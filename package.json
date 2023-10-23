@@ -1,0 +1,30 @@
+{
+  "name": "merchi_checkout",
+  "version": "1.0.0",
+  "description": "Merchi's custom checkout step form",
+  "main": "'src/index.js'",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Merchi",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "20.5.0",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
+    "eslint": "8.47.0",
+    "eslint-config-next": "13.4.16",
+    "lodash": "^4.17.21",
+    "react": "18.2.0",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-country-region-selector": "^3.6.1",
+    "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-geosuggest": "^2.14.1",
+    "react-icons": "^4.10.1",
+    "react-medium-image-zoom": "^5.1.8",
+    "typescript": "5.1.6",
+    "uuid": "^9.0.0"
+  }
+}
