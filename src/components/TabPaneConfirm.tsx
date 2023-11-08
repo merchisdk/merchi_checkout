@@ -1,17 +1,22 @@
 'use client';
 import { useState } from 'react';
-import { submitBuyNow, submitQuoteRequest } from './actions/confirm';
+import { submitBuyNow, submitQuoteRequest } from '../actions/confirm';
 import TabPane from './TabPane';
 import TitleStep from './TitleStep';
 import FooterButtons from './FooterButtons';
 import { currencyTaxAndCost } from './currency';
-import { hasDraftTab, tabIdConfirm } from './tabs_utils';
-import { addressInOneLine, isProductSupplierMOD } from './utils';
+import {
+  hasDraftTab,
+  tabIdConfirm,
+  tabIdDrafting,
+  tabIdCustomerInfo,
+  tabIdShipment,
+} from '../tabs_utils';
+import { addressInOneLine, isProductSupplierMOD } from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import { DraftImagesStatic } from './DraftImageUploaded';
 import JobInfoContent from './JobInfoContent';
 import { SmallCustomerInfo } from './TabPaneCustomer';
-import { tabIdDrafting, tabIdCustomerInfo, tabIdShipment } from './tabs_utils';
 
 interface PropsShippingAddressInfo {
   address: any;

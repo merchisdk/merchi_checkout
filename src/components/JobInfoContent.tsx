@@ -4,7 +4,7 @@ import {
   isInstructionsType,
   isProductSupplierMOD,
   isSelectable,
-} from './utils';
+} from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 
 function formatCost(product: any, cost: number) {

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { CgSpinner } from 'react-icons/cg';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
-import { addressInOneLine } from '../utils';
+import { addressInOneLine } from '../../utils';
 import { currencyTaxAndCost } from '../currency';
 
 function ShipmentPrice({ shipment }: any) {

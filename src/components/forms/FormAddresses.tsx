@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import InputsAddress from './InputsAddress';
 import CheckboxBillingAddressSameAsShippingAddress from './CheckboxBillingAddressSameAsShippingAddress';
-import { fetchShippingOptions } from '../actions/shipping';
+import { fetchShippingOptions } from '../../actions/shipping';
 import InputError from './InputError';
 import { ListShipmentQuoteOptions } from '../lists';
 
