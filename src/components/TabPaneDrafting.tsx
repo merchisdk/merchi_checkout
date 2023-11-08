@@ -1,11 +1,11 @@
 'use client';
+import { useState } from 'react';
 import TabPane from './TabPane';
 import TitleStep from './TitleStep';
 import FooterButtons from './FooterButtons';
-import { tabIdDrafting } from './tabs_utils';
+import { tabIdDrafting } from '../tabs_utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import MerchiImageEditor from '../merchi_image_editor/MerchiImageEditor';
-import { useState } from 'react';
 import InputFileUpload from './forms/InputFileUpload';
 import { useForm } from 'react-hook-form';
 
@@ -18,6 +18,7 @@ function TabPaneDrafting() {
     setJob,
     toggleMerchiCheckout,
   } = useMerchiCheckboutContext();
+
   const { allowClientDraftContribution, draftTemplates = [] } = product;
   const clientFiles = job.clientFiles || [];
   const [activeTemplateIndex, setActiveTemplateIndex] = useState(0);

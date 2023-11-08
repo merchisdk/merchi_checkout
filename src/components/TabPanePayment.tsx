@@ -1,6 +1,6 @@
 'use client';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
-import { tabIdPayment } from './tabs_utils';
+import { tabIdPayment } from '../tabs_utils';
 import TitleStep from './TitleStep';
 import TabPane from './TabPane';
 import MerchiInvoice from '../merchi_invoice/MerchiInvoice';

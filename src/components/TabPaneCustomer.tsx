@@ -2,8 +2,8 @@
 import TabPane from './TabPane';
 import TitleStep from './TitleStep';
 import FooterButtons from './FooterButtons';
-import { tabIdCustomerInfo } from './tabs_utils';
-import { isUserRegistered, isRegisteredAndHasStore } from './utils';
+import { tabIdCustomerInfo } from '../tabs_utils';
+import { isUserRegistered, isRegisteredAndHasStore } from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import { FormCustomerNew, FormCustomerReturning } from './forms';
 import FormDomainNew from './forms/FormDomainNew';

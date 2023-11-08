@@ -1,5 +1,5 @@
 'use client';
-import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
+import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import { CgSpinner } from 'react-icons/cg';
 import { FaArrowRight } from 'react-icons/fa';
 

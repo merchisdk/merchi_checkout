@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useController } from 'react-hook-form';
-import { uploadFileToServer } from '../actions/files';
+import { uploadFileToServer } from '../../actions/files';
 import { useDropzone } from 'react-dropzone';
 import { CgSpinner } from 'react-icons/cg';
 import { FaRegImage, FaPlus } from 'react-icons/fa';

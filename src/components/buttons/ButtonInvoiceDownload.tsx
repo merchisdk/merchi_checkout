@@ -1,6 +1,6 @@
 'use client';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
-import { generatePublicInvoicePdf } from '../actions/invoice';
+import { generatePublicInvoicePdf } from '../../actions/invoice';
 import { useState } from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { FaFileInvoiceDollar } from 'react-icons/fa';

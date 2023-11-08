@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MerchiCheckoutTab } from './types';
+import { MerchiCheckoutTab } from '../types';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 
 interface PropsTab {

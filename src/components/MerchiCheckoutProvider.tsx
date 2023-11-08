@@ -1,8 +1,7 @@
 'use client';
-import { useEffect } from 'react';
-import { createContext, ReactNode, useContext, useState } from 'react';
-import { MerchiCheckoutTab } from './types';
-import { tabsInit } from './tabs_utils';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { MerchiCheckoutTab } from '../types';
+import { tabsInit } from '../tabs_utils';
 
 interface IMerchiCheckout {
   activeTabIndex: number;
