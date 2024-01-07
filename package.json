@@ -1,6 +1,6 @@
 {
   "name": "merchi_checkout",
-  "version": "0.0.0",
+  "version": "0.0.0c",
   "description": "Merchi's custom checkout step form",
   "main": "'src/index.js'",
   "module": "src/index.tsx",
@@ -35,6 +35,24 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.0",
+    "@babel/plugin-transform-react-jsx": "^7.22.15",
+    "@babel/plugin-transform-runtime": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
+    "@types/lodash": "^4.14.199",
+    "@types/node": "20.5.0",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
+    "@types/uuid": "^9.0.5",
+    "copyfiles": "^2.4.1",
+    "eslint": "8.47.0",
+    "eslint-config-next": "13.4.16",
+    "typescript": "^5.1.6"
+  },
   "dependencies": {
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.7",
@@ -56,13 +74,10 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
     "react-geosuggest": "^2.14.1",
+    "react-hook-form": "7.45.4",
     "react-icons": "^4.10.1",
     "react-medium-image-zoom": "^5.1.8",
     "typescript": "5.1.6",
     "uuid": "^9.0.0"
-  },
-  "private": null,
-  "devDependencies": {
-    "copyfiles": "^2.4.1"
   }
 }
