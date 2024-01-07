@@ -1,6 +1,6 @@
 'use client';
 import { useController } from 'react-hook-form';
-import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
+import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import InputError from './InputError';
 
 interface Props {

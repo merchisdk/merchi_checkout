@@ -1,7 +1,7 @@
 'use client';
 import { v4 as uuidv4 } from 'uuid';
 import { useController } from 'react-hook-form';
-import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
+import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import InputError from './InputError';
 
 interface Option {

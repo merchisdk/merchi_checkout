@@ -1,5 +1,5 @@
 'use client';
-import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
+import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 
 interface Props {
   isChecked: boolean;
