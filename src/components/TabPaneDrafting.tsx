@@ -5,7 +5,7 @@ import TitleStep from './TitleStep';
 import FooterButtons from './FooterButtons';
 import { tabIdDrafting } from '../tabs_utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
-import MerchiImageEditor from '../merchi_image_editor/MerchiImageEditor';
+import MerchiImageEditor from './merchi_image_editor/MerchiImageEditor';
 import InputFileUpload from './forms/InputFileUpload';
 import { useForm } from 'react-hook-form';
 

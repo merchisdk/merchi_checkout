@@ -3,7 +3,8 @@ import MerchiCheckoutTabs from './components/MerchiCheckoutTabs';
 import TabPane from './components/TabPane';
 
 export {
-  MerchiCheckout,
   MerchiCheckoutTabs,
   TabPane,
 };
+
+export default MerchiCheckout;
