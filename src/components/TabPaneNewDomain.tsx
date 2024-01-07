@@ -1,7 +1,7 @@
 'use client';
 import Cookies from 'js-cookie';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
-import { tabIdComplete } from './tabs_utils';
+import { tabIdComplete } from '../tabs_utils';
 import FooterButtons from './FooterButtons';
 import TitleStep from './TitleStep';
 import TabPane from './TabPane';

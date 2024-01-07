@@ -3,7 +3,7 @@ import FooterButtons from './FooterButtons';
 import TabPane from './TabPane';
 import TitleStep from './TitleStep';
 import { FormAddresses } from './forms';
-import { tabIdShipment } from './tabs_utils';
+import { tabIdShipment } from '../tabs_utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 
 function TabPaneAddress() {
