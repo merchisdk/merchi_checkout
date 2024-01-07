@@ -1,6 +1,6 @@
 {
   "name": "merchi_checkout",
-  "version": "0.0.0-i",
+  "version": "0.0.0-j",
   "description": "Merchi's custom checkout step form",
   "main": "lib/index.js",
   "module": "src/index.tsx",
@@ -57,6 +57,10 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "6.4.2",
+    "@fortawesome/fontawesome-svg-core": "6.4.2",
+    "@fortawesome/free-solid-svg-icons": "6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@pqina/pintura": "^8.71.1",
     "@pqina/react-pintura": "^9.0.3",
     "@types/node": "20.5.0",

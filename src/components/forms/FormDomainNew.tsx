@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createDomainStore } from '../actions/domain';
+import { createDomainStore } from '../../actions/domain';
 import InputCheckStoreName from './InputCheckStoreName';
 import InputError from './InputError';
 import InputSelect from './InputSelect';
 import InputFileUpload from './InputFileUpload';
-import { isoCountries } from '../utils';
+import { isoCountries } from '../../utils';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 
 const countryOptions = Object.keys(isoCountries).map((key) => ({
