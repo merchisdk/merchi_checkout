@@ -1,6 +1,6 @@
 'use client';
 
-import { useMerchiCheckboutContext } from "../../MerchiCheckoutProvider";
+import { useMerchiCheckboutContext } from "../MerchiCheckoutProvider";
 
 interface InputErrorProps {
   error?: {

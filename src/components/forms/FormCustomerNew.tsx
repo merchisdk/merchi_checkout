@@ -5,7 +5,7 @@ import InputAcceptUserTermsAndConditions from './InputAcceptUserTermsAndConditio
 import { createNewCustomer } from '../../actions/customer';
 import InputSelect from './InputSelect';
 import InputText from './InputText';
-import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
+import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import { phoneOptions } from '../../utils';
 import InputError from './InputError';
 
