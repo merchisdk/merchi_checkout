@@ -5,7 +5,7 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { Controller } from 'react-hook-form';
 import InputText from './InputText';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
-import { addressInOneLine, geoSuggestResultAsNewAddress } from '../utils';
+import { addressInOneLine, geoSuggestResultAsNewAddress } from '../../utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEdit, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
