@@ -24,6 +24,7 @@ import {
   uploadShapeBackgroundImage,
 } from './actions/file';
 import { templateFileUrl } from './utils';
+import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 
 setPlugins(plugin_annotate);
 
@@ -70,6 +71,7 @@ export default function ImageEditor({
   isActive,
   setClientFiles,
 }: Props) {
+  const { urlApi } = useMerchiCheckboutContext();
   const editorRef = useRef(null);
   const fileInputRef = useRef(null);
   const { file, name } = draftTemplate;
@@ -78,7 +80,7 @@ export default function ImageEditor({
       .processImage()
       .then(async (imageWriterResult: any) => {
         const { dest } = imageWriterResult;
-        const r = await uploadFileToServerAndChangeName(dest, name);
+        const r = await uploadFileToServerAndChangeName((urlApi as string), dest, name);
         const fileJson = await r.json();
         editDraftTemplate(fileJson.file);
       });
@@ -105,7 +107,7 @@ export default function ImageEditor({
                 if (type === 'addshape' && detail.backgroundImage) {
                   // When files are added to the canvas we save them to
                   // client files which will be saved to job.clientFiles
-                  const r = await uploadShapeBackgroundImage(detail);
+                  const r = await uploadShapeBackgroundImage((urlApi as string), detail);
                   const fileJson = await r.json();
                   clientFiles.push({
                     file: fileJson.file,
@@ -121,7 +123,7 @@ export default function ImageEditor({
                 }
               }}
               onProcess={async ({ dest }: any) => {
-                const r = await uploadFileToServerAndChangeName(dest, name);
+                const r = await uploadFileToServerAndChangeName((urlApi as string), dest, name);
                 const fileJson = await r.json();
                 editDraftTemplate(fileJson.file);
               }}

@@ -8,6 +8,7 @@ import {
 } from './actions';
 import { PaymentRequestPaymentMethodEvent } from '@stripe/stripe-js';
 import { companyStripePubKeyOrTestPubKey } from './utils';
+import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
 
 const badgeTestMode = <div style={{color: 'red'}}>Test mode</div>;
 
@@ -25,6 +26,7 @@ function StripeCardForm({
   PaymentButton,
 }: Props) {
   const { domain } = invoice;
+  const { urlApi } = useMerchiCheckboutContext();
   const company = domain.company;
   const hasCompanyPubKey = Boolean(company.isStripeValid && companyStripePubKeyOrTestPubKey(company));
   const companyPubKey = hasCompanyPubKey ? companyStripePubKeyOrTestPubKey(company) : '';
@@ -34,7 +36,7 @@ function StripeCardForm({
   async function doStripePayment(r: any) {
     setLoadingStripePayment(true);
     try {
-      const response = await stripeCardFormSubmit(r.stripe, r.card, invoice);
+      const response = await stripeCardFormSubmit((urlApi as string), r.stripe, r.card, invoice);
       callbackStripePaymentSuccess(response);
       setLoadingStripePayment(false);
     } catch (e: any) {
@@ -47,7 +49,7 @@ function StripeCardForm({
   ) {
     setLoadingStripePaymentButtons(true);
     try {
-      const response = await stripePaymentButtonSubmit(stripe, invoice, event);
+      const response = await stripePaymentButtonSubmit((urlApi as string), stripe, invoice, event);
       callbackStripePaymentSuccess(response);
       setLoadingStripePaymentButtons(false);
     } catch (e: any) {
@@ -57,7 +59,7 @@ function StripeCardForm({
   }
   const [stripePublicKey, setStripePublicKey] = useState(companyPubKey);
   useEffect(() => {
-    if (!stripePublicKey && canUseConnect) stripeInitPromise().then(setStripePublicKey)
+    if (!stripePublicKey && canUseConnect) stripeInitPromise((urlApi as string)).then(setStripePublicKey)
   }, [stripePublicKey, canUseConnect]);
   return (
     <>

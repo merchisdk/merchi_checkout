@@ -1,4 +1,4 @@
-export async function checkStoreName(name: string) {
+export async function checkStoreName(urlApi: string, name: string) {
   const formData = new FormData();
   formData.append('subDomain', name);
 
@@ -7,13 +7,10 @@ export async function checkStoreName(name: string) {
     body: formData,
   };
 
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}subdomain_check/`,
-    fetchOptions
-  );
+  return await fetch(`${urlApi}subdomain_check/`, fetchOptions);
 }
 
-export async function createDomainStore(signUpFormValues: any, user: any) {
+export async function createDomainStore(urlApi: string, signUpFormValues: any, user: any) {
   const {
     country,
     logo,
@@ -29,7 +26,7 @@ export async function createDomainStore(signUpFormValues: any, user: any) {
   const queryString = new URLSearchParams(queryObj).toString();
   try { 
     return await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}stores/fast_create/?${queryString}`,
+      `${urlApi}stores/fast_create/?${queryString}`,
       fetchOptions,
     );
   } catch(e) {

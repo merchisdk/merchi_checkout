@@ -1,14 +1,16 @@
 'use client';
 import { useState } from 'react';
 import { CreditCard, PaymentForm } from 'react-square-web-payments-sdk';
+import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
 import { currencyMap } from '../currency';
 
 export async function actionSquarePaymentProcess(
+  urlApi: string,
   invoice: any,
   sourceId: string,
 ) {
   let invoiceJson = invoice;
-  let url = `${process.env.NEXT_PUBLIC_API_URL}invoice/${invoiceJson.id}/square/payment/`;
+  let url = `${urlApi}invoice/${invoiceJson.id}/square/payment/`;
   const fetchOptions: any = {
     method: 'GET',
     query: [['sourceId', sourceId]],
@@ -31,6 +33,7 @@ function SquareCard({
   invoice,
   callbackPaymentSuccess,
 }: Props) {
+  const { urlApi } = useMerchiCheckboutContext();
   const [laoding, setLoading] = useState(false);
   const { currency, domain, totalCost } = invoice;
   const company = domain.company;
@@ -46,7 +49,7 @@ function SquareCard({
   async function submit(sourceId: any) {
     setLoading(true);
     try {
-      const r =  await actionSquarePaymentProcess(invoice, sourceId);
+      const r =  await actionSquarePaymentProcess((urlApi as string), invoice, sourceId);
       setLoading(false);
       callbackPaymentSuccess(r)
     } catch (e: any) {

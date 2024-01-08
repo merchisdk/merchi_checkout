@@ -15,6 +15,7 @@ function FormReturningCustomer() {
     includeDomainSignup,
     nextTab,
     setCustomer,
+    urlApi,
   } = useMerchiCheckboutContext();
   const hookForm = useForm({ defaultValues: { emailAddress: '' } });
   const {
@@ -29,7 +30,10 @@ function FormReturningCustomer() {
     setLoading(true);
     const values = getValues();
     try {
-      const r = await tryReturningCustomerEmail(values.emailAddress);
+      const r = await tryReturningCustomerEmail(
+        (urlApi as string),
+        values.emailAddress
+      );
       if (r.ok) {
         const customer = await r.json();
         setCustomer({

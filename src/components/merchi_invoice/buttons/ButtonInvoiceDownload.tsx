@@ -1,5 +1,6 @@
 'use client';
 import { generatePublicInvoicePdf } from '../actions/invoice';
+import { useMerchiCheckboutContext } from '../../MerchiCheckoutProvider';
 import { useState } from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { FaFileInvoiceDollar } from 'react-icons/fa';
@@ -15,13 +16,16 @@ function ButtonInvoiceDownload({
   classNameMerchiInvoiceButtonDownloadInvoice,
   invoice,
 }: Props) {
+  const {
+    urlApi,
+  } = useMerchiCheckboutContext();
   const { unpaid } = invoice;
   const [loading, setLoading] = useState(false);
   // const icon = loading ? faCircleNotch : faFileInvoiceDollar;
   async function generateInvoice(receipt?: boolean) {
     setLoading(true);
     try {
-      await generatePublicInvoicePdf(invoice, receipt);
+      await generatePublicInvoicePdf((urlApi as string), invoice, receipt);
       setLoading(false);
     } catch (e: any) {
       alertErrorShow(e.message);

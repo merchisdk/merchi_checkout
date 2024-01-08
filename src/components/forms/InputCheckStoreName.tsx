@@ -30,13 +30,15 @@ function InputCheckStoreName({ control, errors }: Props) {
   const {
     classNameMerchiCheckoutFormGroup,
     classNameMerchiCheckoutFormInput,
+    urlFrontend,
+    urlApi,
   } = useMerchiCheckboutContext();
   const [checkingName, setCheckingName] = useState(false);
   const [available, setAvailable] = useState(false);
   const [neutral, setNeutral] = useState(true);
   async function checkName() {
     try {
-      const response: any = await checkStoreName(value || '');
+      const response: any = await checkStoreName((urlApi as string), value || '');
       if (response.ok) {
         setAvailable(true);
       } else {
@@ -84,7 +86,7 @@ function InputCheckStoreName({ control, errors }: Props) {
           style={style}
           className={`ml-2 font-italic mr-1 ${colorIndication()}`}
         >
-          {value !== '' ? value : 'your-store'}.{process.env.NEXT_PUBLIC_FRONTEND_URL_DISPLAY}{' '}
+          {value !== '' ? value : 'your-store'}.{urlFrontend}{' '}
         </span>
         {iconIndication()}
       </div>

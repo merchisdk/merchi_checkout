@@ -9,7 +9,7 @@ const urlToFilePdf = async (url: string, filename: string) => {
   return file;
 };
 
-export async function generatePublicInvoicePdf(invoice: any, receipt?: boolean) {
+export async function generatePublicInvoicePdf(urlApi: string, invoice: any, receipt?: boolean) {
   const id = invoice.id;
   const domain = invoice.domain.emailDomain;
 
@@ -24,7 +24,7 @@ export async function generatePublicInvoicePdf(invoice: any, receipt?: boolean) 
   const uri = receipt ? '/generate/receipt/pdf/' : '/generate/pdf/';
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}invoices/${id}${uri}?${queryString}`,
+      `${urlApi}invoices/${id}${uri}?${queryString}`,
       fetchOptions
     );
 

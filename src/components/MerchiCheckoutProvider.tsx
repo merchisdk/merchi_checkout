@@ -49,6 +49,7 @@ interface IMerchiCheckout {
   isBuyRequest?: boolean;
   isOpen?: boolean;
   isProductEmbedForm?: boolean;
+  isStaging?: boolean;
   job: any;
   loading: boolean;
   messageSuccessBuyRequest?: string;
@@ -64,6 +65,8 @@ interface IMerchiCheckout {
   showUserTermsAndConditions?: boolean;
   tabs: MerchiCheckoutTab[];
   toggleMerchiCheckout: () => void;
+  urlFrontend?: string;
+  urlApi?: string;
 }
 
 const MerchiCheckoutContext = createContext<IMerchiCheckout>({
@@ -109,6 +112,7 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   hideDrafting: false,
   isBuyRequest: false,
   isOpen: false,
+  isStaging: false,
   loading: false,
   messageSuccessBuyRequest: undefined,
   messageSuccessQuoteRequest: undefined,
@@ -127,6 +131,8 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   showUserTermsAndConditions: true,
   tabs: [],
   toggleMerchiCheckout() {},
+  urlFrontend: '',
+  urlApi: '',
 });
 
 export const useMerchiCheckboutContext = () =>
@@ -170,6 +176,7 @@ interface PropsMerchiProductFormProvider {
   isBuyRequest?: boolean;
   isOpen: boolean;
   isProductEmbedForm?: boolean;
+  isStaging?: boolean;
   messageSuccessBuyRequest?: string;
   messageSuccessQuoteRequest?: string;
   showUserTermsAndConditions?: boolean;
@@ -219,6 +226,7 @@ export const MerchiCheckoutProvider = ({
   isBuyRequest,
   isOpen,
   isProductEmbedForm = false,
+  isStaging = false,
   job,
   product,
   messageSuccessBuyRequest,
@@ -329,6 +337,12 @@ export const MerchiCheckoutProvider = ({
       }
     }
   }, [googlePlacesApiKey]);
+  let urlApi = 'https://api.merchi.co/v6/';
+  let urlFrontend = 'https://merchi.co/';
+  if (isStaging) {
+    urlApi = 'https://api.staging.merchi.co/v6/';
+    urlFrontend = 'https://staging.merchi.co/';
+  }
   return (
     <>
       <MerchiCheckoutContext.Provider
@@ -392,6 +406,8 @@ export const MerchiCheckoutProvider = ({
             showUserTermsAndConditions,
             tabs,
             toggleMerchiCheckout,
+            urlApi,
+            urlFrontend,
           } as IMerchiCheckout
         }
       >

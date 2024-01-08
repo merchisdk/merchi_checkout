@@ -19,6 +19,7 @@ export function FormCustomerNew() {
     nextTab,
     setCustomer,
     showUserTermsAndConditions,
+    urlApi,
   } = useMerchiCheckboutContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -36,7 +37,7 @@ export function FormCustomerNew() {
   async function onSubmit(values: any) {
     setLoading(true);
     try {
-      const r = await createNewCustomer({ ...values });
+      const r = await createNewCustomer((urlApi as string), { ...values });
       if (r.ok) {
         const userJson = await r.json();
         setCustomer(userJson.user);
