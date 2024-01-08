@@ -18,6 +18,7 @@ function TabPaneSubmitted() {
     job,
     messageSuccessBuyRequest,
     messageSuccessQuoteRequest,
+    urlFrontend,
   } = useMerchiCheckboutContext();
   const activeSession = Cookies.get('session_token');
   const msg = isBuyRequest
@@ -53,7 +54,7 @@ function TabPaneSubmitted() {
                 {!!(activeSession && job.id && !isBuyRequest) && (
                   <a
                     className={classNameMerchiCheckoutButtonPrimary}
-                    href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}jobs/${job.id}/`}
+                    href={`${urlFrontend}jobs/${job.id}/`}
                   >
                     View Job
                   </a>
@@ -80,7 +81,7 @@ function TabPaneSubmitted() {
                 {!!(activeSession && job.id && !isBuyRequest) && (
                   <a
                     className={classNameMerchiCheckoutButtonSecondaryBlock}
-                    href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}jobs/${job.id}/`}
+                    href={`${urlFrontend}jobs/${job.id}/`}
                   >
                     View Job
                   </a>

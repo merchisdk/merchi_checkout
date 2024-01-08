@@ -171,15 +171,16 @@ function TabPaneConfirm() {
     product,
     setInvoice,
     setJob,
+    urlApi,
   } = useMerchiCheckboutContext();
   const [loading, setLoading] = useState(false);
   async function submit() {
     setLoading(true);
     try {
       if (isBuyRequest) {
-        const response = await submitBuyNow({
-          ...job,
-          product: { id: product.id },
+        const response = await submitBuyNow(
+          (urlApi as string),
+          { ...job, product: { id: product.id },
         });
         if (response.ok) {
           const invoice = await response.json();
@@ -192,7 +193,7 @@ function TabPaneConfirm() {
           setLoading(false);
         }
       } else {
-        const response = await submitQuoteRequest(job);
+        const response = await submitQuoteRequest((urlApi as string), job);
         if (response.ok) {
           const quote = await response.json();
           setJob({ ...job, id: quote.job.id });

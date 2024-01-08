@@ -5,6 +5,7 @@ import { uploadFileToServer } from '../../actions/files';
 import { useDropzone } from 'react-dropzone';
 import { CgSpinner } from 'react-icons/cg';
 import { FaRegImage, FaPlus } from 'react-icons/fa';
+import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider'; 
 
 interface Props {
   accept?: any;
@@ -28,6 +29,7 @@ function InputFileUpload({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([]); // State to store uploaded file URLs
+  const { urlApi } = useMerchiCheckboutContext();
 
   const {
     field,
@@ -45,7 +47,7 @@ function InputFileUpload({
     for (const file of acceptedFiles) {
       try {
         setLoading(true);
-        const response = await uploadFileToServer(file);
+        const response = await uploadFileToServer((urlApi as string), file);
         const data = await response.json();
         newFiles.push(data.file);
         field.onChange(data.file.id);

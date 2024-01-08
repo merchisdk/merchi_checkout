@@ -1,6 +1,6 @@
 {
   "name": "merchi_checkout",
-  "version": "0.0.0-k",
+  "version": "0.0.0-l",
   "description": "Merchi's custom checkout step form",
   "main": "lib/index.js",
   "module": "src/index.tsx",

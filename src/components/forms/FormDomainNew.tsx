@@ -20,6 +20,7 @@ export default function FormDomainNew() {
     classNameMerchiCheckoutFormGroup,
     job,
     nextTab,
+    urlApi,
   } = useMerchiCheckboutContext();
   const { client } = job;
   const [error, setError] = useState(null);
@@ -35,7 +36,7 @@ export default function FormDomainNew() {
   async function onSubmit(values: any) {
     setLoading(true);
     try {
-      const r = await createDomainStore({ ...values }, client);
+      const r = await createDomainStore((urlApi as string), { ...values }, client);
       if (r.ok) {
         nextTab();
         setLoading(false);

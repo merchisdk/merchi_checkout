@@ -1,8 +1,8 @@
-export async function uploadFileToServer(file: File): Promise<Response> {
+export async function uploadFileToServer(urlApi: string, file: File): Promise<Response> {
   const formData = new FormData();
   formData.append('0', file);
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}public-upload-job-files/`, {
+  const response = await fetch(`${urlApi}public-upload-job-files/`, {
     method: 'POST',
     body: formData,
   });

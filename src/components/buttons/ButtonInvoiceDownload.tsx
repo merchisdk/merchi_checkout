@@ -10,13 +10,14 @@ function ButtonInvoiceDownload() {
     alertErrorShow,
     classNameMerchiCheckoutButtonDownloadInvoice,
     invoice = {},
+    urlApi,
   } = useMerchiCheckboutContext();
   const { unpaid } = invoice;
   const [loading, setLoading] = useState(false);
   async function generate(receipt?: boolean) {
     setLoading(true);
     try {
-      await generatePublicInvoicePdf(invoice, receipt);
+      await generatePublicInvoicePdf((urlApi as string), invoice, receipt);
       setLoading(false);
     } catch (e: any) {
       alertErrorShow(e.message);

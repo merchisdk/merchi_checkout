@@ -1,8 +1,8 @@
-export async function uploadFileToServer(file: File): Promise<Response> {
+export async function uploadFileToServer(urlApi: string, file: File): Promise<Response> {
   const formData = new FormData();
   formData.append('0', file);
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}public-upload-job-files/`, {
+  const response = await fetch(`${urlApi}public-upload-job-files/`, {
     method: 'POST',
     body: formData,
   });
@@ -14,13 +14,13 @@ export async function uploadFileToServer(file: File): Promise<Response> {
   return response;
 }
 
-export async function uploadFileToServerAndChangeName(file: File, fileName: string): Promise<Response> {
+export async function uploadFileToServerAndChangeName(urlApi: string, file: File, fileName: string): Promise<Response> {
   const newFile = new File([file], fileName, { type: file.type });
 
   const formData = new FormData();
   formData.append('0', newFile);
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}public-upload-job-files/`, {
+  const response = await fetch(`${urlApi}public-upload-job-files/`, {
     method: 'POST',
     body: formData,
   });
@@ -32,7 +32,7 @@ export async function uploadFileToServerAndChangeName(file: File, fileName: stri
   return response;
 }
 
-export async function uploadShapeBackgroundImage(shapeObject: any): Promise<Response> {
+export async function uploadShapeBackgroundImage(urlApi: string, shapeObject: any): Promise<Response> {
   // Step 1: Fetch the blob from the blob URL
   const response = await fetch(shapeObject.backgroundImage);
   const blob = await response.blob();
@@ -59,5 +59,5 @@ export async function uploadShapeBackgroundImage(shapeObject: any): Promise<Resp
   const file = new File([blob], `${shapeObject.id}.${mimeType.split('/')[1]}`, { type: mimeType });
 
   // Step 3: Upload the file using your uploadFileToServer function
-  return uploadFileToServer(file);
+  return uploadFileToServer(urlApi, file);
 }

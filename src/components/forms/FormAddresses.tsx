@@ -30,7 +30,7 @@ interface Props {
 }
 
 function FormAddresses({ formId }: Props) {
-  const { job, nextTab, setJob } = useMerchiCheckboutContext();
+  const { job, nextTab, setJob, urlApi } = useMerchiCheckboutContext();
   const [
     billingAddressSameAsShippingAddress,
     setBillingAddressSameAsShippingAddress,
@@ -50,7 +50,7 @@ function FormAddresses({ formId }: Props) {
       onSelectShipment(null);
       setError(null);
       setLoading(true);
-      const r = await fetchShippingOptions(address, job);
+      const r = await fetchShippingOptions((urlApi as string), address, job);
       if (r.ok) {
         const shipmentsJson = await r.json();
         setShipmentOptions(shipmentsJson.shipments);
