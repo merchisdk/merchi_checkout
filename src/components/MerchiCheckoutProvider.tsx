@@ -49,7 +49,6 @@ interface IMerchiCheckout {
   isBuyRequest?: boolean;
   isOpen?: boolean;
   isProductEmbedForm?: boolean;
-  isStaging?: boolean;
   job: any;
   loading: boolean;
   messageSuccessBuyRequest?: string;
@@ -65,8 +64,8 @@ interface IMerchiCheckout {
   showUserTermsAndConditions?: boolean;
   tabs: MerchiCheckoutTab[];
   toggleMerchiCheckout: () => void;
-  urlFrontend?: string;
-  urlApi?: string;
+  urlFrontend: string;
+  urlApi: string;
 }
 
 const MerchiCheckoutContext = createContext<IMerchiCheckout>({
@@ -112,7 +111,6 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   hideDrafting: false,
   isBuyRequest: false,
   isOpen: false,
-  isStaging: false,
   loading: false,
   messageSuccessBuyRequest: undefined,
   messageSuccessQuoteRequest: undefined,
@@ -176,7 +174,6 @@ interface PropsMerchiProductFormProvider {
   isBuyRequest?: boolean;
   isOpen: boolean;
   isProductEmbedForm?: boolean;
-  isStaging?: boolean;
   messageSuccessBuyRequest?: string;
   messageSuccessQuoteRequest?: string;
   showUserTermsAndConditions?: boolean;
@@ -186,6 +183,8 @@ interface PropsMerchiProductFormProvider {
   setInvoice: (invoice: any) => void;
   setJob: (job: any) => void;
   toggleMerchiCheckout: () => void;
+  urlApi?: string;
+  urlFrontend?: string;
 }
 
 export const MerchiCheckoutProvider = ({
@@ -226,7 +225,6 @@ export const MerchiCheckoutProvider = ({
   isBuyRequest,
   isOpen,
   isProductEmbedForm = false,
-  isStaging = false,
   job,
   product,
   messageSuccessBuyRequest,
@@ -235,6 +233,8 @@ export const MerchiCheckoutProvider = ({
   setJob,
   showUserTermsAndConditions = true,
   toggleMerchiCheckout,
+  urlApi = 'https://api.merchi.co/v6/',
+  urlFrontend = 'https://merchi.co/',
 }: PropsMerchiProductFormProvider) => {
   const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const [loading, setLoading] = useState(false);
@@ -337,82 +337,74 @@ export const MerchiCheckoutProvider = ({
       }
     }
   }, [googlePlacesApiKey]);
-  let urlApi = 'https://api.merchi.co/v6/';
-  let urlFrontend = 'https://merchi.co/';
-  if (isStaging) {
-    urlApi = 'https://api.staging.merchi.co/v6/';
-    urlFrontend = 'https://staging.merchi.co/';
-  }
   return (
-    <>
-      <MerchiCheckoutContext.Provider
-        value={
-          {
-            activeTabIndex,
-            alerts,
-            alertClose,
-            alertErrorShow,
-            classNameMerchiCheckoutAlertsContainer,
-            classNameMerchiCheckoutAlert,
-            classNameMerchiCheckoutAlertError,
-            classNameMerchiCheckoutAlertSuccess,
-            classNameMerchiCheckoutButtonPrimary,
-            classNameMerchiCheckoutButtonPrimaryBlock,
-            classNameMerchiCheckoutButtonSecondary,
-            classNameMerchiCheckoutButtonSecondaryBlock,
-            classNameMerchiCheckoutButtonDownloadInvoice,
-            classNameMerchiCheckoutFormCheckbox,
-            classNameMerchiCheckoutFormGroup,
-            classNameMerchiCheckoutFormGroupCheckbox,
-            classNameMerchiCheckoutFormInput,
-            classNameMerchiCheckoutGoogleSuggestList,
-            classNameMerchiCheckoutGoogleSuggestListItem,
-            classNameMerchiCheckoutListGroupItemLoader,
-            classNameMerchiCheckoutFormLabelCheckbox,
-            classNameMerchiCheckoutInputError,
-            classNameMerchiCheckoutListGroup,
-            classNameMerchiCheckoutListGroupItem,
-            classNameMerchiCheckoutRow,
-            classNameMerchiCheckoutRowColumn,
-            classNameMerchiCheckoutTabsContainer,
-            classNameMerchiCheckoutTab,
-            classNameMerchiCheckoutTabButton,
-            classNameMerchiCheckoutTabPane,
-            classNameMerchiCheckoutTabPaneContainer,
-            classNameMerchiInvoiceButtonPayInvoice,
-            clearCustomer,
-            currentUser,
-            customer: job.client || {},
-            domain,
-            editDraftTemplate,
-            googlePlacesLoaded,
-            includeDomainSignup,
-            invoice,
-            isBuyRequest,
-            isOpen,
-            isProductEmbedForm,
-            job,
-            loading,
-            messageSuccessBuyRequest,
-            messageSuccessQuoteRequest,
-            nextTab,
-            product,
-            setActiveTabById,
-            setActiveTabIndex,
-            setCustomer,
-            setDomain,
-            setInvoice,
-            setJob,
-            showUserTermsAndConditions,
-            tabs,
-            toggleMerchiCheckout,
-            urlApi,
-            urlFrontend,
-          } as IMerchiCheckout
-        }
-      >
-        {children}
-      </MerchiCheckoutContext.Provider>
-    </>
+    <MerchiCheckoutContext.Provider
+      value={
+        {
+          activeTabIndex,
+          alerts,
+          alertClose,
+          alertErrorShow,
+          classNameMerchiCheckoutAlertsContainer,
+          classNameMerchiCheckoutAlert,
+          classNameMerchiCheckoutAlertError,
+          classNameMerchiCheckoutAlertSuccess,
+          classNameMerchiCheckoutButtonPrimary,
+          classNameMerchiCheckoutButtonPrimaryBlock,
+          classNameMerchiCheckoutButtonSecondary,
+          classNameMerchiCheckoutButtonSecondaryBlock,
+          classNameMerchiCheckoutButtonDownloadInvoice,
+          classNameMerchiCheckoutFormCheckbox,
+          classNameMerchiCheckoutFormGroup,
+          classNameMerchiCheckoutFormGroupCheckbox,
+          classNameMerchiCheckoutFormInput,
+          classNameMerchiCheckoutGoogleSuggestList,
+          classNameMerchiCheckoutGoogleSuggestListItem,
+          classNameMerchiCheckoutListGroupItemLoader,
+          classNameMerchiCheckoutFormLabelCheckbox,
+          classNameMerchiCheckoutInputError,
+          classNameMerchiCheckoutListGroup,
+          classNameMerchiCheckoutListGroupItem,
+          classNameMerchiCheckoutRow,
+          classNameMerchiCheckoutRowColumn,
+          classNameMerchiCheckoutTabsContainer,
+          classNameMerchiCheckoutTab,
+          classNameMerchiCheckoutTabButton,
+          classNameMerchiCheckoutTabPane,
+          classNameMerchiCheckoutTabPaneContainer,
+          classNameMerchiInvoiceButtonPayInvoice,
+          clearCustomer,
+          currentUser,
+          customer: job.client || {},
+          domain,
+          editDraftTemplate,
+          googlePlacesLoaded,
+          includeDomainSignup,
+          invoice,
+          isBuyRequest,
+          isOpen,
+          isProductEmbedForm,
+          job,
+          loading,
+          messageSuccessBuyRequest,
+          messageSuccessQuoteRequest,
+          nextTab,
+          product,
+          setActiveTabById,
+          setActiveTabIndex,
+          setCustomer,
+          setDomain,
+          setInvoice,
+          setJob,
+          showUserTermsAndConditions,
+          tabs,
+          toggleMerchiCheckout,
+          urlApi,
+          urlFrontend,
+        } as IMerchiCheckout
+      }
+    >
+      {children}
+    </MerchiCheckoutContext.Provider>
   );
 };

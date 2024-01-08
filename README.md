@@ -67,3 +67,5 @@ yarn add merchi_checkout
 | `setJob`                                      | `(j: MerchiJobJson) => void?`    | None                                                                        | `A setter function for the Merchi job`|
 | `showUserTermsAndConditions`                  | `boolean?`                       | `true`                                                                      | `Show user terms and conditions`   |
 | `toggleMerchiCheckout`                        | `() => void`                     | None                                                                        | `A toggle function whcih sets the "isOpen" prop`|
+| `urlApi`                                      | `string?`                        | `'https://api.merchi.co/v6/'`                                               | `URL to connect to the Merchi API`|
+| `urlFrontend`                                 | `string?`                        | `'https://merchi.co/'`                                                      | `URL to redirect users to a frontend`|
