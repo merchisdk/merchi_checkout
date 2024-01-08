@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import InputError from './InputError';
-import { tryReturningCustomerEmail } from '../actions/customer';
+import { tryReturningCustomerEmail } from '../../actions/customer';
 import { useState } from 'react';
 
 const emailValidation = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]/i;

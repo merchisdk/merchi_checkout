@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { debounce } from 'lodash';
 import { useController } from 'react-hook-form';
 import { PiCloudBold, PiCloudCheckBold, PiCloudXBold } from 'react-icons/pi';
-import { checkStoreName } from '../actions/domain';
+import { checkStoreName } from '../../actions/domain';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 
 function replaceSpecialChars(str: string) {
