@@ -13,6 +13,7 @@ function TabPanePayment() {
     invoice,
     nextTab,
     setInvoice,
+    urlApi,
   } = useMerchiCheckboutContext();
   return (
     <TabPane tabId={tabIdPayment}>
@@ -33,6 +34,7 @@ function TabPanePayment() {
                 classNameMerchiInvoiceButtonPayInvoice
               }
               invoice={invoice}
+              urlApi={urlApi}
             />
           )}
         </div>
