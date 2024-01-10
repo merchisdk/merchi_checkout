@@ -1,6 +1,6 @@
 {
   "name": "merchi_checkout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Merchi's custom checkout step form",
   "main": "lib/index.js",
   "module": "src/index.tsx",
@@ -70,6 +70,7 @@
     "eslint-config-next": "13.4.16",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
+    "merchi_invoice": "^1.0.0",
     "react": "18.2.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-country-region-selector": "^3.6.1",

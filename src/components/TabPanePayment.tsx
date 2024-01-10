@@ -3,7 +3,7 @@ import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import { tabIdPayment } from '../tabs_utils';
 import TitleStep from './TitleStep';
 import TabPane from './TabPane';
-import MerchiInvoice from './merchi_invoice/MerchiInvoice';
+import MerchiInvoice from 'merchi_invoice';
 
 function TabPanePayment() {
   const {
@@ -13,6 +13,7 @@ function TabPanePayment() {
     invoice,
     nextTab,
     setInvoice,
+    urlApi,
   } = useMerchiCheckboutContext();
   return (
     <TabPane tabId={tabIdPayment}>
@@ -33,6 +34,7 @@ function TabPanePayment() {
                 classNameMerchiInvoiceButtonPayInvoice
               }
               invoice={invoice}
+              urlApi={urlApi}
             />
           )}
         </div>
