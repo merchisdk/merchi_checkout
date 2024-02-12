@@ -55,6 +55,9 @@ interface IMerchiCheckout {
   messageSuccessQuoteRequest?: string;
   nextTab: () => void;
   product: any;
+  redirectAfterSuccessUrl?: string;
+  redirectAfterQuoteSuccessUrl?: string;
+  redirectWithValue?: boolean;
   setActiveTabById: (id: string) => void;
   setActiveTabIndex: (index: number) => void;
   setCustomer: (customer: any) => void;
@@ -120,6 +123,9 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   isProductEmbedForm: false,
   job: {},
   product: {},
+  redirectAfterSuccessUrl: undefined,
+  redirectAfterQuoteSuccessUrl: undefined,
+  redirectWithValue: true,
   setActiveTabById() {},
   setActiveTabIndex() {},
   setCustomer() {},
@@ -180,6 +186,9 @@ interface PropsMerchiProductFormProvider {
   invoice: any;
   job: any;
   product: any;
+  redirectAfterSuccessUrl?: string;
+  redirectAfterQuoteSuccessUrl?: string;
+  redirectWithValue?: boolean;
   setInvoice: (invoice: any) => void;
   setJob: (job: any) => void;
   toggleMerchiCheckout: () => void;
@@ -229,6 +238,9 @@ export const MerchiCheckoutProvider = ({
   product,
   messageSuccessBuyRequest,
   messageSuccessQuoteRequest,
+  redirectAfterSuccessUrl,
+  redirectAfterQuoteSuccessUrl,
+  redirectWithValue,
   setInvoice,
   setJob,
   showUserTermsAndConditions = true,
@@ -390,6 +402,9 @@ export const MerchiCheckoutProvider = ({
           messageSuccessQuoteRequest,
           nextTab,
           product,
+          redirectAfterSuccessUrl,
+          redirectAfterQuoteSuccessUrl,
+          redirectWithValue,
           setActiveTabById,
           setActiveTabIndex,
           setCustomer,
