@@ -12,7 +12,7 @@ import {
   tabIdCustomerInfo,
   tabIdShipment,
 } from '../tabs_utils';
-import { addressInOneLine, isProductSupplierMOD } from '../utils';
+import { addressInOneLine, isProductSupplierMOD, redirectOnSuccess } from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import { DraftImagesStatic } from './DraftImageUploaded';
 import JobInfoContent from './JobInfoContent';
@@ -169,6 +169,9 @@ function TabPaneConfirm() {
     isBuyRequest,
     nextTab,
     product,
+    redirectAfterSuccessUrl,
+    redirectAfterQuoteSuccessUrl,
+    redirectWithValue,
     setInvoice,
     setJob,
     urlApi,
@@ -196,9 +199,16 @@ function TabPaneConfirm() {
         const response = await submitQuoteRequest((urlApi as string), job);
         if (response.ok) {
           const quote = await response.json();
-          setJob({ ...job, id: quote.job.id });
-          setLoading(false);
-          nextTab();
+          let quoteRedirect = redirectAfterQuoteSuccessUrl ?
+            String(redirectAfterQuoteSuccessUrl) :
+            String(redirectAfterSuccessUrl);
+          if (quoteRedirect) {
+            redirectOnSuccess(quoteRedirect, redirectWithValue, quote.job.totalCost);
+          } else {
+            setJob({ ...job, id: quote.job.id });
+            setLoading(false);
+            nextTab();
+          }
         } else {
           const error = await response.json();
           alertErrorShow(error.message);

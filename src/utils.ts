@@ -490,3 +490,16 @@ export function appendClientToOwnDraft(job: any) {
   }
   return job;
 }
+
+export function redirectOnSuccess(
+  url: string, redirectWithValue?: boolean, value?: any) {
+  let cleanUrl = url.
+    replace('%27', '').
+    replace('%91', '').
+    replace('%92', '').
+    replace('%93', '').
+    replace('%94', '');
+  window.location.href = decodeURI(
+    redirectWithValue ? `${cleanUrl}merchiValue=${value}` : cleanUrl
+  );
+}

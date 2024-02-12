@@ -4,6 +4,7 @@ import { tabIdPayment } from '../tabs_utils';
 import TitleStep from './TitleStep';
 import TabPane from './TabPane';
 import MerchiInvoice from 'merchi_invoice';
+import { redirectOnSuccess } from '../utils'
 
 function TabPanePayment() {
   const {
@@ -12,6 +13,8 @@ function TabPanePayment() {
     classNameMerchiInvoiceButtonPayInvoice,
     invoice,
     nextTab,
+    redirectAfterSuccessUrl,
+    redirectWithValue,
     setInvoice,
     urlApi,
   } = useMerchiCheckboutContext();
@@ -24,8 +27,12 @@ function TabPanePayment() {
             <MerchiInvoice
               alertErrorShow={alertErrorShow}
               callbackCreditCardPaymentSuccess={(i: any) => {
-                setInvoice(i.invoice);
-                nextTab();
+                if (redirectAfterSuccessUrl) {
+                  redirectOnSuccess(redirectAfterSuccessUrl, redirectWithValue, i?.invoice?.totalCost);
+                } else {
+                  setInvoice(i.invoice);
+                  nextTab();
+                }
               }}
               classNameMerchiInvoiceButtonDownloadInvoice={
                 classNameMerchiCheckoutButtonDownloadInvoice
