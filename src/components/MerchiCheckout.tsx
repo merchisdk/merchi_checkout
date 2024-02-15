@@ -10,6 +10,7 @@ import TabPaneSubmitted from './TabPaneSubmitted';
 import TabPanePayment from './TabPanePayment';
 import TabPaneNewDomain from './TabPaneNewDomain';
 import Alerts from './Alerts';
+import '../styles/globals.css';
 
 interface Props {
   classNameMerchiCheckoutAlertsContainer?: string;

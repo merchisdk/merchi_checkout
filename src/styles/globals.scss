@@ -332,19 +332,6 @@ $textDark: rgb(59, 64, 77);
   border-radius: 1rem;
 }
 
-.merchi-keyvisual {
-  background-image: url('../../public/merchi-jumper-front-back.png');
-}
-
-.footer-img-merchi-swipe {
-  background-image: url('../../public/merchi-swipe-outline.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  height: 100%;
-  width: 100%;
-  min-height: 100px;
-}
-
 .spinner,
 .fade.in .spinner-small {
   -webkit-animation: none !important;
@@ -359,7 +346,7 @@ $textDark: rgb(59, 64, 77);
   width: 100px !important;
   top: 45%;
   left: 48%;
-  background: url('../../public/merchi-monster-loader.gif');
+  background: url('../assets/merchi-monster-loader.gif');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 150px 150px;
@@ -372,7 +359,7 @@ $textDark: rgb(59, 64, 77);
 .spinner-merchi-small {
   height: 100px !important;
   width: 100px !important;
-  background: url('../../public/merchi-monster-loader.gif');
+  background: url('../assets/merchi-monster-loader.gif');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 150px 150px;

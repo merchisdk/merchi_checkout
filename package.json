@@ -1,13 +1,14 @@
 {
   "name": "merchi_checkout",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Merchi's custom checkout step form",
   "main": "lib/index.js",
   "module": "src/index.tsx",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "babel src --out-dir lib --extensions .ts,.tsx --source-maps inline --verbose --copy-files && yarn copy-assets",
+    "build": "babel src --out-dir lib --extensions .ts,.tsx --source-maps inline --verbose --copy-files && yarn copy-assets && yarn compile-sass",
     "copy-assets": "copyfiles -u 1 src/**/*.png lib",
+    "compile-sass": "sass src/styles/globals.scss lib/styles/globals.css",
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -52,8 +53,10 @@
     "@types/react-dom": "18.2.7",
     "@types/uuid": "^9.0.5",
     "copyfiles": "^2.4.1",
+    "compile-sass": "^2.0.0",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.16",
+    "sass": "^1.70.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {
