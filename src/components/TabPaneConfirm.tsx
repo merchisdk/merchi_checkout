@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { useState } from 'react';
 import { submitBuyNow, submitQuoteRequest } from '../actions/confirm';
 import TabPane from './TabPane';
@@ -174,6 +175,7 @@ function TabPaneConfirm() {
     redirectWithValue,
     setInvoice,
     setJob,
+    showDiscountCode,
     urlApi,
   } = useMerchiCheckboutContext();
   const [loading, setLoading] = useState(false);
@@ -223,7 +225,7 @@ function TabPaneConfirm() {
   return (
     <TabPane tabId={tabIdConfirm}>
       <TitleStep title='Confirm - Quote Summary' />
-      <ConfirmInfo />
+      {showDiscountCode && (<ConfirmInfo />)}
       <FooterButtons
         forceDisabled={false}
         loading={loading}

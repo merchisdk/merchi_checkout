@@ -20,8 +20,15 @@ yarn add merchi_checkout
 
 ### Props
 
+Sure, here's the updated props chart for the `MerchiCheckout` component:
+
+### Props
+Sure, here's the updated props chart for the `MerchiCheckout` component with the new default values:
+
+### Props
+
 | Name                                          | Type                             | Default                                                                     | Description                        |
-|-----------------------------------------------|----------------------------------|-----------------------------------------------------------------------------|------------------------------------|
+|-----------------------------------------------|----------------------------------|-----------------------------------------------------------------------------|-----------------------------------|
 | `classNameMerchiCheckoutAlertsContainer`      | `string?`                        | `"d-flex justify-content-center flex-column alerts-container-sm"`           | `Class for the alerts container`   |
 | `classNameMerchiCheckoutAlert`                | `string?`                        | `"alert alert-dismissible alert-notify"`                                    | `Class for the alert element`      |
 | `classNameMerchiCheckoutAlertError`           | `string?`                        | `"alert-danger"`                                                            | `Class for the danger/error alert` |
@@ -72,3 +79,18 @@ yarn add merchi_checkout
 | `toggleMerchiCheckout`                        | `() => void`                     | None                                                                        | `A toggle function whcih sets the "isOpen" prop`|
 | `urlApi`                                      | `string?`                        | `'https://api.merchi.co/v6/'`                                               | `URL to connect to the Merchi API`|
 | `urlFrontend`                                 | `string?`                        | `'https://merchi.co/'`                                                      | `URL to redirect users to a frontend`|
+| `discountButtonText`                          | `string?`                        | None                                                                        | `Text for the discount button`     |
+| `discountClassName`                           | `string?`                        | `'row g-3 align-items-end'`                                                | `Class for the discount container` |
+| `discountClassNameMainContainer`              | `string?`                        | None                                                                        | `Class for the discount main container` |
+| `discountClassNameButtonItemRemove`           | `string?`                        | `'btn btn-sm btn-link'`                                                    | `Class for the discount button to remove an item` |
+| `discountClassNameButton`                     | `string?`                        | `'btn btn-primary'`                                                        | `Class for the discount button`    |
+| `discountClassNameButtonContainer`            | `string?`                        | `'col-auto'`                                                               | `Class for the discount button container` |
+| `discountClassNameErrorMessage`               | `string?`                        | `'text-danger'`                                                            | `Class for the discount error message` |
+| `discountClassNameInput`                      | `string?`                        | `'form-control'`                                                           | `Class for the discount input`     |
+| `discountClassNameListItem`                   | `string?`                        | `'list-group-item d-flex justify-content-between mt-2'`                    | `Class for the discount list item` |
+| `discountClassNameListItems`                  | `string?`                        | `'list-group'`                                                             | `Class for the discount list items` |
+| `discountClassNameInputContainer`             | `string?`                        | `'col-auto'`                                                               | `Class for the discount input container` |
+| `discountClassNameInputdiscountLabel`         | `string?`                        | `'visually-hidden'`                                                        | `Class for the discount label`     |
+| `discountLabel`                               | `string?`                        | None                                                                        | `Label for the discount input`     |
+| `discountShowAppliedItems`                    | `boolean?`                       | `false`                                                                     | `Show the applied discount items`  |
+| `showDiscountCode`                    | `boolean?`                       | `true`                                                                     | `Show the discount code UI on the confirm tab`  |
