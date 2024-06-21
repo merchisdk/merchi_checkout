@@ -18,6 +18,7 @@ import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import { DraftImagesStatic } from './DraftImageUploaded';
 import JobInfoContent from './JobInfoContent';
 import { SmallCustomerInfo } from './TabPaneCustomer';
+import DiscountInputGroup from './DiscountInputGroup';
 
 interface PropsShippingAddressInfo {
   address: any;
@@ -225,7 +226,7 @@ function TabPaneConfirm() {
   return (
     <TabPane tabId={tabIdConfirm}>
       <TitleStep title='Confirm - Quote Summary' />
-      {showDiscountCode && (<ConfirmInfo />)}
+      {showDiscountCode && (<DiscountInputGroup />)}
       <FooterButtons
         forceDisabled={false}
         loading={loading}

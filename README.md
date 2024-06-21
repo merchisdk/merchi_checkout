@@ -87,9 +87,9 @@ Sure, here's the updated props chart for the `MerchiCheckout` component with the
 | `discountClassNameButtonContainer`            | `string?`                        | `'col-auto'`                                                               | `Class for the discount button container` |
 | `discountClassNameErrorMessage`               | `string?`                        | `'text-danger'`                                                            | `Class for the discount error message` |
 | `discountClassNameInput`                      | `string?`                        | `'form-control'`                                                           | `Class for the discount input`     |
-| `discountClassNameListItem`                   | `string?`                        | `'list-group-item d-flex justify-content-between mt-2'`                    | `Class for the discount list item` |
+| `discountClassNameListItem`                   | `string?`                        | `'list-group-item d-flex align-items-center justify-content-between mt-2'`                    | `Class for the discount list item` |
 | `discountClassNameListItems`                  | `string?`                        | `'list-group'`                                                             | `Class for the discount list items` |
-| `discountClassNameInputContainer`             | `string?`                        | `'col-auto'`                                                               | `Class for the discount input container` |
+| `discountClassNameInputContainer`             | `string?`                        | None                                                               | `Class for the discount input container` |
 | `discountClassNameInputdiscountLabel`         | `string?`                        | `'visually-hidden'`                                                        | `Class for the discount label`     |
 | `discountLabel`                               | `string?`                        | None                                                                        | `Label for the discount input`     |
 | `discountShowAppliedItems`                    | `boolean?`                       | `false`                                                                     | `Show the applied discount items`  |

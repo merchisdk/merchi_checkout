@@ -1,6 +1,6 @@
 {
   "name": "merchi_checkout",
-  "version": "1.0.4a",
+  "version": "1.0.4b",
   "description": "Merchi's custom checkout step form",
   "main": "lib/index.js",
   "module": "src/index.tsx",
@@ -74,7 +74,7 @@
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "merchi_invoice": "^1.0.0",
-    "merchi_sdk_ts": "^1.0.23",
+    "merchi_sdk_ts": "^1.0.24",
     "react": "18.2.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-country-region-selector": "^3.6.1",
