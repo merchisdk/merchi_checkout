@@ -27,7 +27,7 @@ export function CustomerInfo() {
     'Phone number not shown';
 
   return (
-    <div className='modal_merchi-checkout-customer-details text-left'>
+    <div className='modal-merchi-checkout-customer-details text-left'>
       <strong>{name}</strong>
       <p>{emailAddress}</p>
       <p>{phoneNumber}</p>
@@ -39,7 +39,7 @@ export function SmallCustomerInfo() {
   const { classNameMerchiCheckoutButtonPrimary, clearCustomer } =
     useMerchiCheckboutContext();
   return (
-    <div className='w-100 modal_merchi-checkout-customer-card'>
+    <div className='w-100 modal-merchi-checkout-customer-card'>
       <CustomerInfo />
       <div className='mt-2'>
         <button

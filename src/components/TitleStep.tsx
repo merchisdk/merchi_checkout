@@ -8,7 +8,7 @@ interface Props {
 function TitleStep({ title }: Props) {
   const { activeTabIndex, tabs } = useMerchiCheckboutContext();
   return (
-    <div className='modal_merchi-checkout_steps-heading'>
+    <div className='modal-merchi-checkout_steps-heading'>
       <small className='text-muted'>
         Step {activeTabIndex + 1}/{tabs.length}
       </small>

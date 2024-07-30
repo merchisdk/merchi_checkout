@@ -77,21 +77,21 @@ function InputFileUpload({
     <>
       <div {...getRootProps()} className='merchi-dropzone-sign-up'>
         <input {...getInputProps()} disabled={disabled} name={name} />
-        <div className='modal_merchi-checkout_dropzone-text-container'>
-          <div className='modal_merchi-checkout_dropzone-icon-container'>
+        <div className='modal-merchi-checkout_dropzone-text-container'>
+          <div className='modal-merchi-checkout_dropzone-icon-container'>
             {loading ? (
               <CgSpinner
                 style={spinnerStyleFix}
-                className='modal_merchi-checkout_dropzone-icon animate_spin'
+                className='modal-merchi-checkout_dropzone-icon animate_spin'
                 fontSize='1.5rem'
               />
             ) : (
               <FaRegImage
-                className='modal_merchi-checkout_dropzone-icon'
+                className='modal-merchi-checkout_dropzone-icon'
                 fontSize='1.75rem'
               />
             )}
-            <FaPlus className='modal_merchi-checkout_dropzone-icon-plus' />
+            <FaPlus className='modal-merchi-checkout_dropzone-icon-plus' />
           </div>
           <div>
             <div className='text-left'>
@@ -102,13 +102,13 @@ function InputFileUpload({
         </div>
       </div>
       {uploadedFiles && uploadedFiles.length > 0 && (
-        <div className='modal_merchi-checkout_dropzone-image-preview'>
+        <div className='modal-merchi-checkout_dropzone-image-preview'>
           {uploadedFiles.map((file, index) => (
             <img
               key={index}
               src={file.viewUrl}
               alt='Uploaded preview'
-              className='modal_merchi-checkout_dropzone-image-preview-item'
+              className='modal-merchi-checkout_dropzone-image-preview-item'
             />
           ))}
         </div>

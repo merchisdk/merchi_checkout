@@ -92,7 +92,7 @@ function ConfirmAddressAndShipmentInfo() {
   const { job } = useMerchiCheckboutContext();
   const { shipping, shipment } = job;
   return (
-    <div className='text-left px-3 py-3 modal_merchi-checkout-shipment-detail'>
+    <div className='text-left px-3 py-3 modal-merchi-checkout-shipment-detail'>
       <strong>Shipment Detail</strong>
       {shipping && (
         <div className='my-1'>
@@ -105,7 +105,24 @@ function ConfirmAddressAndShipmentInfo() {
   );
 }
 
-export function ConfirmInfo() {
+function DiscountGroupContainer() {
+  const {
+    discountLabel,
+    discountClassNameInputdiscountLabel,
+  } = useMerchiCheckboutContext();
+  return (
+    <div className='text-left py-3 modal-merchi-checkout-discount-code'>
+      {discountLabel && (
+        <strong className={discountClassNameInputdiscountLabel}>
+          {discountLabel}
+        </strong>
+      )}
+      <DiscountInputGroup />
+    </div>
+  );
+}
+
+function ConfirmInfo() {
   const { job, setActiveTabById, tabs } = useMerchiCheckboutContext();
   const { client, ownDrafts, product } = job;
   const isResell = isProductSupplierMOD(product);
@@ -226,7 +243,10 @@ function TabPaneConfirm() {
   return (
     <TabPane tabId={tabIdConfirm}>
       <TitleStep title='Confirm - Quote Summary' />
-      {showDiscountCode && (<DiscountInputGroup />)}
+      <ConfirmInfo />
+      {showDiscountCode && (
+        <DiscountGroupContainer />
+      )}
       <FooterButtons
         forceDisabled={false}
         loading={loading}

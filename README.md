@@ -44,10 +44,10 @@ Sure, here's the updated props chart for the `MerchiCheckout` component with the
 | `classNameMerchiCheckoutFormInput`            | `string?`                        | `"form-control"`                                                            | `Class for input fields`           |
 | `classNameMerchiCheckoutGoogleSuggestList`    | `string?`                        | `"list-group m-b-0"`                                                        | `Class for a list group`           |
 | `classNameMerchiCheckoutGoogleSuggestListItem`| `string?`                        | `"list-group-item cursor-pointer"`                                          | `Class for the list item geo suggest`|
-| `classNameMerchiCheckoutListGroupItemLoader`  | `string?`                        | `"list-group-item modal_merchi-checkout-shipment-option"`                   | `Class for the list item loader`   |
+| `classNameMerchiCheckoutListGroupItemLoader`  | `string?`                        | `"list-group-item modal-merchi-checkout-shipment-option"`                   | `Class for the list item loader`   |
 | `classNameMerchiCheckoutFormLabelCheckbox`    | `string?`                        | None                                                                        | `Class for the checkbox/radio label`|
 | `classNameMerchiCheckoutInputError`           | `string?`                        | `"text-danger"`                                                             | `Class for the input error`        |
-| `classNameMerchiCheckoutListGroup`            | `string?`                        | `"modal_merchi-checkout-shipment-option"`                                   | `Class for the checkout list group`|
+| `classNameMerchiCheckoutListGroup`            | `string?`                        | `"modal-merchi-checkout-shipment-option"`                                   | `Class for the checkout list group`|
 | `classNameMerchiCheckoutListGroupItem`        | `string?`                        | `"list-group-item"`                                                         | `Class for the checkout list group item`|
 | `classNameMerchiCheckoutRow`                  | `string?`                        | `"merchi-row"`                                                              | `Class for a row element`          |
 | `classNameMerchiCheckoutRowColumn`            | `string?`                        | `"merchi-column"`                                                           | `Class for a column element`       |
@@ -80,17 +80,17 @@ Sure, here's the updated props chart for the `MerchiCheckout` component with the
 | `urlApi`                                      | `string?`                        | `'https://api.merchi.co/v6/'`                                               | `URL to connect to the Merchi API`|
 | `urlFrontend`                                 | `string?`                        | `'https://merchi.co/'`                                                      | `URL to redirect users to a frontend`|
 | `discountButtonText`                          | `string?`                        | None                                                                        | `Text for the discount button`     |
-| `discountClassName`                           | `string?`                        | `'row g-3 align-items-end'`                                                | `Class for the discount container` |
+| `discountClassName`                           | `string?`                        | `'d-flex align-items-end'`                                                | `Class for the discount container` |
 | `discountClassNameMainContainer`              | `string?`                        | None                                                                        | `Class for the discount main container` |
 | `discountClassNameButtonItemRemove`           | `string?`                        | `'btn btn-sm btn-link'`                                                    | `Class for the discount button to remove an item` |
 | `discountClassNameButton`                     | `string?`                        | `'btn btn-primary'`                                                        | `Class for the discount button`    |
-| `discountClassNameButtonContainer`            | `string?`                        | `'col-auto'`                                                               | `Class for the discount button container` |
+| `discountClassNameButtonContainer`            | `string?`                        | `''`                                                               | `Class for the discount button container` |
 | `discountClassNameErrorMessage`               | `string?`                        | `'text-danger'`                                                            | `Class for the discount error message` |
 | `discountClassNameInput`                      | `string?`                        | `'form-control'`                                                           | `Class for the discount input`     |
 | `discountClassNameListItem`                   | `string?`                        | `'list-group-item d-flex align-items-center justify-content-between mt-2'`                    | `Class for the discount list item` |
 | `discountClassNameListItems`                  | `string?`                        | `'list-group'`                                                             | `Class for the discount list items` |
 | `discountClassNameInputContainer`             | `string?`                        | None                                                               | `Class for the discount input container` |
-| `discountClassNameInputdiscountLabel`         | `string?`                        | `'visually-hidden'`                                                        | `Class for the discount label`     |
-| `discountLabel`                               | `string?`                        | None                                                                        | `Label for the discount input`     |
-| `discountShowAppliedItems`                    | `boolean?`                       | `false`                                                                     | `Show the applied discount items`  |
-| `showDiscountCode`                    | `boolean?`                       | `true`                                                                     | `Show the discount code UI on the confirm tab`  |
+| `discountClassNameInputdiscountLabel`         | `string?`                        | `'visually-hidden'`                                                | `Class for the discount label`     |
+| `discountLabel`                               | `string?`                        | `'Discount code'`                                                  | `Label for the discount input`     |
+| `discountShowAppliedItems`                    | `boolean?`                       | `false`                                                            | `Show the applied discount items`  |
+| `showDiscountCode`                            | `boolean?`                       | `true`                                                             | `Show the discount code UI on the confirm tab`  |

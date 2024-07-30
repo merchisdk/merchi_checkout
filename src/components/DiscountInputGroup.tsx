@@ -10,21 +10,22 @@ export default function DiscountInputGroup() {
     discountButtonText = 'Apply',
     discountCallbackError,
     discountCallbackSuccess,
-    discountClassName = 'row g-3 align-items-end',
+    discountClassName = 'd-flex align-items-end',
     discountClassNameButton = 'btn btn-primary',
-    discountClassNameButtonContainer = 'col-auto',
+    discountClassNameButtonContainer = '',
     discountClassNameButtonItemRemove = 'btn btn-sm btn-link',
     discountClassNameErrorMessage = 'text-danger',
     discountClassNameInput = 'form-control',
     discountClassNameInputContainer,
-    discountClassNameInputdiscountLabel = 'visually-hidden',
     discountClassNameListItem = 'list-group-item d-flex align-items-center justify-content-between mt-2',
     discountClassNameListItems = 'list-group',
     discountClassNameMainContainer,
-    discountLabel,
     discountShowAppliedItems,
     invoice,
+    job,
     product,
+    setInvoice,
+    setJob,
   } = useMerchiCheckboutContext();
   const merchi = new Merchi();
   const hookForm = useForm({
@@ -53,14 +54,16 @@ export default function DiscountInputGroup() {
     setError({});
     try {
       let url = '';
-      if (invoice) {
-        url = `/invoices/${invoice.id}/check_discount_code/`;
-      }
       if (product) {
         url = `/products/${product.id}/check_discount_code/`;
       }
       const r = await merchi.authenticatedFetch(url, { query });
-      setItems(r.items || []);
+      const items = r.items || [];
+      setItems(items);
+      setJob({...job, items});
+      if (invoice) {
+        setInvoice({...invoice, items});
+      }
       discountCallbackSuccess(r);
     } catch (e: any) {
       setError({message: `Error: ${e.errorMessage || e.message || 'Unexpected error.'}`});
@@ -87,7 +90,6 @@ export default function DiscountInputGroup() {
     <div className={discountClassNameMainContainer}>
       <div className={discountClassName}>
         <div className={discountClassNameInputContainer}>
-          {discountLabel && <label className={discountClassNameInputdiscountLabel}>{discountLabel}</label>}
           <input
             type="text"
             className={discountClassNameInput}
