@@ -30,7 +30,7 @@ function VariationInfoBody({ cost, name, product, value, files, type }: any) {
             files.map((file: any) => (
               <img
                 key={file.viewUrl}
-                className='modal_merchi-checkout-job-info-content-img'
+                className='modal-merchi-checkout-job-info-content-img'
                 src={file.viewUrl}
                 alt={file.name}
               />
@@ -199,7 +199,7 @@ export default function JobInfoContent() {
   const isResell = isProductSupplierMOD(product);
   const hasGroups = variationsGroups.length > 0;
   return (
-    <div className='modal_merchi-checkout-job-info-content'>
+    <div className='modal-merchi-checkout-job-info-content'>
       <strong>{product.name}</strong>
       {variationsGroups.length > 0 && (
         <div

@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { MerchiCheckoutTab } from '../types';
 import { tabsInit } from '../tabs_utils';
@@ -39,6 +40,22 @@ interface IMerchiCheckout {
   clearCustomer: () => void;
   currentUser?: any;
   customer?: any;
+  discountButtonText?: string;
+  discountCallbackError: () => void;
+  discountCallbackSuccess: (items: any[]) => void;
+  discountClassName?: string;
+  discountClassNameMainContainer?: string;
+  discountClassNameButtonItemRemove?: string;
+  discountClassNameButton?: string;
+  discountClassNameButtonContainer?: string;
+  discountClassNameErrorMessage?: string;
+  discountClassNameInput?: string;
+  discountClassNameListItem?: string;
+  discountClassNameListItems?: string;
+  discountClassNameInputContainer?: string;
+  discountClassNameInputdiscountLabel?: string;
+  discountLabel?: string;
+  discountShowAppliedItems?: boolean;
   domain?: any;
   editDraftTemplate: (index: number, draft: any) => void;
   googlePlacesApiKey?: string;
@@ -64,6 +81,7 @@ interface IMerchiCheckout {
   setDomain: (domain: any) => void;
   setInvoice: (invoice: any) => void;
   setJob: (job: any) => void;
+  showDiscountCode?: boolean;
   showUserTermsAndConditions?: boolean;
   tabs: MerchiCheckoutTab[];
   toggleMerchiCheckout: () => void;
@@ -107,6 +125,22 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   clearCustomer() {},
   currentUser: undefined,
   customer: undefined,
+  discountButtonText: undefined,
+  discountCallbackError() {},
+  discountCallbackSuccess() {},
+  discountClassName: undefined,
+  discountClassNameButton: undefined,
+  discountClassNameButtonContainer: undefined,
+  discountClassNameButtonItemRemove: undefined,
+  discountClassNameErrorMessage: undefined,
+  discountClassNameInput: undefined,
+  discountClassNameInputContainer: undefined,
+  discountClassNameInputdiscountLabel: undefined,
+  discountClassNameListItem: undefined,
+  discountClassNameListItems: undefined,
+  discountClassNameMainContainer: undefined,
+  discountLabel: undefined,
+  discountShowAppliedItems: true,
   domain: undefined,
   editDraftTemplate() {},
   googlePlacesApiKey: undefined,
@@ -132,6 +166,7 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   setDomain() {},
   setInvoice() {},
   setJob() {},
+  showDiscountCode: true,
   showUserTermsAndConditions: true,
   tabs: [],
   toggleMerchiCheckout() {},
@@ -173,6 +208,20 @@ interface PropsMerchiProductFormProvider {
   classNameMerchiCheckoutTabPaneContainer?: string;
   classNameMerchiInvoiceButtonPayInvoice?: string;
   currentUser?: any;
+  discountButtonText?: string;
+  discountClassName?: string;
+  discountClassNameMainContainer?: string;
+  discountClassNameButtonItemRemove?: string;
+  discountClassNameButton?: string;
+  discountClassNameButtonContainer?: string;
+  discountClassNameErrorMessage?: string;
+  discountClassNameInput?: string;
+  discountClassNameListItem?: string;
+  discountClassNameListItems?: string;
+  discountClassNameInputContainer?: string;
+  discountClassNameInputdiscountLabel?: string;
+  discountLabel?: string;
+  discountShowAppliedItems?: boolean;
   googlePlacesApiKey?: string;
   googlePlacesLoaded?: boolean;
   hideDrafting?: boolean;
@@ -182,6 +231,7 @@ interface PropsMerchiProductFormProvider {
   isProductEmbedForm?: boolean;
   messageSuccessBuyRequest?: string;
   messageSuccessQuoteRequest?: string;
+  showDiscountCode?: boolean;
   showUserTermsAndConditions?: boolean;
   invoice: any;
   job: any;
@@ -213,10 +263,10 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutFormInput = 'form-control',
   classNameMerchiCheckoutGoogleSuggestList = 'list-group m-b-0',
   classNameMerchiCheckoutGoogleSuggestListItem = 'list-group-item cursor-pointer',
-  classNameMerchiCheckoutListGroupItemLoader = 'list-group-item modal_merchi-checkout-shipment-option',
+  classNameMerchiCheckoutListGroupItemLoader = 'list-group-item modal-merchi-checkout-shipment-option',
   classNameMerchiCheckoutInputError = 'text-danger',
   classNameMerchiCheckoutFormLabelCheckbox = '',
-  classNameMerchiCheckoutListGroup = 'modal_merchi-checkout-shipment-option',
+  classNameMerchiCheckoutListGroup = 'modal-merchi-checkout-shipment-option',
   classNameMerchiCheckoutListGroupItem = 'list-group-item',
   classNameMerchiCheckoutRow = 'merchi-row',
   classNameMerchiCheckoutRowColumn = 'merchi-column',
@@ -227,6 +277,20 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutTabPaneContainer = 'tab-content',
   classNameMerchiInvoiceButtonPayInvoice = 'btn btn-lg btn-primary btn-block',
   currentUser,
+  discountButtonText = 'Apply',
+  discountClassName = 'd-flex align-items-end',
+  discountClassNameButton = 'btn btn-primary',
+  discountClassNameButtonContainer = '',
+  discountClassNameButtonItemRemove = 'btn btn-sm btn-link',
+  discountClassNameErrorMessage = 'text-danger',
+  discountClassNameInput = 'form-control',
+  discountClassNameInputContainer,
+  discountClassNameInputdiscountLabel = 'visually-hidden',
+  discountClassNameListItem = 'list-group-item d-flex align-items-center justify-content-between mt-2',
+  discountClassNameListItems = 'list-group',
+  discountClassNameMainContainer,
+  discountLabel = 'Discount code',
+  discountShowAppliedItems = true,
   googlePlacesApiKey,
   hideDrafting = true,
   includeDomainSignup = false,
@@ -243,6 +307,7 @@ export const MerchiCheckoutProvider = ({
   redirectWithValue,
   setInvoice,
   setJob,
+  showDiscountCode = true,
   showUserTermsAndConditions = true,
   toggleMerchiCheckout,
   urlApi = 'https://api.merchi.co/v6/',
@@ -349,6 +414,12 @@ export const MerchiCheckoutProvider = ({
       }
     }
   }, [googlePlacesApiKey]);
+  function discountCallbackSuccess(items: any[]) {
+    setJob({...job, items});
+  }
+  function discountCallbackError() {
+    setJob({...job, items: []});
+  }
   return (
     <MerchiCheckoutContext.Provider
       value={
@@ -388,6 +459,22 @@ export const MerchiCheckoutProvider = ({
           clearCustomer,
           currentUser,
           customer: job.client || {},
+          discountButtonText,
+          discountCallbackError,
+          discountCallbackSuccess,
+          discountClassName,
+          discountClassNameButton,
+          discountClassNameButtonContainer,
+          discountClassNameButtonItemRemove,
+          discountClassNameErrorMessage,
+          discountClassNameInput,
+          discountClassNameInputContainer,
+          discountClassNameInputdiscountLabel,
+          discountClassNameListItem,
+          discountClassNameListItems,
+          discountClassNameMainContainer,
+          discountLabel,
+          discountShowAppliedItems,
           domain,
           editDraftTemplate,
           googlePlacesLoaded,
@@ -411,6 +498,7 @@ export const MerchiCheckoutProvider = ({
           setDomain,
           setInvoice,
           setJob,
+          showDiscountCode,
           showUserTermsAndConditions,
           tabs,
           toggleMerchiCheckout,

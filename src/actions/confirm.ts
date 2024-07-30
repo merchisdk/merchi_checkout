@@ -5,10 +5,12 @@ import { appendClientToOwnDraft, cleanClientFiles } from '../utils';
 export async function submitBuyNow(urlApi: string, jobJson: any) {
   const clientFiles = cleanClientFiles(jobJson.clientFiles || []);
   const job = appendClientToOwnDraft({...jobJson, clientFiles});
+  const itmes = job?.items || [];
   delete job.billing;
   const invoice = {
     client: job.client,
     shipping: job.billing,
+    itmes,
     jobs: [job],
     shipments: job.shipment ? [job.shipment] : undefined,
   };

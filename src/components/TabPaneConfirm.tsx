@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { useState } from 'react';
 import { submitBuyNow, submitQuoteRequest } from '../actions/confirm';
 import TabPane from './TabPane';
@@ -17,6 +18,7 @@ import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import { DraftImagesStatic } from './DraftImageUploaded';
 import JobInfoContent from './JobInfoContent';
 import { SmallCustomerInfo } from './TabPaneCustomer';
+import DiscountInputGroup from './DiscountInputGroup';
 
 interface PropsShippingAddressInfo {
   address: any;
@@ -90,7 +92,7 @@ function ConfirmAddressAndShipmentInfo() {
   const { job } = useMerchiCheckboutContext();
   const { shipping, shipment } = job;
   return (
-    <div className='text-left px-3 py-3 modal_merchi-checkout-shipment-detail'>
+    <div className='text-left px-3 py-3 modal-merchi-checkout-shipment-detail'>
       <strong>Shipment Detail</strong>
       {shipping && (
         <div className='my-1'>
@@ -103,7 +105,24 @@ function ConfirmAddressAndShipmentInfo() {
   );
 }
 
-export function ConfirmInfo() {
+function DiscountGroupContainer() {
+  const {
+    discountLabel,
+    discountClassNameInputdiscountLabel,
+  } = useMerchiCheckboutContext();
+  return (
+    <div className='text-left py-3 modal-merchi-checkout-discount-code'>
+      {discountLabel && (
+        <strong className={discountClassNameInputdiscountLabel}>
+          {discountLabel}
+        </strong>
+      )}
+      <DiscountInputGroup />
+    </div>
+  );
+}
+
+function ConfirmInfo() {
   const { job, setActiveTabById, tabs } = useMerchiCheckboutContext();
   const { client, ownDrafts, product } = job;
   const isResell = isProductSupplierMOD(product);
@@ -174,6 +193,7 @@ function TabPaneConfirm() {
     redirectWithValue,
     setInvoice,
     setJob,
+    showDiscountCode,
     urlApi,
   } = useMerchiCheckboutContext();
   const [loading, setLoading] = useState(false);
@@ -224,6 +244,9 @@ function TabPaneConfirm() {
     <TabPane tabId={tabIdConfirm}>
       <TitleStep title='Confirm - Quote Summary' />
       <ConfirmInfo />
+      {showDiscountCode && (
+        <DiscountGroupContainer />
+      )}
       <FooterButtons
         forceDisabled={false}
         loading={loading}

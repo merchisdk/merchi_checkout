@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import FooterButtons from './FooterButtons';
 import TabPane from './TabPane';
 import TitleStep from './TitleStep';
