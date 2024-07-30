@@ -93,7 +93,7 @@ export default function DiscountInputGroup() {
           <input
             type="text"
             className={discountClassNameInput}
-            placeholder='discount20,dicoount10'
+            placeholder='discount20,discount10'
             {...register('codes', {required: 'Codes must be provided.'})}
           />
         </div>
