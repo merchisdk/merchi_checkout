@@ -2020,6 +2020,16 @@ input:autofill {
   border-radius: 6px;
 }
 
+.merchi-checkout-discount-code-container {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-align: end !important;
+  -ms-flex-align: end !important;
+  align-items: flex-end !important;
+}
+.merchi-checkout-discount-code-field-container {
+}
 @media(min-width: 500px) {
   .merchi-checkout-tabs-container {
     small {

@@ -80,7 +80,7 @@ Sure, here's the updated props chart for the `MerchiCheckout` component with the
 | `urlApi`                                      | `string?`                        | `'https://api.merchi.co/v6/'`                                               | `URL to connect to the Merchi API`|
 | `urlFrontend`                                 | `string?`                        | `'https://merchi.co/'`                                                      | `URL to redirect users to a frontend`|
 | `discountButtonText`                          | `string?`                        | None                                                                        | `Text for the discount button`     |
-| `discountClassName`                           | `string?`                        | `'d-flex align-items-end'`                                                | `Class for the discount container` |
+| `discountClassName`                           | `string?`                        | `''merchi-checkout-discount-code-container''`                                                | `Class for the discount container` |
 | `discountClassNameMainContainer`              | `string?`                        | None                                                                        | `Class for the discount main container` |
 | `discountClassNameButtonItemRemove`           | `string?`                        | `'btn btn-sm btn-link'`                                                    | `Class for the discount button to remove an item` |
 | `discountClassNameButton`                     | `string?`                        | `'btn btn-primary'`                                                        | `Class for the discount button`    |
@@ -89,7 +89,7 @@ Sure, here's the updated props chart for the `MerchiCheckout` component with the
 | `discountClassNameInput`                      | `string?`                        | `'form-control'`                                                           | `Class for the discount input`     |
 | `discountClassNameListItem`                   | `string?`                        | `'list-group-item d-flex align-items-center justify-content-between mt-2'`                    | `Class for the discount list item` |
 | `discountClassNameListItems`                  | `string?`                        | `'list-group'`                                                             | `Class for the discount list items` |
-| `discountClassNameInputContainer`             | `string?`                        | None                                                               | `Class for the discount input container` |
+| `discountClassNameInputContainer`             | `string?`                        | `merchi-checkout-discount-code-field-container`                                                               | `Class for the discount input container` |
 | `discountClassNameInputdiscountLabel`         | `string?`                        | `'visually-hidden'`                                                | `Class for the discount label`     |
 | `discountLabel`                               | `string?`                        | `'Discount code'`                                                  | `Label for the discount input`     |
 | `discountShowAppliedItems`                    | `boolean?`                       | `false`                                                            | `Show the applied discount items`  |
