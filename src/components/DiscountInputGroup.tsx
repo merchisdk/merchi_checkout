@@ -57,6 +57,9 @@ export default function DiscountInputGroup() {
       if (product) {
         url = `/products/${product.id}/check_discount_code/`;
       }
+      if (job?.totalCost) {
+        query.push(['total_cost', job.totalCost]);
+      }
       const r = await merchi.authenticatedFetch(url, { query });
       const items = r.items || [];
       setItems(items);
