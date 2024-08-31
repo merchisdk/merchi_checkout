@@ -19,6 +19,7 @@ import { DraftImagesStatic } from './DraftImageUploaded';
 import JobInfoContent from './JobInfoContent';
 import { SmallCustomerInfo } from './TabPaneCustomer';
 import DiscountInputGroup from './DiscountInputGroup';
+import { clearMerchiSource } from '../merchi_source';
 
 interface PropsShippingAddressInfo {
   address: any;
@@ -207,6 +208,8 @@ function TabPaneConfirm() {
         });
         if (response.ok) {
           const invoice = await response.json();
+          // clear merchi_source from local storage
+          clearMerchiSource();
           setInvoice({ ...invoice.invoice });
           setLoading(false);
           nextTab();
@@ -219,6 +222,8 @@ function TabPaneConfirm() {
         const response = await submitQuoteRequest((urlApi as string), job);
         if (response.ok) {
           const quote = await response.json();
+          // clear merchi_source from local storage
+          clearMerchiSource();
           let quoteRedirect = redirectAfterQuoteSuccessUrl ?
             String(redirectAfterQuoteSuccessUrl) :
             String(redirectAfterSuccessUrl);
