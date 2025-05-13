@@ -1,14 +1,13 @@
 'use client';
+import React from 'react';
 import { MerchiCheckoutProvider } from './MerchiCheckoutProvider';
 import MerchiCheckoutTabs from './MerchiCheckoutTabs';
 import TabPaneAddress from './TabPaneAddress';
-import TabPaneDrafting from './TabPaneDrafting';
 import TabPaneConfirm from './TabPaneConfirm';
 import TabPaneContainer from './TabPaneContainer';
 import TabPaneCustomer from './TabPaneCustomer';
 import TabPaneSubmitted from './TabPaneSubmitted';
 import TabPanePayment from './TabPanePayment';
-import TabPaneNewDomain from './TabPaneNewDomain';
 import Alerts from './Alerts';
 import '../styles/globals.css';
 
@@ -63,7 +62,6 @@ function MerchiCheckout(props: Props) {
       <MerchiCheckoutTabs />
       <TabPaneContainer>
         <TabPaneCustomer />
-        <TabPaneDrafting />
         <TabPaneAddress />
         <TabPaneConfirm />
         <TabPaneSubmitted />
