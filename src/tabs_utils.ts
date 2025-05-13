@@ -20,12 +20,6 @@ function makeTabData(icon: any, id: string, title: string) {
   } as MerchiCheckoutTab;
 }
 
-export const tabIdDrafting = 'drafting';
-export const tabDrafting = makeTabData(
-  faDraftingCompass,
-  tabIdDrafting,
-  'Customise'
-);
 export const tabIdCustomerInfo = 'customer';
 export const tabCustomerInfo = makeTabData(
   faAddressCard,
@@ -67,9 +61,6 @@ export function tabsProductMOD({
   const clientHasDomain = client && client.hasStore;
   const tabs = {} as any;
   const { needsDrafting } = product;
-  if (!hideDrafting && needsDrafting) {
-    tabs[tabIdDrafting] = { ...tabDrafting, disabled: false };
-  }
   // if the current user doesn't have an account ask them to sign up
   if (!hasClient) {
     tabs[tabIdCustomerInfo] = needsDrafting
@@ -105,9 +96,6 @@ export function tabsProductSupplier({
   const tabs = {} as any;
   const hasClient = client && (client as any).id > 0;
   const { needsDrafting, needsShipping } = product;
-  if (!hideDrafting && needsDrafting) {
-    tabs[tabIdDrafting] = { ...tabDrafting, disabled: false };
-  }
   // if the current user doesn't have an account ask them to sign up
   tabs[tabIdCustomerInfo] =
     needsDrafting && !hideDrafting
@@ -163,6 +151,3 @@ export function tabsInit(settings: TabsInit) {
   );
 }
 
-export function hasDraftTab(tabs: MerchiCheckoutTab[]) {
-  return tabs.find((t: MerchiCheckoutTab) => t.id === tabIdDrafting);
-}

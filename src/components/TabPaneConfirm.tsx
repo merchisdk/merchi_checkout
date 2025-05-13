@@ -7,9 +7,7 @@ import TitleStep from './TitleStep';
 import FooterButtons from './FooterButtons';
 import { currencyTaxAndCost } from './currency';
 import {
-  hasDraftTab,
   tabIdConfirm,
-  tabIdDrafting,
   tabIdCustomerInfo,
   tabIdShipment,
 } from '../tabs_utils';
@@ -157,10 +155,10 @@ function ConfirmInfo() {
           content={<ConfirmAddressAndShipmentInfo />}
         />
       )}
-      {!!(hasDraftTab(tabs) && ownDrafts) && (
+      {ownDrafts?.length > 0 && (
         <ConfirmInfoPanel
           minHeight='0px'
-          onClick={() => setActiveTabById(tabIdDrafting)}
+          onClick={() => null}
           showClickToEdit={false}
           title='Edit'
           content={
