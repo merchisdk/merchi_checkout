@@ -46,13 +46,11 @@ export const tabCompleteQuote = makeTabData(
 export const tabComplete = makeTabData(faThumbsUp, tabIdComplete, 'Complete');
 
 interface TabsProductMOD {
-  hideDrafting?: boolean;
   includeDomainSignup?: boolean;
   job: any;
 }
 
 export function tabsProductMOD({
-  hideDrafting,
   includeDomainSignup,
   job,
 }: TabsProductMOD) {
@@ -80,7 +78,6 @@ export function tabsProductMOD({
 }
 
 interface TabsProductSupplier {
-  hideDrafting?: boolean;
   includeDomainSignup?: boolean;
   isBuyRequest: boolean;
   job: any;
@@ -90,7 +87,6 @@ export function tabsProductSupplier({
   includeDomainSignup,
   job,
   isBuyRequest,
-  hideDrafting,
 }: TabsProductSupplier) {
   const { client, product } = job;
   const tabs = {} as any;
@@ -98,7 +94,7 @@ export function tabsProductSupplier({
   const { needsDrafting, needsShipping } = product;
   // if the current user doesn't have an account ask them to sign up
   tabs[tabIdCustomerInfo] =
-    needsDrafting && !hideDrafting
+    needsDrafting
       ? tabCustomerInfo
       : { ...tabCustomerInfo, disabled: false };
   if (needsShipping) {
@@ -123,13 +119,11 @@ export function tabsProductSupplier({
 interface TabsInit {
   includeDomainSignup?: boolean;
   isBuyRequest?: boolean;
-  hideDrafting?: boolean;
   job: any;
 }
 
 export function tabsInit(settings: TabsInit) {
   const {
-    hideDrafting,
     includeDomainSignup,
     isBuyRequest = false,
     job,
@@ -138,12 +132,11 @@ export function tabsInit(settings: TabsInit) {
   const isSupplierMOD = isProductSupplierMOD(product);
   if (isSupplierMOD) {
     return Object.values(
-      tabsProductMOD({ hideDrafting, includeDomainSignup, job })
+      tabsProductMOD({ includeDomainSignup, job })
     );
   }
   return Object.values(
     tabsProductSupplier({
-      hideDrafting,
       includeDomainSignup,
       isBuyRequest,
       job,

@@ -41,7 +41,6 @@ interface Props {
   classNameMerchiInvoiceButtonPayInvoice?: string;
   currentUser?: any;
   googlePlacesApiKey?: string;
-  hideDrafting?: boolean;
   includeDomainSignup?: boolean;
   invoice: any;
   isBuyRequest?: boolean;
