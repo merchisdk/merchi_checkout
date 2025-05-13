@@ -60,7 +60,6 @@ interface IMerchiCheckout {
   editDraftTemplate: (index: number, draft: any) => void;
   googlePlacesApiKey?: string;
   googlePlacesLoaded?: boolean;
-  hideDrafting?: boolean;
   includeDomainSignup?: boolean;
   invoice: any;
   isBuyRequest?: boolean;
@@ -145,7 +144,6 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   editDraftTemplate() {},
   googlePlacesApiKey: undefined,
   googlePlacesLoaded: false,
-  hideDrafting: false,
   isBuyRequest: false,
   isOpen: false,
   loading: false,
@@ -224,7 +222,6 @@ interface PropsMerchiProductFormProvider {
   discountShowAppliedItems?: boolean;
   googlePlacesApiKey?: string;
   googlePlacesLoaded?: boolean;
-  hideDrafting?: boolean;
   includeDomainSignup?: boolean;
   isBuyRequest?: boolean;
   isOpen: boolean;
@@ -292,7 +289,6 @@ export const MerchiCheckoutProvider = ({
   discountLabel = 'Discount code',
   discountShowAppliedItems = true,
   googlePlacesApiKey,
-  hideDrafting = true,
   includeDomainSignup = false,
   invoice,
   isBuyRequest,
@@ -348,7 +344,6 @@ export const MerchiCheckoutProvider = ({
   function resetTabs() {
     const _tabs = tabsInit({
       job,
-      hideDrafting,
       includeDomainSignup,
       isBuyRequest,
     });

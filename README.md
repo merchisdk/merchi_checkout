@@ -120,7 +120,6 @@ function App() {
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| `hideDrafting` | `boolean?` | `true` | Tells the checkout to hide the customisation tab |
 | `includeDomainSignup` | `boolean?` | `false` | Tells the checkout to hide the domain sign up tab |
 | `showUserTermsAndConditions` | `boolean?` | `true` | Show user terms and conditions |
 | `showDiscountCode` | `boolean?` | `true` | Show the discount code UI on the confirm tab |
