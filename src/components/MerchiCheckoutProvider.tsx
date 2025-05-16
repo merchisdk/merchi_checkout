@@ -18,6 +18,7 @@ interface IMerchiCheckout {
   classNameMerchiCheckoutButtonSecondary?: string;
   classNameMerchiCheckoutButtonSecondaryBlock?: string;
   classNameMerchiCheckoutButtonDownloadInvoice?: string;
+  classNameMerchiCheckoutFooterActionsContainer?: string;
   classNameMerchiCheckoutFormCheckbox?: string;
   classNameMerchiCheckoutFormGroup?: string;
   classNameMerchiCheckoutFormGroupCheckbox?: string;
@@ -32,6 +33,7 @@ interface IMerchiCheckout {
   classNameMerchiCheckoutListGroupItem?: string;
   classNameMerchiCheckoutRow?: string;
   classNameMerchiCheckoutRowColumn?: string;
+  classNameMerchiCheckoutSubtitle?: string;
   classNameMerchiCheckoutTabsContainer?: string;
   classNameMerchiCheckoutTab?: string;
   classNameMerchiCheckoutTabPane?: string;
@@ -103,6 +105,7 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   classNameMerchiCheckoutButtonSecondary: undefined,
   classNameMerchiCheckoutButtonSecondaryBlock: undefined,
   classNameMerchiCheckoutButtonDownloadInvoice: undefined,
+  classNameMerchiCheckoutFooterActionsContainer: undefined,
   classNameMerchiCheckoutFormCheckbox: undefined,
   classNameMerchiCheckoutFormGroup: undefined,
   classNameMerchiCheckoutFormGroupCheckbox: undefined,
@@ -117,6 +120,7 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   classNameMerchiCheckoutListGroupItem: undefined,
   classNameMerchiCheckoutRow: undefined,
   classNameMerchiCheckoutRowColumn: undefined,
+  classNameMerchiCheckoutSubtitle: undefined,
   classNameMerchiCheckoutTabsContainer: undefined,
   classNameMerchiCheckoutTab: undefined,
   classNameMerchiCheckoutTabPane: undefined,
@@ -188,6 +192,7 @@ interface PropsMerchiProductFormProvider {
   classNameMerchiCheckoutButtonSecondary?: string;
   classNameMerchiCheckoutButtonSecondaryBlock?: string;
   classNameMerchiCheckoutButtonDownloadInvoice?: string;
+  classNameMerchiCheckoutFooterActionsContainer?: string;
   classNameMerchiCheckoutFormCheckbox?: string;
   classNameMerchiCheckoutFormGroup?: string;
   classNameMerchiCheckoutFormGroupCheckbox?: string;
@@ -201,6 +206,7 @@ interface PropsMerchiProductFormProvider {
   classNameMerchiCheckoutListGroupItem?: string;
   classNameMerchiCheckoutRow?: string;
   classNameMerchiCheckoutRowColumn?: string;
+  classNameMerchiCheckoutSubtitle?: string;
   classNameMerchiCheckoutTabsContainer?: string;
   classNameMerchiCheckoutFormLabelCheckbox?: string;
   classNameMerchiCheckoutTab?: string;
@@ -257,6 +263,7 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutButtonSecondary = 'btn btn-lg btn-secondary',
   classNameMerchiCheckoutButtonSecondaryBlock = 'btn btn-lg btn-secondary btn-block',
   classNameMerchiCheckoutButtonDownloadInvoice = 'btn btn-lg btn-primary',
+  classNameMerchiCheckoutFooterActionsContainer = 'd-flex justify-content-between mt-4',
   classNameMerchiCheckoutFormCheckbox = 'form-check-input',
   classNameMerchiCheckoutFormGroup = 'form-group',
   classNameMerchiCheckoutFormGroupCheckbox = 'form-check',
@@ -271,6 +278,7 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutListGroupItem = 'list-group-item',
   classNameMerchiCheckoutRow = 'merchi-row',
   classNameMerchiCheckoutRowColumn = 'merchi-column',
+  classNameMerchiCheckoutSubtitle = 'merchi-checkout-subtitle',
   classNameMerchiCheckoutTabsContainer = 'merchi-checkout-tabs-container',
   classNameMerchiCheckoutTab = 'merchi-checkout-tab',
   classNameMerchiCheckoutTabButton = 'btn merchi-checkout-tab-btn',
@@ -436,6 +444,7 @@ export const MerchiCheckoutProvider = ({
           classNameMerchiCheckoutButtonSecondary,
           classNameMerchiCheckoutButtonSecondaryBlock,
           classNameMerchiCheckoutButtonDownloadInvoice,
+          classNameMerchiCheckoutFooterActionsContainer,
           classNameMerchiCheckoutFormCheckbox,
           classNameMerchiCheckoutFormGroup,
           classNameMerchiCheckoutFormGroupCheckbox,
@@ -450,6 +459,7 @@ export const MerchiCheckoutProvider = ({
           classNameMerchiCheckoutListGroupItem,
           classNameMerchiCheckoutRow,
           classNameMerchiCheckoutRowColumn,
+          classNameMerchiCheckoutSubtitle,
           classNameMerchiCheckoutTabsContainer,
           classNameMerchiCheckoutTab,
           classNameMerchiCheckoutTabButton,

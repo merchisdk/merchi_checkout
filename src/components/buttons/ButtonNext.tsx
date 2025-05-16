@@ -1,16 +1,18 @@
 'use client';
+import React from 'react';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import { CgSpinner } from 'react-icons/cg';
 import { FaArrowRight } from 'react-icons/fa';
 
 interface Props {
+  buttonText?: string;
   formId?: string;
   forceDisabled?: boolean;
   loading?: boolean;
   onClick?: () => void;
 }
 
-function ButtonNext({ formId, forceDisabled, loading, onClick }: Props) {
+function ButtonNext({ buttonText = 'Next', formId, forceDisabled, loading, onClick }: Props) {
   const {
     activeTabIndex,
     classNameMerchiCheckoutButtonPrimary,
@@ -33,6 +35,7 @@ function ButtonNext({ formId, forceDisabled, loading, onClick }: Props) {
       disabled={disabled || loading}
       onClick={!formId ? handleButtonClick : undefined}
     >
+      <span style={{ marginRight: '0.5rem' }}>{buttonText}</span>
       {loading ? (
         <CgSpinner fontSize='1.1rem' className='animate_spin' />
       ) : (

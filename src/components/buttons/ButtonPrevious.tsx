@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import { FaArrowLeft } from 'react-icons/fa';
 
@@ -7,7 +8,7 @@ interface Props {
   onClick?: () => void;
 }
 
-function ButtonPrevious({ buttonText = '', onClick }: Props) {
+function ButtonPrevious({ buttonText = 'Back', onClick }: Props) {
   const {
     activeTabIndex,
     classNameMerchiCheckoutButtonPrimary,
@@ -29,8 +30,8 @@ function ButtonPrevious({ buttonText = '', onClick }: Props) {
             }
       }
     >
-      {buttonText}
       <FaArrowLeft fontSize='1.1rem' />
+      <span style={{ marginLeft: '0.5rem' }}>{buttonText}</span>
     </button>
   );
 }

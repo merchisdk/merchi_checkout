@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { debounce } from 'lodash';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -40,7 +41,6 @@ function FormAddresses({ formId }: Props) {
   const [shipmentOptions, setShipmentOptions] = useState([]);
   const hookForm = useForm();
   const {
-    formState: { errors },
     getValues,
     handleSubmit,
     reset,

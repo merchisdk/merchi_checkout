@@ -1,4 +1,6 @@
+import React from 'react';
 import { ButtonNext, ButtonPrevious } from './buttons';
+import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 
 interface Props {
   formId?: string;
@@ -17,8 +19,9 @@ function FooterButtons({
   onClickBack,
   onClickNext,
 }: Props) {
+  const { classNameMerchiCheckoutFooterActionsContainer } = useMerchiCheckboutContext();
   return (
-    <div className='d-flex justify-content-between mt-4'>
+    <div className={classNameMerchiCheckoutFooterActionsContainer}>
       <ButtonPrevious onClick={onClickBack} />
       {isActive && (
         <ButtonNext
