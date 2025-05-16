@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createDomainStore } from '../../actions/domain';
@@ -21,6 +22,7 @@ export default function FormDomainNew() {
     job,
     nextTab,
     urlApi,
+    classNameMerchiCheckoutSubtitle,
   } = useMerchiCheckboutContext();
   const { client } = job;
   const [error, setError] = useState(null);
@@ -52,35 +54,37 @@ export default function FormDomainNew() {
   }
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='text-center text-muted mb-4'>
-        <h3>Store details</h3>
-      </div>
-      <div className='d-flex flex-column' style={{ gap: '0.75rem' }}>
-        <InputCheckStoreName
-          control={control}
-          errors={errors}
-        />
-        <InputSelect
-          control={control}
-          name='country'
-          options={countryOptions}
-        />
-        <InputFileUpload
-          control={control}
-          name='logo.id'
-          placeholder='Upload Store Logo'
-          rules={{required: 'A store logo is required.'}}
-        />
-      </div>
-      <InputError error={error || {}} />
-      <div className={classNameMerchiCheckoutFormGroup}>
-        <button
-          className={classNameMerchiCheckoutButtonPrimary}
-          disabled={loading}
-          type='submit'
-        >
-          {loading ? 'Loading...' : 'Submit'}
-        </button>
+      <div className='mt-5 pt-3 w-100 customer-detail-form domain-form'>
+        <div className='mb-4'>
+          <h3 className={classNameMerchiCheckoutSubtitle}>Store details</h3>
+        </div>
+        <div className='d-flex flex-column' style={{ gap: '0.75rem' }}>
+          <InputCheckStoreName
+            control={control}
+            errors={errors}
+          />
+          <InputSelect
+            control={control}
+            name='country'
+            options={countryOptions}
+          />
+          <InputFileUpload
+            control={control}
+            name='logo.id'
+            placeholder='Upload Store Logo'
+            rules={{required: 'A store logo is required.'}}
+          />
+        </div>
+        <InputError error={error || {}} />
+        <div className={classNameMerchiCheckoutFormGroup}>
+          <button
+            className={classNameMerchiCheckoutButtonPrimary}
+            disabled={loading}
+            type='submit'
+          >
+            {loading ? 'Loading...' : 'Submit'}
+          </button>
+        </div>
       </div>
     </form>
   );

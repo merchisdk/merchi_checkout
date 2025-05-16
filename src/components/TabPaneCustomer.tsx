@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import TabPane from './TabPane';
 import TitleStep from './TitleStep';
 import FooterButtons from './FooterButtons';
@@ -69,6 +70,8 @@ function TabPaneCustomer() {
   const { job, includeDomainSignup } = useMerchiCheckboutContext();
   const { client } = job;
   const isActive = isUserRegistered(client);
+  const { classNameMerchiCheckoutSubtitle } = useMerchiCheckboutContext();
+
   return (
     <TabPane tabId={tabIdCustomerInfo}>
       <TitleStep title='Customer - Contact info' />
@@ -82,11 +85,11 @@ function TabPaneCustomer() {
         >
           <div className='w-100 customer-detail-form'>
             <div className='mt-1 mb-5'>
-              <h5 className='mb-3'>Returning customer</h5>
+              <h5 className={classNameMerchiCheckoutSubtitle}>Returning customer</h5>
               <FormCustomerReturning />
             </div>
             <div>
-              <h5 className='mb-3'>New customer</h5>
+              <h5 className={classNameMerchiCheckoutSubtitle}>New customer</h5>
               <FormCustomerNew />
             </div>
           </div>

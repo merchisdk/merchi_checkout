@@ -72,6 +72,7 @@ function App() {
 | `classNameMerchiCheckoutButtonSecondary` | `string?` | `"btn btn-lg btn-secondary"` | Class for the secondary button |
 | `classNameMerchiCheckoutButtonSecondaryBlock` | `string?` | `"btn btn-lg btn-secondary btn-block"` | Class for the secondary block button |
 | `classNameMerchiCheckoutButtonDownloadInvoice` | `string?` | `"btn btn-lg btn-primary"` | Class for the download invoice button |
+| `classNameMerchiCheckoutFooterActionsContainer` | `string?` | `"d-flex justify-content-between mt-4"` | Class for the footer actions container |
 | `classNameMerchiCheckoutFormCheckbox` | `string?` | `"form-check-input"` | Class for input checkbox or radio |
 | `classNameMerchiCheckoutFormGroup` | `string?` | `"form-group"` | Class for the form group: label, input, checkbox, radio... |
 | `classNameMerchiCheckoutFormGroupCheckbox` | `string?` | `"form-check"` | Class for the checkbox/radio container |
@@ -86,6 +87,7 @@ function App() {
 | `classNameMerchiCheckoutListGroupItem` | `string?` | `"list-group-item"` | Class for the checkout list group item |
 | `classNameMerchiCheckoutRow` | `string?` | `"merchi-row"` | Class for a row element |
 | `classNameMerchiCheckoutRowColumn` | `string?` | `"merchi-column"` | Class for a column element |
+| `classNameMerchiCheckoutSubtitle` | `string?` | `"merchi-checkout-subtitle"` | Class for subtitle elements |
 | `classNameMerchiCheckoutTabsContainer` | `string?` | `"merchi-checkout-tabs-container"` | Class for the tabs container |
 | `classNameMerchiCheckoutTab` | `string?` | `"merchi-checkout-tab"` | Class for the checkout tab element |
 | `classNameMerchiCheckoutTabPane` | `string?` | `"tab-pane"` | Class for the tab pane |

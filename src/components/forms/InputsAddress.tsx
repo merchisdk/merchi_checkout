@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useEffect, useRef } from 'react';
 import Geosuggest from 'react-geosuggest';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -33,6 +34,7 @@ export function InputsAddress({
     googlePlacesLoaded,
     classNameMerchiCheckoutFormGroup,
     classNameMerchiCheckoutFormInput,
+    classNameMerchiCheckoutFormSelect,
     classNameMerchiCheckoutRow,
     classNameMerchiCheckoutRowColumn,
     classNameMerchiCheckoutGoogleSuggestList,
@@ -118,7 +120,7 @@ export function InputsAddress({
                 <CountryDropdown
                   {...field}
                   // value={defaultAddress && defaultAddress.country}
-                  classes={classNameMerchiCheckoutFormInput}
+                  classes={classNameMerchiCheckoutFormSelect}
                   onChange={(val) => {
                     setValue(inputName("country"), val);
                     field.onChange(val);
@@ -143,7 +145,7 @@ export function InputsAddress({
                   // value={defaultAddress && defaultAddress.state}
                   countryValueType="short"
                   country={getValues(inputName("country"))}
-                  classes={classNameMerchiCheckoutFormInput}
+                  classes={classNameMerchiCheckoutFormSelect}
                   onChange={(val) => {
                     setValue(inputName("state"), val);
                     field.onChange(val);
