@@ -46,20 +46,15 @@ function FormAddresses({ formId }: Props) {
     reset,
   } = hookForm;
   const debouncedFetchShippingOptions = debounce(async (address: any) => {
+    onSelectShipment(null);
+    setError(null);
+    setLoading(true);
     try {
-      onSelectShipment(null);
-      setError(null);
-      setLoading(true);
-      const r = await fetchShippingOptions((urlApi as string), address, job);
-      if (r.ok) {
-        const shipmentsJson = await r.json();
-        setShipmentOptions(shipmentsJson.shipments);
-      } else {
-        setError({ message: 'Unable to fetch shipment options' } as any);
-      }
-      setLoading(false);
+      const r = await fetchShippingOptions(address, job);
+      setShipmentOptions(r.shipments);
     } catch (e: any) {
       setError(e);
+    } finally {
       setLoading(false);
     }
   }, 1000);

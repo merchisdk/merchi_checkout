@@ -1,11 +1,15 @@
-import { encodeMerchiApiData } from './helpers';
+import { Merchi } from 'merchi_sdk_ts';
 
-export async function fetchShippingOptions(urlApi: string, addressJson: any, job: any) {
+const merchi = new Merchi();
+
+export async function fetchShippingOptions(addressJson: any, job: any) {
   const { product = {}, quantity = 0 } = job;
-  const formData = encodeMerchiApiData(addressJson);
-  const fetchOptions: any = {method: 'POST', body: formData}
-  return await fetch(
-    `${urlApi}products/${product.id}/shipment_options/?quantity=${quantity}`,
-    fetchOptions,
+  const addressEnt = new merchi.Address()
+    .fromJson(addressJson, {makeDirty: true})
+    .toFormData({_prefix: 'address-0'});
+  const query: any[] = [['quantity', quantity.toString()]];
+  return await merchi.authenticatedFetch(
+    `/products/${(product as any).id}/shipment_options/`,
+    {body: addressEnt, method: 'POST', query}
   );
 }
