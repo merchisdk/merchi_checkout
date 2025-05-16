@@ -76,6 +76,7 @@ function App() {
 | `classNameMerchiCheckoutFormGroup` | `string?` | `"form-group"` | Class for the form group: label, input, checkbox, radio... |
 | `classNameMerchiCheckoutFormGroupCheckbox` | `string?` | `"form-check"` | Class for the checkbox/radio container |
 | `classNameMerchiCheckoutFormInput` | `string?` | `"form-control"` | Class for input fields |
+| `classNameMerchiCheckoutFormSelect` | `string?` | `"form-control"` | Class for select dropdown fields |
 | `classNameMerchiCheckoutGoogleSuggestList` | `string?` | `"list-group m-b-0"` | Class for a list group |
 | `classNameMerchiCheckoutGoogleSuggestListItem` | `string?` | `"list-group-item cursor-pointer"` | Class for the list item geo suggest |
 | `classNameMerchiCheckoutListGroupItemLoader` | `string?` | `"list-group-item modal-merchi-checkout-shipment-option"` | Class for the list item loader |

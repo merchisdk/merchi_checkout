@@ -25,6 +25,7 @@ interface Props {
   classNameMerchiCheckoutFormGroup?: string;
   classNameMerchiCheckoutFormGroupCheckbox?: string;
   classNameMerchiCheckoutFormInput?: string;
+  classNameMerchiCheckoutFormSelect?: string;
   classNameMerchiCheckoutGoogleSuggestList?: string;
   classNameMerchiCheckoutGoogleSuggestListItem?: string;
   classNameMerchiCheckoutInputError?: string;
