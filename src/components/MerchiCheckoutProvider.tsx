@@ -22,6 +22,7 @@ interface IMerchiCheckout {
   classNameMerchiCheckoutFormGroup?: string;
   classNameMerchiCheckoutFormGroupCheckbox?: string;
   classNameMerchiCheckoutFormInput?: string;
+  classNameMerchiCheckoutFormSelect?: string;
   classNameMerchiCheckoutGoogleSuggestList?: string;
   classNameMerchiCheckoutGoogleSuggestListItem?: string;
   classNameMerchiCheckoutListGroupItemLoader?: string;
@@ -106,16 +107,17 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   classNameMerchiCheckoutFormGroup: undefined,
   classNameMerchiCheckoutFormGroupCheckbox: undefined,
   classNameMerchiCheckoutFormInput: undefined,
+  classNameMerchiCheckoutFormSelect: undefined,
   classNameMerchiCheckoutGoogleSuggestList: undefined,
   classNameMerchiCheckoutGoogleSuggestListItem: undefined,
   classNameMerchiCheckoutListGroupItemLoader: undefined,
+  classNameMerchiCheckoutFormLabelCheckbox: undefined,
   classNameMerchiCheckoutInputError: undefined,
   classNameMerchiCheckoutListGroup: undefined,
   classNameMerchiCheckoutListGroupItem: undefined,
   classNameMerchiCheckoutRow: undefined,
   classNameMerchiCheckoutRowColumn: undefined,
   classNameMerchiCheckoutTabsContainer: undefined,
-  classNameMerchiCheckoutFormLabelCheckbox: undefined,
   classNameMerchiCheckoutTab: undefined,
   classNameMerchiCheckoutTabPane: undefined,
   classNameMerchiCheckoutTabPaneContainer: undefined,
@@ -190,6 +192,7 @@ interface PropsMerchiProductFormProvider {
   classNameMerchiCheckoutFormGroup?: string;
   classNameMerchiCheckoutFormGroupCheckbox?: string;
   classNameMerchiCheckoutFormInput?: string;
+  classNameMerchiCheckoutFormSelect?: string;
   classNameMerchiCheckoutGoogleSuggestList?: string;
   classNameMerchiCheckoutGoogleSuggestListItem?: string;
   classNameMerchiCheckoutListGroupItemLoader?: string;
@@ -258,6 +261,7 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutFormGroup = 'form-group',
   classNameMerchiCheckoutFormGroupCheckbox = 'form-check',
   classNameMerchiCheckoutFormInput = 'form-control',
+  classNameMerchiCheckoutFormSelect = 'form-control',
   classNameMerchiCheckoutGoogleSuggestList = 'list-group m-b-0',
   classNameMerchiCheckoutGoogleSuggestListItem = 'list-group-item cursor-pointer',
   classNameMerchiCheckoutListGroupItemLoader = 'list-group-item modal-merchi-checkout-shipment-option',
@@ -436,6 +440,7 @@ export const MerchiCheckoutProvider = ({
           classNameMerchiCheckoutFormGroup,
           classNameMerchiCheckoutFormGroupCheckbox,
           classNameMerchiCheckoutFormInput,
+          classNameMerchiCheckoutFormSelect,
           classNameMerchiCheckoutGoogleSuggestList,
           classNameMerchiCheckoutGoogleSuggestListItem,
           classNameMerchiCheckoutListGroupItemLoader,

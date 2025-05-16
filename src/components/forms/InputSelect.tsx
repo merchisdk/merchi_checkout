@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useController } from 'react-hook-form';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
@@ -26,7 +27,7 @@ function InputSelect({
 }: Props) {
   const {
     classNameMerchiCheckoutFormGroup,
-    classNameMerchiCheckoutFormInput,
+    classNameMerchiCheckoutFormSelect,
   } = useMerchiCheckboutContext();
   const {
     field,
@@ -43,7 +44,7 @@ function InputSelect({
       {label && <label>{label}</label>}
       <select
         {...field}
-        className={`${classNameMerchiCheckoutFormInput} ${invalid && ' is-invalid'}`}
+        className={`${classNameMerchiCheckoutFormSelect} ${invalid && ' is-invalid'}`}
       >
         {options.map((option, index) => (
           <option key={index + uuidv4()} value={option.value}>
