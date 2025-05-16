@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import InputError from './InputError';
@@ -7,7 +8,7 @@ import { useState } from 'react';
 
 const emailValidation = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]/i;
 
-function FormReturningCustomer() {
+function FormCustomerReturning() {
   const {
     classNameMerchiCheckoutFormGroup,
     classNameMerchiCheckoutFormInput,
@@ -58,6 +59,7 @@ function FormReturningCustomer() {
   return (
     <form onSubmit={handleSubmit(submit)}>
       <div className={classNameMerchiCheckoutFormGroup}>
+        <label>Email</label>
         <input
           className={classNameMerchiCheckoutFormInput}
           placeholder='info@example.com'
@@ -90,4 +92,4 @@ function FormReturningCustomer() {
   );
 }
 
-export default FormReturningCustomer;
+export default FormCustomerReturning;

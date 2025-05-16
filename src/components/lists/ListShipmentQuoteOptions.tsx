@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { CgSpinner } from 'react-icons/cg';
@@ -40,7 +41,7 @@ function ShipmentOptionInfo({ shipment }: PropsShipmentOptionInfo) {
       {!name ? (
         <>
           {!!transportCompanyName && (
-            <p className='mb-0'>{shipmentMethod.name}</p>
+            <div className='shipment-option-name'>{shipmentMethod.name}</div>
           )}
           {pickUp ? (
             <PickupInfo originAddress={originAddress} />
@@ -50,7 +51,7 @@ function ShipmentOptionInfo({ shipment }: PropsShipmentOptionInfo) {
         </>
       ) : (
         <>
-          <p className='m-0'>{name}</p>
+          <div className='shipment-option-name'>{name}</div>
           {pickUp && <PickupInfo originAddress={originAddress} />}
         </>
       )}
@@ -88,7 +89,7 @@ function ListItemShipmentQuoteOption({
       >
         <ShipmentOptionInfo shipment={shipment} />
         <div>
-          {isSelected && <FontAwesomeIcon color='white' icon={faCheck} />}
+          {isSelected && <FontAwesomeIcon icon={faCheck} />}
         </div>
       </div>
     </div>
