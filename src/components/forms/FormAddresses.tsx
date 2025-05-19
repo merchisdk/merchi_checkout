@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import InputsAddress from './InputsAddress';
 import CheckboxBillingAddressSameAsShippingAddress from './CheckboxBillingAddressSameAsShippingAddress';
-import { fetchShippingOptions } from '../../actions/shipping';
 import InputError from './InputError';
 import { ListShipmentQuoteOptions } from '../lists';
 
@@ -31,7 +30,7 @@ interface Props {
 }
 
 function FormAddresses({ formId }: Props) {
-  const { job, nextTab, setJob, urlApi } = useMerchiCheckboutContext();
+  const { job, merchi, nextTab, setJob } = useMerchiCheckboutContext();
   const [
     billingAddressSameAsShippingAddress,
     setBillingAddressSameAsShippingAddress,
@@ -50,7 +49,15 @@ function FormAddresses({ formId }: Props) {
     setError(null);
     setLoading(true);
     try {
-      const r = await fetchShippingOptions(address, job);
+      const { product = {}, quantity = 0 } = job;
+      const addressEnt = new merchi.Address()
+        .fromJson(address, {makeDirty: true})
+        .toFormData({_prefix: 'address-0'});
+      const query: any[] = [['quantity', quantity.toString()]];
+      const r = await merchi.authenticatedFetch(
+        `/products/${(product as any).id}/shipment_options/`,
+        {body: addressEnt, method: 'POST', query}
+      );
       setShipmentOptions(r.shipments);
     } catch (e: any) {
       setError(e);

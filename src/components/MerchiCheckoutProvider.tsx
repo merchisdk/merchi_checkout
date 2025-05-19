@@ -3,6 +3,7 @@ import * as React from 'react';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { MerchiCheckoutTab } from '../types';
 import { tabsInit } from '../tabs_utils';
+import { Merchi } from 'merchi_sdk_ts';
 
 interface IMerchiCheckout {
   activeTabIndex: number;
@@ -71,6 +72,7 @@ interface IMerchiCheckout {
   isProductEmbedForm?: boolean;
   job: any;
   loading: boolean;
+  merchi: Merchi;
   messageSuccessBuyRequest?: string;
   messageSuccessQuoteRequest?: string;
   nextTab: () => void;
@@ -155,6 +157,7 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   isBuyRequest: false,
   isOpen: false,
   loading: false,
+  merchi: undefined,
   messageSuccessBuyRequest: undefined,
   messageSuccessQuoteRequest: undefined,
   nextTab() {},
@@ -331,6 +334,7 @@ export const MerchiCheckoutProvider = ({
   const [domain, setDomain] = useState(null);
   const [tabs, setTabs] = useState([] as any[]);
   const [googlePlacesLoaded, setGoogleMapsLoaded] = useState(false);
+  const merchi = new Merchi(undefined, undefined, undefined, undefined, urlApi);
   function editDraftTemplate(index: number, draft: any) {
     const jobJson = { ...job };
     const draftTemplates = product.draftTemplates || [];
@@ -500,6 +504,7 @@ export const MerchiCheckoutProvider = ({
           isProductEmbedForm,
           job,
           loading,
+          merchi,
           messageSuccessBuyRequest,
           messageSuccessQuoteRequest,
           nextTab,

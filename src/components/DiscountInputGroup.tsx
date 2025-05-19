@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { Merchi } from 'merchi_sdk_ts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleNotch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
@@ -23,11 +22,11 @@ export default function DiscountInputGroup() {
     discountShowAppliedItems,
     invoice,
     job,
+    merchi,
     product,
     setInvoice,
     setJob,
   } = useMerchiCheckboutContext();
-  const merchi = new Merchi();
   const hookForm = useForm({
     defaultValues: { codes: '' },
   });
