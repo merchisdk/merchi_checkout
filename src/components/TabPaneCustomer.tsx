@@ -37,20 +37,20 @@ export function CustomerInfo() {
 }
 
 export function SmallCustomerInfo() {
-  const { classNameMerchiCheckoutButtonPrimary, clearCustomer } =
-    useMerchiCheckboutContext();
+  const {
+    classNameMerchiCheckoutButtonPrimary,
+    clearCustomer,
+  } = useMerchiCheckboutContext();
   return (
     <div className='w-100 modal-merchi-checkout-customer-card'>
       <CustomerInfo />
-      <div className='mt-2'>
-        <button
-          className={classNameMerchiCheckoutButtonPrimary}
-          onClick={clearCustomer}
-        >
-          <BiUserCircle fontSize='1rem' style={{ marginRight: '0.25rem' }} />{' '}
-          Change
-        </button>
-      </div>
+      <button
+        className={classNameMerchiCheckoutButtonPrimary}
+        onClick={clearCustomer}
+      >
+        <BiUserCircle fontSize='1rem' style={{ marginRight: '0.25rem' }} />{' '}
+        Change
+      </button>
     </div>
   );
 }

@@ -52,7 +52,7 @@ function ShipmentOptionInfoConfirm({
         <p className='mb-0'>{name}</p>
       </div>
       <div className='mt-3 pt-2 total-order-cost-container'>
-        <small className='mb-1 d-block'>Shipment Cost</small>
+        <small className='mb-1 d-block'>Shipment Cost</small>{' '}
         <strong className='mb-0'>
           {currencyTaxAndCost(currency, taxType, shipment.cost)}
         </strong>
@@ -76,9 +76,12 @@ export function ConfirmInfoPanel({
   showClickToEdit,
 }: PropsConfirmInfoPanel) {
   const cursor = showClickToEdit ? 'pointer' : 'auto';
+  const {
+    classNameMerchiCheckoutConfirmInfoPanel
+  } = useMerchiCheckboutContext();
   return (
     <div
-      className='d-flex align-items-center'
+      className={classNameMerchiCheckoutConfirmInfoPanel}
       style={{ cursor, minHeight }}
       onClick={onClick}
     >
@@ -122,7 +125,7 @@ function DiscountGroupContainer() {
 }
 
 function ConfirmInfo() {
-  const { job, setActiveTabById, tabs } = useMerchiCheckboutContext();
+  const { job, setActiveTabById } = useMerchiCheckboutContext();
   const { client, ownDrafts, product } = job;
   const isResell = isProductSupplierMOD(product);
   const needsShipping = product && product.needsShipping;

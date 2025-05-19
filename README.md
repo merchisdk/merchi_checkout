@@ -72,6 +72,7 @@ function App() {
 | `classNameMerchiCheckoutButtonSecondary` | `string?` | `"btn btn-lg btn-secondary"` | Class for the secondary button |
 | `classNameMerchiCheckoutButtonSecondaryBlock` | `string?` | `"btn btn-lg btn-secondary btn-block"` | Class for the secondary block button |
 | `classNameMerchiCheckoutButtonDownloadInvoice` | `string?` | `"btn btn-lg btn-primary"` | Class for the download invoice button |
+| `classNameMerchiCheckoutConfirmInfoPanel` | `string?` | `"d-flex align-items-center"` | Class for the confirmation information panel |
 | `classNameMerchiCheckoutFooterActionsContainer` | `string?` | `"d-flex justify-content-between mt-4"` | Class for the footer actions container |
 | `classNameMerchiCheckoutFormCheckbox` | `string?` | `"form-check-input"` | Class for input checkbox or radio |
 | `classNameMerchiCheckoutFormGroup` | `string?` | `"form-group"` | Class for the form group: label, input, checkbox, radio... |
