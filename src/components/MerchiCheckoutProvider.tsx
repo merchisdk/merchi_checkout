@@ -18,6 +18,7 @@ interface IMerchiCheckout {
   classNameMerchiCheckoutButtonSecondary?: string;
   classNameMerchiCheckoutButtonSecondaryBlock?: string;
   classNameMerchiCheckoutButtonDownloadInvoice?: string;
+  classNameMerchiCheckoutConfirmInfoPanel?: string;
   classNameMerchiCheckoutFooterActionsContainer?: string;
   classNameMerchiCheckoutFormCheckbox?: string;
   classNameMerchiCheckoutFormGroup?: string;
@@ -105,6 +106,7 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   classNameMerchiCheckoutButtonSecondary: undefined,
   classNameMerchiCheckoutButtonSecondaryBlock: undefined,
   classNameMerchiCheckoutButtonDownloadInvoice: undefined,
+  classNameMerchiCheckoutConfirmInfoPanel: undefined,
   classNameMerchiCheckoutFooterActionsContainer: undefined,
   classNameMerchiCheckoutFormCheckbox: undefined,
   classNameMerchiCheckoutFormGroup: undefined,
@@ -192,6 +194,7 @@ interface PropsMerchiProductFormProvider {
   classNameMerchiCheckoutButtonSecondary?: string;
   classNameMerchiCheckoutButtonSecondaryBlock?: string;
   classNameMerchiCheckoutButtonDownloadInvoice?: string;
+  classNameMerchiCheckoutConfirmInfoPanel?: string;
   classNameMerchiCheckoutFooterActionsContainer?: string;
   classNameMerchiCheckoutFormCheckbox?: string;
   classNameMerchiCheckoutFormGroup?: string;
@@ -263,6 +266,7 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutButtonSecondary = 'btn btn-lg btn-secondary',
   classNameMerchiCheckoutButtonSecondaryBlock = 'btn btn-lg btn-secondary btn-block',
   classNameMerchiCheckoutButtonDownloadInvoice = 'btn btn-lg btn-primary',
+  classNameMerchiCheckoutConfirmInfoPanel = 'd-flex align-items-center',
   classNameMerchiCheckoutFooterActionsContainer = 'd-flex justify-content-between mt-4',
   classNameMerchiCheckoutFormCheckbox = 'form-check-input',
   classNameMerchiCheckoutFormGroup = 'form-group',
@@ -444,6 +448,7 @@ export const MerchiCheckoutProvider = ({
           classNameMerchiCheckoutButtonSecondary,
           classNameMerchiCheckoutButtonSecondaryBlock,
           classNameMerchiCheckoutButtonDownloadInvoice,
+          classNameMerchiCheckoutConfirmInfoPanel,
           classNameMerchiCheckoutFooterActionsContainer,
           classNameMerchiCheckoutFormCheckbox,
           classNameMerchiCheckoutFormGroup,

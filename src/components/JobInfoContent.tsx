@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { formatCurrency, currencyTotalCostShowIncTax } from './currency';
 import {
   isInstructionsType,
@@ -161,7 +162,7 @@ function VariationGroupInfo({ group, index, product, groupArrayLength }: any) {
         <div className='pt-2'>
           {!!(variations && variations.length) && (
             <div>
-              <strong>Group {index + 1} Detail</strong>
+              <strong>Group {index + 1} Detail</strong>{' '}
             </div>
           )}
           <VariationsInfo
@@ -179,7 +180,7 @@ function VariationGroupInfo({ group, index, product, groupArrayLength }: any) {
             }}
           >
             <strong className='mb-0 float-left float-start'>
-              {isResell ? 'Unit' : `Group`} Cost
+              {isResell ? 'Unit' : `Group`} Cost {' '}
             </strong>
             <strong className='mb-0 ml-2 float-right float-end'>
               {formatCost(product, group.groupCost)}
@@ -208,7 +209,7 @@ export default function JobInfoContent() {
         >
           {variationsGroups.map((g: any, i: number) =>
             g.quantity ? (
-              <div className='w-100' key={i + 'jonb-info-content'}>
+              <div className='w-100' key={`${i}-job-info-content`}>
                 <VariationGroupInfo
                   groupArrayLength={variationsGroups.length}
                   group={g}
@@ -239,9 +240,9 @@ export default function JobInfoContent() {
           </div>
           {!isResell && (
             <div className='pt-2 mt-3 total-order-cost-container'>
-              <small className='mb-0'>Total Order Cost</small>
+              <small className='mb-0'>Total Order Cost</small>{' '}
               {needsShipping && (
-                <small className='mb-0 ml-1 font-italic'>ex Shipment</small>
+                <><small className='mb-0 ml-1 font-italic'>ex Shipment</small>{' '}</>
               )}
               <strong className='mb-0 d-block'>{totalCost}</strong>
             </div>
