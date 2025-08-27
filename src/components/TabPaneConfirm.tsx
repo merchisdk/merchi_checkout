@@ -205,8 +205,9 @@ function TabPaneConfirm() {
       if (isBuyRequest) {
         const response = await submitBuyNow(
           (urlApi as string),
-          { ...job, product: { id: product.id },
-        });
+          {
+            ...job, product: { id: product.id },
+          });
         if (response.ok) {
           const invoice = await response.json();
           // clear merchi_source from local storage
@@ -225,13 +226,14 @@ function TabPaneConfirm() {
           const quote = await response.json();
           // clear merchi_source from local storage
           clearMerchiSource();
-          let quoteRedirect = redirectAfterQuoteSuccessUrl ?
-            String(redirectAfterQuoteSuccessUrl) :
-            String(redirectAfterSuccessUrl);
+          const rawRedirect = redirectAfterQuoteSuccessUrl ?? redirectAfterSuccessUrl;
+          const quoteRedirect =
+            typeof rawRedirect === 'string' ? rawRedirect.trim() : '';
+
           if (quoteRedirect) {
             redirectOnSuccess(quoteRedirect, redirectWithValue, quote.job.totalCost);
           } else {
-            setJob({ ...job, id: quote.job.id });
+            setJob(prev => ({ ...prev, id: quote.job.id }));
             setLoading(false);
             nextTab();
           }
