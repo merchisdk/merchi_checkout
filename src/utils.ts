@@ -250,12 +250,12 @@ export const isoCountries: any = {
 
 export function userDomainsByRoles(user: any, roles: Array<number>) {
   const eD = user && user.enrolledDomains ? user.enrolledDomains : [];
-  const domains = [];
+  const domains: any[] = [];
   let i = 0;
   for (i; i < eD.length; i++) {
     const e = eD[i];
     if (roles.includes(e.role)) {
-      domains.push(e.domain);
+      domains.push((e as any).domain);
     }
   }
   return domains;
@@ -315,26 +315,25 @@ export const phoneOptions = Object.keys(supportedNumbers).map((key) => ({
   label: supportedNumbers[key],
 }));
 
-export const addressComponentsSettings: any = {
-  administrative_area_level_1: 'short_name',
-  administrative_area_level_2: 'short_name',
-  country: 'short_name',
-  establishment: 'long_name',
-  floor: 'short_name',
-  locality: 'long_name',
-  postal_code: 'short_name',
-  premise: 'short_name',
-  room: 'long_name',
-  route: 'short_name',
-  street_number: 'short_name',
-  sublocality: 'long_name',
-  subpremise: 'short_name',
+export const addressComponentsSettingsBackend: any = {
+  administrative_area_level_1: 'shortName',
+  administrative_area_level_2: 'shortName',
+  country: 'shortName',
+  establishment: 'longName',
+  floor: 'shortName',
+  locality: 'longName',
+  postal_code: 'shortName',
+  premise: 'shortName',
+  room: 'longName',
+  route: 'shortName',
+  street_number: 'shortName',
+  sublocality: 'longName',
+  subpremise: 'shortName',
 };
 
-export function geoSuggestResultAsNewAddress(resp: any) {
-  const addressComponents = resp && resp.gmaps ?
-    resp.gmaps.address_components : null;
-  const name = resp && resp.gmaps && resp.gmaps.name;
+export function googlePlacesResultAsNewAddress(placeDetails: any) {
+  const addressComponents = placeDetails?.addressComponents || [];
+  const name = placeDetails?.name || '';
   const address = {
     city: '',
     country: '',
@@ -343,15 +342,25 @@ export function geoSuggestResultAsNewAddress(resp: any) {
     postcode: '',
     state: '',
   };
-  let i;
-  if (addressComponents) {
-    for (i = 0; i < addressComponents.length; i++) {
+
+  if (addressComponents && addressComponents.length > 0) {
+    for (let i = 0; i < addressComponents.length; i++) {
       const addrComponent = addressComponents[i];
       const addrTypes = addrComponent.types;
-      const addrType = addrTypes.length > 0 ? addrTypes[0] : null;
-      const componentSetting = addrType ?
-        addressComponentsSettings[addrType] : null;
-      if (componentSetting) {
+      
+      // Find the first relevant type that we have a setting for
+      let addrType = null;
+      let componentSetting = null;
+      
+      for (const type of addrTypes) {
+        if (addressComponentsSettingsBackend[type]) {
+          addrType = type;
+          componentSetting = addressComponentsSettingsBackend[type];
+          break;
+        }
+      }
+
+      if (componentSetting && addrType) {
         const addressVal = addrComponent[componentSetting];
         switch (addrType) {
           case 'establishment':
@@ -363,19 +372,21 @@ export function geoSuggestResultAsNewAddress(resp: any) {
           case 'route':
             const oldLineOne = address.lineOne;
             address.lineOne = oldLineOne.includes(addressVal) ?
-              oldLineOne : `${oldLineOne} ${addressVal}`;
+              oldLineOne : `${oldLineOne} ${addressVal}`.trim();
             break;
           case 'locality':
           case 'sublocality':
-            const oldCity = address.city ? `${address.city} ` : ''
-            address.city = oldCity + addressVal;
+            const oldCity = address.city ? `${address.city} ` : '';
+            address.city = (oldCity + addressVal).trim();
             break;
           case 'administrative_area_level_1':
+
             address.state = addressVal;
             break;
           case 'administrative_area_level_2':
             break;
           case 'country':
+
             address.country = addressVal;
             break;
           case 'postal_code':
@@ -386,8 +397,19 @@ export function geoSuggestResultAsNewAddress(resp: any) {
         }
       }
     }
+
+    // Clean up line one if it's empty and we have a formatted address
+    if (!address.lineOne.trim() && placeDetails?.formattedAddress) {
+      // Try to extract street address from formatted address
+      const parts = placeDetails.formattedAddress.split(',');
+      if (parts.length > 0) {
+        address.lineOne = parts[0].trim();
+      }
+    }
+
     return address;
   }
+
   return null;
 }
 

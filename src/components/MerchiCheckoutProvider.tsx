@@ -63,8 +63,6 @@ interface IMerchiCheckout {
   discountShowAppliedItems?: boolean;
   domain?: any;
   editDraftTemplate: (index: number, draft: any) => void;
-  googlePlacesApiKey?: string;
-  googlePlacesLoaded?: boolean;
   includeDomainSignup?: boolean;
   invoice: any;
   isBuyRequest?: boolean;
@@ -152,8 +150,6 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   discountShowAppliedItems: true,
   domain: undefined,
   editDraftTemplate() {},
-  googlePlacesApiKey: undefined,
-  googlePlacesLoaded: false,
   isBuyRequest: false,
   isOpen: false,
   loading: false,
@@ -235,8 +231,6 @@ interface PropsMerchiProductFormProvider {
   discountClassNameInputdiscountLabel?: string;
   discountLabel?: string;
   discountShowAppliedItems?: boolean;
-  googlePlacesApiKey?: string;
-  googlePlacesLoaded?: boolean;
   includeDomainSignup?: boolean;
   isBuyRequest?: boolean;
   isOpen: boolean;
@@ -307,7 +301,6 @@ export const MerchiCheckoutProvider = ({
   discountClassNameMainContainer,
   discountLabel = 'Discount code',
   discountShowAppliedItems = true,
-  googlePlacesApiKey,
   includeDomainSignup = false,
   invoice,
   isBuyRequest,
@@ -333,7 +326,6 @@ export const MerchiCheckoutProvider = ({
   const [alerts, setAlerts] = useState([]);
   const [domain, setDomain] = useState(null);
   const [tabs, setTabs] = useState([] as any[]);
-  const [googlePlacesLoaded, setGoogleMapsLoaded] = useState(false);
   const merchi = new Merchi(undefined, undefined, undefined, undefined, urlApi);
   function editDraftTemplate(index: number, draft: any) {
     const jobJson = { ...job };
@@ -388,14 +380,6 @@ export const MerchiCheckoutProvider = ({
     const index = tabs.findIndex((t: MerchiCheckoutTab) => t.id === tabId);
     setActiveTabIndex(index);
   }
-  // Persistent callback setup
-  if (typeof window !== 'undefined') {
-    if (!(window as any).googleMapsScriptLoaded) {
-      (window as any).googleMapsScriptLoaded = () => {
-        setGoogleMapsLoaded(true);
-      };
-    }
-  }
   useEffect(() => {
     if (job.product && !tabs.length) {
       resetTabs();
@@ -404,31 +388,6 @@ export const MerchiCheckoutProvider = ({
       setCustomer(currentUser || {});
     }
   }, [job]);
-  useEffect(() => {
-    // Use an ID for easier detection
-    if (googlePlacesApiKey) {
-      const scriptId = 'googleMapsScript';
-
-      // Check if the script already exists
-      const existingScript = document.getElementById(scriptId);
-      // Check if any script from maps.googleapis.com already exists in the document
-      const existingScript2 = document.querySelector(
-        `script[src^="https://maps.googleapis.com/maps-api-v3/api/js/"]`
-      );
-
-      if (!existingScript && !existingScript2) {
-        const script = document.createElement('script');
-        script.id = scriptId;
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${googlePlacesApiKey}&libraries=places&callback=googleMapsScriptLoaded`;
-        script.async = true;
-        script.defer = true;
-        // Append the script to the head
-        document.head.appendChild(script);
-      } else {
-        setGoogleMapsLoaded(true);
-      }
-    }
-  }, [googlePlacesApiKey]);
   function discountCallbackSuccess(items: any[]) {
     setJob({...job, items});
   }
@@ -496,7 +455,6 @@ export const MerchiCheckoutProvider = ({
           discountShowAppliedItems,
           domain,
           editDraftTemplate,
-          googlePlacesLoaded,
           includeDomainSignup,
           invoice,
           isBuyRequest,
