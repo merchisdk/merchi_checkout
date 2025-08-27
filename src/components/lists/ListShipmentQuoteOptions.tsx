@@ -74,9 +74,8 @@ function ListItemShipmentQuoteOption({
   const { classNameMerchiCheckoutListGroupItem } = useMerchiCheckboutContext();
   return (
     <div
-      className={`${classNameMerchiCheckoutListGroupItem} ${
-        isSelected ? 'active' : ''
-      }`}
+      className={`${classNameMerchiCheckoutListGroupItem} ${isSelected ? 'active' : ''
+        }`}
       style={{ cursor: 'pointer' }}
       onClick={doSelect}
     >
@@ -137,24 +136,42 @@ function ListShipmentQuoteOptions({
   shipmentOptions,
 }: Props) {
   const { classNameMerchiCheckoutListGroup } = useMerchiCheckboutContext();
-  const index = selectedOption
-    ? shipmentOptions
-        .map((s: any) => s.shipment)
-        .findIndex((item: any) => item.id === (selectedOption as any).id)
+
+  const getShipKey = (ship: any) => {
+    const m = ship?.shipmentMethod;
+    const id =
+      ship?.id ??
+      ship?.quoteId ??
+      m?.id;
+    if (id != null) return String(id);
+    const signature = `${m?.name ?? ''}|${ship?.transportCompanyName ?? ''}|${m?.pickUp ? 'P' : 'D'
+      }`;
+    return signature;
+  };
+
+  const selectedKey = selectedOption
+    ? getShipKey((selectedOption as any).shipment ?? selectedOption)
     : null;
+
   return (
     <div className={classNameMerchiCheckoutListGroup}>
       {loading ? (
         <ListItemLoading />
       ) : shipmentOptions.length ? (
-        shipmentOptions.map((s: any, i: number) => (
-          <ListItemShipmentQuoteOption
-            doSelect={() => doSelectShipmentOption(s.shipment)}
-            isSelected={index === i}
-            shipment={s.shipment}
-            key={`${i}-option`}
-          />
-        ))
+        shipmentOptions.map((s: any, i: number) => {
+          const ship = s.shipment;
+          const k = getShipKey(ship);
+          const isSelected = selectedKey !== null && k === selectedKey;
+
+          return (
+            <ListItemShipmentQuoteOption
+              doSelect={() => doSelectShipmentOption(ship)}
+              isSelected={isSelected}
+              shipment={ship}
+              key={k}
+            />
+          );
+        })
       ) : (
         <ListItemNoOptions />
       )}

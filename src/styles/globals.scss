@@ -1989,6 +1989,7 @@ input:autofill {
   align-items: center;
   display: flex;
   justify-content: space-between;
+
   small {
     display: none;
   }
@@ -2028,8 +2029,9 @@ input:autofill {
   -ms-flex-align: end !important;
   align-items: flex-end !important;
 }
-.merchi-checkout-discount-code-field-container {
-}
+
+.merchi-checkout-discount-code-field-container {}
+
 @media(min-width: 500px) {
   .merchi-checkout-tabs-container {
     small {
@@ -2043,11 +2045,11 @@ input:autofill {
     justify-content: start;
     gap: 2rem;
   }
-  
+
   .merchi-checkout-tab {
     text-align: center;
   }
-  
+
   .merchi-checkout-tab-btn {
     padding: 0.75rem 1.25rem;
   }
@@ -2069,12 +2071,15 @@ input:autofill {
   &_merchi-checkout {
     max-width: calc(100% - 15px);
     margin: 0 0.5rem;
+
     .modal-content {
       top: 0.5rem;
     }
+
     @media (min-width: 900px) {
       margin: 0 auto;
       max-width: 900px;
+
       .modal-content {
         top: 3rem;
       }
@@ -2088,9 +2093,11 @@ input:autofill {
       padding: 0.5rem 1rem;
       width: fit-content;
       margin-bottom: 1rem;
+
       small {
         margin-bottom: 0;
       }
+
       h5 {
         font-size: 1rem !important;
       }
@@ -2213,6 +2220,7 @@ input:autofill {
       border-radius: 0.5rem;
       margin-top: 1rem;
     }
+
     &-discount-code {
       padding: 1rem;
       background: #f8f8f8;
@@ -2226,7 +2234,7 @@ input:autofill {
  Invoice
  ************** */
 
- .merchi {
+.merchi {
   &_invoice {
     &-container {
       &-icons {
@@ -2236,4 +2244,4 @@ input:autofill {
       }
     }
   }
- }
+}

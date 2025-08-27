@@ -142,7 +142,6 @@ function App() {
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
-| `googlePlacesApiKey` | `string?` | None | API key for Google places |
 | `urlApi` | `string?` | `'https://api.merchi.co/v6/'` | URL to connect to the Merchi API |
 | `urlFrontend` | `string?` | `'https://merchi.co/'` | URL to redirect users to a frontend |
 | `redirectAfterSuccessUrl` | `string?` | None | On checkout or job creation this url will be redirected to. Typically used for third party conversion tracking |
@@ -165,23 +164,6 @@ function BasicCheckout() {
       product={productData}
       isOpen={true}
       toggleMerchiCheckout={() => {}}
-    />
-  );
-}
-```
-
-### With Google Places Integration
-```jsx
-import { MerchiCheckout } from 'merchi_checkout';
-
-function CheckoutWithGooglePlaces() {
-  return (
-    <MerchiCheckout
-      invoice={invoiceData}
-      product={productData}
-      isOpen={true}
-      toggleMerchiCheckout={() => {}}
-      googlePlacesApiKey="YOUR_GOOGLE_PLACES_API_KEY"
     />
   );
 }

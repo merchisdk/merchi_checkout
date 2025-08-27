@@ -41,7 +41,6 @@ interface Props {
   classNameMerchiCheckoutTabPaneContainer?: string;
   classNameMerchiInvoiceButtonPayInvoice?: string;
   currentUser?: any;
-  googlePlacesApiKey?: string;
   includeDomainSignup?: boolean;
   invoice: any;
   isBuyRequest?: boolean;
