@@ -15,12 +15,13 @@ function Tab({ index, tab }: PropsTab) {
     setActiveTabIndex,
   } = useMerchiCheckboutContext();
   const { disabled, title } = tab;
-  const classActive = activeTabIndex === index ? 'active' : '';
+  const isActive = activeTabIndex === index;
+  const variantClass = isActive ? 'btn-primary active' : 'btn-outline-primary';
   return (
     <div className={classNameMerchiCheckoutTab}>
       <button
         disabled={disabled}
-        className={`${classNameMerchiCheckoutTabButton} ${classActive}`}
+        className={`${classNameMerchiCheckoutTabButton} ${variantClass}`}
         style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
         onClick={() => {
           if (!disabled) {
