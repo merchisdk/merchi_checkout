@@ -95,8 +95,8 @@ interface IMerchiCheckout {
 const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   activeTabIndex: 0,
   alerts: [],
-  alertClose() {},
-  alertErrorShow() {},
+  alertClose() { },
+  alertErrorShow() { },
   classNameMerchiCheckoutAlertsContainer: undefined,
   classNameMerchiCheckoutAlert: undefined,
   classNameMerchiCheckoutAlertError: undefined,
@@ -129,12 +129,12 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   classNameMerchiCheckoutTabPaneContainer: undefined,
   classNameMerchiCheckoutTabButton: undefined,
   classNameMerchiInvoiceButtonPayInvoice: undefined,
-  clearCustomer() {},
+  clearCustomer() { },
   currentUser: undefined,
   customer: undefined,
   discountButtonText: undefined,
-  discountCallbackError() {},
-  discountCallbackSuccess() {},
+  discountCallbackError() { },
+  discountCallbackSuccess() { },
   discountClassName: undefined,
   discountClassNameButton: undefined,
   discountClassNameButtonContainer: undefined,
@@ -149,14 +149,14 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   discountLabel: undefined,
   discountShowAppliedItems: true,
   domain: undefined,
-  editDraftTemplate() {},
+  editDraftTemplate() { },
   isBuyRequest: false,
   isOpen: false,
   loading: false,
   merchi: undefined,
   messageSuccessBuyRequest: undefined,
   messageSuccessQuoteRequest: undefined,
-  nextTab() {},
+  nextTab() { },
   includeDomainSignup: false,
   invoice: {},
   isProductEmbedForm: false,
@@ -165,16 +165,16 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   redirectAfterSuccessUrl: undefined,
   redirectAfterQuoteSuccessUrl: undefined,
   redirectWithValue: true,
-  setActiveTabById() {},
-  setActiveTabIndex() {},
-  setCustomer() {},
-  setDomain() {},
-  setInvoice() {},
-  setJob() {},
+  setActiveTabById() { },
+  setActiveTabIndex() { },
+  setCustomer() { },
+  setDomain() { },
+  setInvoice() { },
+  setJob() { },
   showDiscountCode: true,
   showUserTermsAndConditions: true,
   tabs: [],
-  toggleMerchiCheckout() {},
+  toggleMerchiCheckout() { },
   urlFrontend: '',
   urlApi: '',
 });
@@ -270,8 +270,8 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutFormGroupCheckbox = 'form-check',
   classNameMerchiCheckoutFormInput = 'form-control',
   classNameMerchiCheckoutFormSelect = 'form-control',
-  classNameMerchiCheckoutGoogleSuggestList = 'list-group m-b-0',
-  classNameMerchiCheckoutGoogleSuggestListItem = 'list-group-item cursor-pointer',
+  classNameMerchiCheckoutGoogleSuggestList = 'merchi-checkout-google-suggest-list',
+  classNameMerchiCheckoutGoogleSuggestListItem = 'merchi-checkout-google-suggest-list-item',
   classNameMerchiCheckoutListGroupItemLoader = 'list-group-item modal-merchi-checkout-shipment-option',
   classNameMerchiCheckoutInputError = 'text-danger',
   classNameMerchiCheckoutFormLabelCheckbox = '',
@@ -389,10 +389,10 @@ export const MerchiCheckoutProvider = ({
     }
   }, [job]);
   function discountCallbackSuccess(items: any[]) {
-    setJob({...job, items});
+    setJob({ ...job, items });
   }
   function discountCallbackError() {
-    setJob({...job, items: []});
+    setJob({ ...job, items: [] });
   }
   return (
     <MerchiCheckoutContext.Provider
@@ -485,7 +485,7 @@ export const MerchiCheckoutProvider = ({
         } as IMerchiCheckout
       }
     >
-      {children}
+      <div className="merchi-checkout">{children}</div>
     </MerchiCheckoutContext.Provider>
   );
 };

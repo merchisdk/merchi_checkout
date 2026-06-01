@@ -5,8 +5,13 @@ import {
   isInstructionsType,
   isProductSupplierMOD,
   isSelectable,
+  FieldType,
 } from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
+import {
+  SummaryAmountRow,
+  SummaryFieldRow,
+} from './CheckoutSummaryFields';
 
 function formatCost(product: any, cost: number) {
   const currency = product.currency ? product.currency : 'AUD';
@@ -16,16 +21,15 @@ function formatCost(product: any, cost: number) {
   });
 }
 
-function ProductCostRow({ job }: any) {
-  const quantity = job ? job.quantity : 0;
-  return <p className='d-block mt-4 mb-0'>Total Quantity: {quantity}</p>;
-}
-
 function VariationInfoBody({ cost, name, product, value, files, type }: any) {
+  const isColourPicker = type === FieldType.COLOUR_PICKER;
+  const displayValue = isColourPicker
+    ? null
+    : value;
   return (
-    <div>
-      <small className='mb-1'>{name}</small>
-      <div className='mb-0'>
+    <div className='merchi-checkout-summary-variation-row'>
+      <div className='merchi-checkout-summary-variation-label'>{name}</div>
+      <div className='merchi-checkout-summary-variation-value'>
         <div className='d-flex' style={{ gap: '0.5rem' }}>
           {files &&
             files.map((file: any) => (
@@ -37,59 +41,19 @@ function VariationInfoBody({ cost, name, product, value, files, type }: any) {
               />
             ))}
         </div>
-        {type === 10 && (
-          <div
-            style={{ backgroundColor: `${value}` }}
-            className='color-indicator'
-          />
+        {isColourPicker && value && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div
+              style={{ backgroundColor: value }}
+              className='color-indicator'
+            />
+            <span>{value}</span>
+          </div>
         )}
-        {value && value} {cost ? `+ ${formatCost(product, cost)}` : ''}
-        {files.length == 0 && !value && '-'}
+        {displayValue && displayValue} {cost ? `+ ${formatCost(product, cost)}` : ''}
+        {!(files?.length) && !value && '-'}
       </div>
     </div>
-  );
-}
-
-function VariationOptionsInfoBody({
-  name,
-  selectedOptions,
-  sellerProductEditable,
-  product,
-}: any) {
-  const firstOption = selectedOptions[0];
-  return (
-    <>
-      {selectedOptions.length > 1 ? (
-        <div>
-          <small className='mb-1'>{name}</small>
-          <ul className='list-unstyled m-0 m-b-5'>
-            {selectedOptions.map((o: any, i: number) => (
-              <li key={`${i}-option-key-${o.optionId}`}>
-                {o.value}{' '}
-                {Boolean(o.totalCost && !sellerProductEditable)
-                  ? ` + ${formatCost(product, o.totalCost)}`
-                  : ''}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : firstOption ? (
-        <div>
-          <small className='mb-1'>{name}</small>
-          <p className='mb-0'>
-            {firstOption.value}
-            {Boolean(firstOption.totalCost)
-              ? ` + ${formatCost(product, firstOption.totalCost)}`
-              : ''}
-          </p>
-        </div>
-      ) : (
-        <div>
-          <small className='mb-1'>{name}</small>
-          <p className='mb-0'>-</p>
-        </div>
-      )}
-    </>
   );
 }
 
@@ -99,38 +63,109 @@ function VariationInfo({ product, variation }: any) {
   const isVariationSelectable = isSelectable(fieldType);
   const options = selectedOptions;
   return (
-    <div>
+    <div className='merchi-checkout-summary-variation'>
       {isVariationSelectable && options ? (
-        <>
-          <VariationOptionsInfoBody
-            name={variationField.name}
-            type={variationField.fieldType}
-            value={variation.value}
-            product={product}
-            files={variationFiles}
-            selectedOptions={options}
-            sellerProductEditable={sellerProductEditable}
-          />
-        </>
+        <VariationOptionsInfoBody
+          name={variationField.name}
+          fieldType={fieldType}
+          value={variation.value}
+          product={product}
+          files={variationFiles}
+          selectedOptions={options}
+          sellerProductEditable={sellerProductEditable}
+        />
       ) : (
-        <>
-          <VariationInfoBody
-            name={variationField.name}
-            type={variationField.fieldType}
-            value={variation.value}
-            files={variationFiles}
-            product={product}
-            cost={sellerProductEditable ? 0 : variation.cost}
-          />
-        </>
+        <VariationInfoBody
+          name={variationField.name}
+          type={variationField.fieldType}
+          value={variation.value}
+          files={variationFiles}
+          product={product}
+          cost={sellerProductEditable ? 0 : variation.cost}
+        />
       )}
     </div>
   );
 }
 
+function ColourSelectOption({ option }: { option: any }) {
+  const label = option?.value?.trim() || '';
+  const hex = option?.colour?.trim() || '';
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+      {hex && (
+        <span
+          style={{
+            display: 'inline-block',
+            width: '0.875rem',
+            height: '0.875rem',
+            borderRadius: '50%',
+            backgroundColor: hex,
+            border: '1px solid rgba(0,0,0,0.12)',
+            flexShrink: 0,
+          }}
+        />
+      )}
+      {label || hex || '–'}
+    </span>
+  );
+}
+
+function VariationOptionsInfoBody({
+  name,
+  selectedOptions,
+  sellerProductEditable,
+  product,
+  fieldType,
+}: any) {
+  const firstOption = selectedOptions[0];
+  const isColourSelect = fieldType === FieldType.COLOUR_SELECT;
+
+  function renderOptionLabel(o: any) {
+    if (isColourSelect) return <ColourSelectOption option={o} />;
+    return (
+      <>
+        {o.value?.trim() || '–'}
+        {Boolean(o.totalCost && !sellerProductEditable)
+          ? ` + ${formatCost(product, o.totalCost)}`
+          : ''}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {selectedOptions.length > 1 ? (
+        <div className='merchi-checkout-summary-variation-row'>
+          <div className='merchi-checkout-summary-variation-label'>{name}</div>
+          <ul className='merchi-checkout-summary-variation-value list-unstyled m-0'>
+            {selectedOptions.map((o: any, i: number) => (
+              <li key={`${i}-option-key-${o.optionId ?? i}`}>
+                {renderOptionLabel(o)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : firstOption ? (
+        <div className='merchi-checkout-summary-variation-row'>
+          <div className='merchi-checkout-summary-variation-label'>{name}</div>
+          <div className='merchi-checkout-summary-variation-value'>
+            {renderOptionLabel(firstOption)}
+          </div>
+        </div>
+      ) : (
+        <div className='merchi-checkout-summary-variation-row'>
+          <div className='merchi-checkout-summary-variation-label'>{name}</div>
+          <div className='merchi-checkout-summary-variation-value'>-</div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function VariationsInfo({ product, quantity, variations = [] }: any) {
   return (
-    <div className='d-flex flex-column' style={{ gap: '1rem' }}>
+    <div className='merchi-checkout-summary-variations'>
       {variations.map((v: any, i: number) =>
         !isInstructionsType(v.variationField.fieldType) ? (
           <VariationInfo
@@ -139,56 +174,39 @@ function VariationsInfo({ product, quantity, variations = [] }: any) {
             product={product}
             key={i}
           />
-        ) : (
-          ''
-        )
+        ) : null
       )}
     </div>
   );
 }
 
-function VariationGroupInfo({ group, index, product, groupArrayLength }: any) {
+function VariationGroupInfo({ group, index, product }: any) {
   const isResell = isProductSupplierMOD(product);
   const { quantity, variations } = group;
+  const visibleVariations = (variations ?? []).filter(
+    (v: any) => !isInstructionsType(v?.variationField?.fieldType)
+  );
+  const costLabel = isResell ? 'Unit Cost' : 'Group Cost';
+
   return (
-    <div className={`quote-summary-card ${groupArrayLength === 1 && ' w-100'}`}>
-      <div className='mt-2 d-flex flex-column justify-content-between text-left h-100'>
-        <div>
-          <small className='text-muted'>Group {index + 1}</small>
-          <small className='text-muted'>
-            {!isResell && ` | Quantity: ${quantity}`}
-          </small>
-        </div>
-        <div className='pt-2'>
-          {!!(variations && variations.length) && (
-            <div>
-              <strong>Group {index + 1} Detail</strong>{' '}
-            </div>
-          )}
-          <VariationsInfo
-            quantity={quantity}
-            variations={variations}
-            product={product}
-          />
-        </div>
-        <div className='pt-3'>
-          <div
-            className='pt-1'
-            style={{
-              borderTop: '1px solid #d7d7d7',
-              height: '24px',
-            }}
-          >
-            <strong className='mb-0 float-left float-start'>
-              {isResell ? 'Unit' : `Group`} Cost {' '}
-            </strong>
-            <strong className='mb-0 ml-2 float-right float-end'>
-              {formatCost(product, group.groupCost)}
-            </strong>
-          </div>
-        </div>
-      </div>
-    </div>
+    <section className='merchi-checkout-summary-group'>
+      <strong className='merchi-checkout-summary-order-detail-title'>
+        Group {index + 1} Detail
+      </strong>
+      {!isResell && quantity > 0 && (
+        <SummaryFieldRow label='Quantity' value={quantity} />
+      )}
+      {visibleVariations.length > 0 && (
+        <VariationsInfo
+          quantity={quantity}
+          variations={variations}
+          product={product}
+        />
+      )}
+      <strong className='merchi-checkout-summary-group-cost'>
+        {costLabel}: {formatCost(product, group.groupCost)}
+      </strong>
+    </section>
   );
 }
 
@@ -199,56 +217,81 @@ export default function JobInfoContent() {
   const totalCost = currencyTotalCostShowIncTax(job);
   const isResell = isProductSupplierMOD(product);
   const hasGroups = variationsGroups.length > 0;
+  const jobLevelVariations = (variations ?? []).filter(
+    (v: any) => !isInstructionsType(v?.variationField?.fieldType)
+  );
+  const totalQuantity = hasGroups
+    ? variationsGroups.reduce(
+        (sum: number, g: any) => sum + (Number(g.quantity) || 0),
+        0
+      )
+    : Number(quantity) || 0;
+
   return (
-    <div className='modal-merchi-checkout-job-info-content'>
-      <strong>{product.name}</strong>
-      {variationsGroups.length > 0 && (
-        <div
-          className='d-flex flex-wrap justify-content-between'
-          style={{ gap: 30 }}
-        >
+    <div className='modal-merchi-checkout-job-info-content merchi-checkout-summary'>
+      <div className='merchi-checkout-summary-section-title'>{product.name}</div>
+      {hasGroups && (
+        <div className='merchi-checkout-summary-groups'>
           {variationsGroups.map((g: any, i: number) =>
             g.quantity ? (
-              <div className='w-100' key={`${i}-job-info-content`}>
-                <VariationGroupInfo
-                  groupArrayLength={variationsGroups.length}
-                  group={g}
-                  key={i}
-                  index={i}
-                  job={job}
-                  product={product}
-                />
-              </div>
-            ) : (
-              ''
-            )
+              <VariationGroupInfo
+                group={g}
+                key={`${i}-job-info-content`}
+                index={i}
+                product={product}
+              />
+            ) : null
           )}
         </div>
       )}
-      <div className='d-flex justify-content-center parent-variation-card'>
-        <div className='text-left mt-1 w-100'>
-          <ProductCostRow job={job} product={product} quantity={quantity} />
-          <div>
-            {!!(variations && variations.length) && (
-              <strong className='mb-0'>Order Detail</strong>
-            )}
-            <VariationsInfo
-              quantity={quantity}
-              variations={variations}
-              product={product}
-            />
-          </div>
-          {!isResell && (
-            <div className='pt-2 mt-3 total-order-cost-container'>
-              <small className='mb-0'>Total Order Cost</small>{' '}
-              {needsShipping && (
-                <><small className='mb-0 ml-1 font-italic'>ex Shipment</small>{' '}</>
-              )}
-              <strong className='mb-0 d-block'>{totalCost}</strong>
-            </div>
+      {!hasGroups && (
+        <div className='merchi-checkout-summary-standalone'>
+          {jobLevelVariations.length > 0 && (
+            <>
+              <strong className='merchi-checkout-summary-order-detail-title'>
+                Order Detail
+              </strong>
+              <VariationsInfo
+                quantity={quantity}
+                variations={variations}
+                product={product}
+              />
+            </>
           )}
         </div>
-      </div>
+      )}
+      {hasGroups && jobLevelVariations.length > 0 && (
+        <div className='merchi-checkout-summary-standalone'>
+          <strong className='merchi-checkout-summary-order-detail-title'>
+            Order Detail
+          </strong>
+          <VariationsInfo
+            quantity={quantity}
+            variations={variations}
+            product={product}
+          />
+        </div>
+      )}
+      {!isResell && (
+        <div className='merchi-checkout-summary-total'>
+          {totalQuantity > 0 && (
+            <SummaryAmountRow
+              className='merchi-checkout-summary-total-quantity'
+              label='Total Quantity'
+              amount={totalQuantity}
+            />
+          )}
+          <SummaryAmountRow
+            label='Total Order Cost'
+            labelExtra={
+              needsShipping ? (
+                <small className='merchi-checkout-summary-total-note'> ex Shipment</small>
+              ) : undefined
+            }
+            amount={totalCost}
+          />
+        </div>
+      )}
       {!!(isResell && !hasGroups) && (
         <div>
           <strong className='mb-0'>

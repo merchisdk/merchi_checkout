@@ -2005,20 +2005,41 @@ input:autofill {
 }
 
 .merchi-checkout-tab-btn {
-  color: $brandBlue;
-  background-color: transparent;
-  background-image: none;
-  border-color: $brandBlue;
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   margin-right: 0 !important;
 }
 
-.merchi-checkout-tab-btn.active {
+.btn.btn-primary,
+.btn.btn-md.btn-primary,
+.btn.btn-lg.btn-primary,
+.btn.btn-block.btn-primary {
+  background-color: var(--color-brand, #{$brandBlue});
+  border-color: var(--color-brand, #{$brandBlue});
   color: #fff;
-  background-color: $brandBlue;
-  border-color: $brandBlue;
-  border-radius: 6px;
+}
+
+.btn.btn-primary:hover:not(:disabled),
+.btn.btn-md.btn-primary:hover:not(:disabled),
+.btn.btn-lg.btn-primary:hover:not(:disabled),
+.btn.btn-block.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-brand-dark, #{$brandBlue});
+  border-color: var(--color-brand-dark, #{$brandBlue});
+}
+
+.btn.btn-outline-primary,
+.btn.btn-lg.btn-outline-primary {
+  color: var(--color-brand, #{$brandBlue});
+  background-color: transparent;
+  background-image: none;
+  border-color: var(--color-brand, #{$brandBlue});
+}
+
+.btn.btn-outline-primary:hover:not(:disabled),
+.btn.btn-lg.btn-outline-primary:hover:not(:disabled) {
+  color: #fff;
+  background-color: var(--color-brand, #{$brandBlue});
+  border-color: var(--color-brand, #{$brandBlue});
 }
 
 .merchi-checkout-discount-code-container {
@@ -2052,6 +2073,163 @@ input:autofill {
 
   .merchi-checkout-tab-btn {
     padding: 0.75rem 1.25rem;
+  }
+}
+
+.merchi-checkout-summary {
+  text-align: left;
+}
+
+.merchi-checkout-summary-section-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #18181b;
+}
+
+.merchi-checkout-summary-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.merchi-checkout-summary-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.merchi-checkout-summary-groups .merchi-checkout-summary-group:first-child
+  .merchi-checkout-summary-order-detail-title {
+  margin-top: 0;
+}
+
+.merchi-checkout-summary-variations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.merchi-checkout-summary-variation-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.merchi-checkout-summary-variation-label {
+  font-size: 0.8125rem;
+  color: #71717a;
+  line-height: 1.3;
+}
+
+.merchi-checkout-summary-variation-value {
+  font-size: 0.875rem;
+  color: #18181b;
+  line-height: 1.4;
+}
+
+.merchi-checkout-summary-group-cost {
+  display: block;
+  margin-top: 0.5rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid #e4e4e7;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #18181b;
+}
+
+.merchi-checkout-summary-standalone {
+  margin-top: 0.75rem;
+}
+
+.merchi-checkout-summary-order-detail-title {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.merchi-checkout-summary-total {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e4e4e7;
+}
+
+.merchi-checkout-summary-amount {
+  margin-bottom: 0;
+}
+
+.merchi-checkout-summary-total-quantity,
+.merchi-checkout-summary-shipment-cost {
+  margin-bottom: 0.75rem;
+}
+
+.modal-merchi-checkout-shipment-detail.merchi-checkout-summary {
+  .merchi-checkout-summary-order-detail-title {
+    margin-top: 0;
+  }
+
+  .merchi-checkout-summary-variation-row + .merchi-checkout-summary-variation-row,
+  .merchi-checkout-summary-variation-row + .merchi-checkout-summary-amount {
+    margin-top: 0.625rem;
+  }
+}
+
+.merchi-checkout-summary-total-label {
+  margin-bottom: 0.25rem;
+  font-size: 0.8125rem;
+  color: #71717a;
+  line-height: 1.4;
+
+  small {
+    display: inline;
+    font-size: inherit;
+    color: inherit;
+  }
+}
+
+.merchi-checkout-summary-total-note {
+  font-style: italic;
+}
+
+.merchi-checkout-summary-total-amount {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #18181b;
+}
+
+.merchi-checkout-google-suggest-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 1050;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.merchi-checkout-google-suggest-list-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f4f4f5;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover,
+  &.active {
+    background-color: #f8f9fa;
   }
 }
 

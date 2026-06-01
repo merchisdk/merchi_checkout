@@ -55,7 +55,7 @@ export function InputsAddress({
   const [showSuggestions, setShowSuggestions] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
-  const [addressLocal, setAddressLocal] = React.useState({...defaultAddress});
+  const [addressLocal, setAddressLocal] = React.useState({ ...defaultAddress });
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const suggestionsRef = React.useRef<HTMLDivElement>(null);
@@ -138,7 +138,7 @@ export function InputsAddress({
       if (response.status === 'success') {
         // Parse the Google Places result into address components
         const parsedAddress = googlePlacesResultAsNewAddress(response.result);
-        
+
         if (parsedAddress) {
           setInputValue(addressInOneLine(parsedAddress));
           updateAddress(parsedAddress);
@@ -199,13 +199,13 @@ export function InputsAddress({
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev < suggestions.length - 1 ? prev + 1 : 0
         );
         break;
       case 'ArrowUp':
         event.preventDefault();
-        setSelectedIndex(prev => 
+        setSelectedIndex(prev =>
           prev > 0 ? prev - 1 : suggestions.length - 1
         );
         break;
@@ -345,7 +345,7 @@ export function InputsAddress({
     <>
       <div className={classNameMerchiCheckoutFormGroup}>
         <label>{labelGeoSuggest}</label>
-        <div className="position-relative" style={{position: 'relative'}}>
+        <div className="position-relative" style={{ position: 'relative' }}>
           <input
             autoComplete='new-password'
             ref={inputRef}
@@ -377,9 +377,9 @@ export function InputsAddress({
             <button
               type="button"
               className="btn btn-sm position-absolute"
-              style={{ 
-                right: '5px', 
-                top: '50%', 
+              style={{
+                right: '5px',
+                top: '50%',
                 transform: 'translateY(-50%)',
                 border: 'none',
                 background: 'transparent',
@@ -391,40 +391,36 @@ export function InputsAddress({
               <FontAwesomeIcon icon={faTimes} />
             </button>
           )}
+          {showSuggestions && suggestions.length > 0 && (
+            <div
+              ref={suggestionsRef}
+              className={classNameMerchiCheckoutGoogleSuggestList}
+              role="listbox"
+            >
+              {suggestions.map((suggestion, index) => (
+                <div
+                  key={suggestion.placeId}
+                  className={`${classNameMerchiCheckoutGoogleSuggestListItem} ${index === selectedIndex ? 'active' : ''}`}
+                  role="option"
+                  onMouseDown={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    handleSuggestionSelect(suggestion);
+                  }}
+                  onMouseEnter={() => setSelectedIndex(index)}
+                >
+                  <strong>
+                    {suggestion.structuredFormatting?.main_text || suggestion.description}
+                  </strong>
+                  {suggestion.structuredFormatting?.secondary_text && (
+                    <div className="text-muted small">
+                      {suggestion.structuredFormatting.secondary_text}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        {showSuggestions && suggestions.length > 0 && (
-          <div 
-            ref={suggestionsRef}
-            className={classNameMerchiCheckoutGoogleSuggestList}
-            style={{ 
-              zIndex: 1000, 
-              top: '100%',
-              overflowY: 'auto',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-            }}
-          >
-            {suggestions.map((suggestion, index) => (
-              <div
-                key={suggestion.placeId}
-                className={`${classNameMerchiCheckoutGoogleSuggestListItem} ${index === selectedIndex ? 'active' : ''}`}
-                onClick={(e: any) => {
-                  e.preventDefault();
-                  handleSuggestionSelect(suggestion);
-                }}
-                onMouseEnter={() => setSelectedIndex(index)}
-              >
-                <strong>
-                  {suggestion.structuredFormatting?.main_text || suggestion.description}
-                </strong>
-                {suggestion.structuredFormatting?.secondary_text && (
-                  <div className="text-muted small">
-                    {suggestion.structuredFormatting.secondary_text}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
       <Collapse isOpen={addressFieldsOpen}>
         {addressForm}

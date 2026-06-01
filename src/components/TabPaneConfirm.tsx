@@ -13,53 +13,15 @@ import {
 } from '../tabs_utils';
 import { addressInOneLine, isProductSupplierMOD, redirectOnSuccess } from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
+import {
+  SummaryAmountRow,
+  SummaryFieldRow,
+} from './CheckoutSummaryFields';
 import { DraftImagesStatic } from './DraftImageUploaded';
 import JobInfoContent from './JobInfoContent';
 import { SmallCustomerInfo } from './TabPaneCustomer';
 import DiscountInputGroup from './DiscountInputGroup';
 import { clearMerchiSource } from '../merchi_source';
-
-interface PropsShippingAddressInfo {
-  address: any;
-  titleClass: string;
-}
-
-export function ShippingAddressInfo({
-  address,
-  titleClass = '',
-}: PropsShippingAddressInfo) {
-  return (
-    <div>
-      <p className={`text-capitalize ${titleClass}`}>
-        {addressInOneLine(address)}
-      </p>
-    </div>
-  );
-}
-
-interface PropsShipmentOptionInfoConfirm {
-  shipment: any;
-}
-
-function ShipmentOptionInfoConfirm({
-  shipment,
-}: PropsShipmentOptionInfoConfirm) {
-  const { shipmentMethod, taxType } = shipment;
-  const { currency, name } = shipmentMethod;
-  return (
-    <div className='shipment-option-info-confirm'>
-      <div className='my-1'>
-        <p className='mb-0'>{name}</p>
-      </div>
-      <div className='mt-3 pt-2 total-order-cost-container'>
-        <small className='mb-1 d-block'>Shipment Cost</small>{' '}
-        <strong className='mb-0'>
-          {currencyTaxAndCost(currency, taxType, shipment.cost)}
-        </strong>
-      </div>
-    </div>
-  );
-}
 
 interface PropsConfirmInfoPanel {
   content: any;
@@ -93,16 +55,36 @@ export function ConfirmInfoPanel({
 function ConfirmAddressAndShipmentInfo() {
   const { job } = useMerchiCheckboutContext();
   const { shipping, shipment } = job;
+  const shipmentMethod = shipment?.shipmentMethod;
+  const methodName = shipmentMethod?.name ?? '—';
+
   return (
-    <div className='text-left px-3 py-3 modal-merchi-checkout-shipment-detail'>
-      <strong>Shipment Detail</strong>
+    <div className='text-left px-3 py-3 modal-merchi-checkout-shipment-detail merchi-checkout-summary'>
+      <strong className='merchi-checkout-summary-order-detail-title'>
+        Shipment Detail
+      </strong>
       {shipping && (
-        <div className='my-1'>
-          <small className='mb-1'>Address</small>
-          <ShippingAddressInfo titleClass='mb-0' address={shipping} />
-        </div>
+        <SummaryFieldRow
+          label='Address'
+          value={
+            <span className='text-capitalize'>{addressInOneLine(shipping)}</span>
+          }
+        />
       )}
-      {shipment && <ShipmentOptionInfoConfirm shipment={shipment} />}
+      {shipment && (
+        <>
+          <SummaryFieldRow label='Shipment method' value={methodName} />
+          <SummaryAmountRow
+            className='merchi-checkout-summary-shipment-cost'
+            label='Shipment Cost'
+            amount={currencyTaxAndCost(
+              shipmentMethod?.currency,
+              shipment.taxType,
+              shipment.cost
+            )}
+          />
+        </>
+      )}
     </div>
   );
 }
