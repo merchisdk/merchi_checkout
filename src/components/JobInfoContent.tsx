@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { FaFilePdf } from 'react-icons/fa';
 import { formatCurrency, currencyTotalCostShowIncTax } from './currency';
 import {
   isInstructionsType,
@@ -21,50 +22,159 @@ function formatCost(product: any, cost: number) {
   });
 }
 
+function isPdf(file: any) {
+  const mimetype = file?.mimetype || '';
+  return mimetype === 'application/pdf' || mimetype === 'application/x-pdf';
+}
+
+function isImageFile(file: any) {
+  const mimetype = file?.mimetype || '';
+  if (mimetype.startsWith('image/')) return true;
+  const name = (file?.name || '').toLowerCase();
+  return /\.(jpe?g|png|gif|webp|svg|bmp)$/.test(name);
+}
+
+function optionImageUrl(option: any) {
+  return option?.linkedFile?.viewUrl || '';
+}
+
+function findMatchingOption(option: any, options: any[] = []) {
+  return options.find((o) => String(o.optionId) === String(option?.optionId));
+}
+
+function resolveOptionColour(
+  option: any,
+  selectableOptions: any[] = [],
+  fieldOptions: any[] = []
+) {
+  const direct = option?.colour?.trim();
+  if (direct) return direct;
+  const fromSelectable = findMatchingOption(option, selectableOptions)?.colour?.trim();
+  if (fromSelectable) return fromSelectable;
+  return findMatchingOption(option, fieldOptions)?.colour?.trim() || '';
+}
+
+function resolveOptionImageUrl(
+  option: any,
+  selectableOptions: any[] = [],
+  fieldOptions: any[] = []
+) {
+  const direct = optionImageUrl(option);
+  if (direct) return direct;
+  const fromSelectable = optionImageUrl(
+    findMatchingOption(option, selectableOptions)
+  );
+  if (fromSelectable) return fromSelectable;
+  return optionImageUrl(findMatchingOption(option, fieldOptions));
+}
+
+function formatOptionCost(
+  product: any,
+  option: any,
+  sellerProductEditable: boolean
+) {
+  if (!option?.totalCost || sellerProductEditable) return null;
+  return ` + ${formatCost(product, option.totalCost)}`;
+}
+
+function VariationFilePreview({ file }: { file: any }) {
+  const fileUrl = file?.viewUrl || file?.downloadUrl || '';
+  const fileName = file?.name || 'File';
+
+  if (isPdf(file)) {
+    return (
+      <a
+        className='merchi-checkout-summary-file-link'
+        href={fileUrl}
+        target='_blank'
+        rel='noopener noreferrer'
+        title={fileName}
+      >
+        <FaFilePdf aria-hidden />
+        <span>{fileName}</span>
+      </a>
+    );
+  }
+
+  if (isImageFile(file) && fileUrl) {
+    return (
+      <img
+        className='modal-merchi-checkout-job-info-content-img'
+        src={fileUrl}
+        alt={fileName}
+        title={fileName}
+      />
+    );
+  }
+
+  if (fileUrl) {
+    return (
+      <a
+        className='merchi-checkout-summary-file-link'
+        href={fileUrl}
+        target='_blank'
+        rel='noopener noreferrer'
+        title={fileName}
+      >
+        {fileName}
+      </a>
+    );
+  }
+
+  return <span>{fileName}</span>;
+}
+
 function VariationInfoBody({ cost, name, product, value, files, type }: any) {
   const isColourPicker = type === FieldType.COLOUR_PICKER;
-  const displayValue = isColourPicker
-    ? null
-    : value;
+  const isFileUpload = type === FieldType.FILE_UPLOAD;
+  const hasFiles = Boolean(files?.length);
+  const displayValue = isColourPicker || (isFileUpload && hasFiles) ? null : value;
+
   return (
     <div className='merchi-checkout-summary-variation-row'>
       <div className='merchi-checkout-summary-variation-label'>{name}</div>
       <div className='merchi-checkout-summary-variation-value'>
-        <div className='d-flex' style={{ gap: '0.5rem' }}>
-          {files &&
-            files.map((file: any) => (
-              <img
-                key={file.viewUrl}
-                className='modal-merchi-checkout-job-info-content-img'
-                src={file.viewUrl}
-                alt={file.name}
+        {hasFiles && (
+          <div className='merchi-checkout-summary-file-previews'>
+            {files.map((file: any, index: number) => (
+              <VariationFilePreview
+                key={file.viewUrl || file.id || `${name}-file-${index}`}
+                file={file}
               />
             ))}
-        </div>
+          </div>
+        )}
         {isColourPicker && value && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div
+          <div className='merchi-checkout-summary-colour-value'>
+            <span
               style={{ backgroundColor: value }}
               className='color-indicator'
             />
             <span>{value}</span>
           </div>
         )}
-        {displayValue && displayValue} {cost ? `+ ${formatCost(product, cost)}` : ''}
-        {!(files?.length) && !value && '-'}
+        {displayValue && displayValue}
+        {cost ? ` + ${formatCost(product, cost)}` : ''}
+        {!hasFiles && !value && '-'}
       </div>
     </div>
   );
 }
 
 function VariationInfo({ product, variation }: any) {
-  const { selectedOptions, variationField, variationFiles } = variation;
-  const { fieldType, sellerProductEditable } = variationField;
+  const { selectedOptions, variationField, variationFiles, selectableOptions } =
+    variation;
+  const { fieldType, sellerProductEditable, options: fieldOptions = [] } =
+    variationField;
   const isVariationSelectable = isSelectable(fieldType);
+  const isTurnaroundTime = fieldType === FieldType.TURNAROUND_TIME;
   const options = selectedOptions;
+  const useSelectableDisplay =
+    isVariationSelectable &&
+    (Boolean(options?.length) || (isTurnaroundTime && variation.value));
   return (
     <div className='merchi-checkout-summary-variation'>
-      {isVariationSelectable && options ? (
+      {useSelectableDisplay ? (
         <VariationOptionsInfoBody
           name={variationField.name}
           fieldType={fieldType}
@@ -72,6 +182,9 @@ function VariationInfo({ product, variation }: any) {
           product={product}
           files={variationFiles}
           selectedOptions={options}
+          variation={variation}
+          selectableOptions={selectableOptions}
+          fieldOptions={fieldOptions}
           sellerProductEditable={sellerProductEditable}
         />
       ) : (
@@ -88,25 +201,134 @@ function VariationInfo({ product, variation }: any) {
   );
 }
 
-function ColourSelectOption({ option }: { option: any }) {
+function ColourSelectOption({
+  option,
+  selectableOptions,
+  fieldOptions,
+}: {
+  option: any;
+  selectableOptions?: any[];
+  fieldOptions?: any[];
+}) {
   const label = option?.value?.trim() || '';
-  const hex = option?.colour?.trim() || '';
+  const hex = resolveOptionColour(option, selectableOptions, fieldOptions);
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem' }}>
+    <span className='merchi-checkout-summary-colour-option'>
       {hex && (
         <span
-          style={{
-            display: 'inline-block',
-            width: '0.875rem',
-            height: '0.875rem',
-            borderRadius: '50%',
-            backgroundColor: hex,
-            border: '1px solid rgba(0,0,0,0.12)',
-            flexShrink: 0,
-          }}
+          style={{ backgroundColor: hex }}
+          className='color-indicator'
         />
       )}
-      {label || hex || '–'}
+      <span>{label || hex || '–'}</span>
+    </span>
+  );
+}
+
+function ImageSelectOption({
+  option,
+  selectableOptions,
+  fieldOptions,
+  product,
+  sellerProductEditable,
+}: {
+  option: any;
+  selectableOptions?: any[];
+  fieldOptions?: any[];
+  product: any;
+  sellerProductEditable: boolean;
+}) {
+  const imageUrl = resolveOptionImageUrl(option, selectableOptions, fieldOptions);
+  const label = option?.value?.trim() || '';
+  const cost = formatOptionCost(product, option, sellerProductEditable);
+
+  return (
+    <span className='merchi-checkout-summary-image-select-option'>
+      {imageUrl ? (
+        <img
+          className='modal-merchi-checkout-job-info-content-img'
+          src={imageUrl}
+          alt={label || 'Selected option'}
+          title={label || undefined}
+        />
+      ) : null}
+      <span>{label || '–'}{cost || ''}</span>
+    </span>
+  );
+}
+
+function getOptionId(option: any) {
+  return option?.optionId ?? option?.id;
+}
+
+function resolveTurnaroundSelectedOption(
+  variation: any,
+  selectableOptions: any[] = [],
+  fieldOptions: any[] = []
+) {
+  const { selectedOptions = [], value } = variation;
+  if (selectedOptions.length > 0) {
+    return selectedOptions[0];
+  }
+  const valueStr = value != null && value !== '' ? String(value).trim() : '';
+  if (!valueStr) return null;
+
+  const pools = [selectableOptions, fieldOptions];
+  for (const pool of pools) {
+    const byId = pool.find(
+      (o: any) => String(getOptionId(o)) === valueStr
+    );
+    if (byId) return byId;
+    const byValue = pool.find(
+      (o: any) => String(o.value ?? '') === valueStr
+    );
+    if (byValue) return byValue;
+  }
+  return null;
+}
+
+function formatTurnaroundDeadline(userDeadline: any) {
+  if (!userDeadline) return null;
+  const seconds = Number(userDeadline);
+  if (!Number.isFinite(seconds) || seconds <= 0) return null;
+  return new Date(seconds * 1000).toLocaleDateString('en-AU', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function TurnaroundOptionLabel({
+  option,
+  variationField,
+  product,
+  sellerProductEditable,
+}: {
+  option: any;
+  variationField: any;
+  product: any;
+  sellerProductEditable: boolean;
+}) {
+  const days = parseInt(String(option?.value ?? ''), 10) || 0;
+  const deadline = formatTurnaroundDeadline(option?.userDeadline);
+  const shippingTimeIncluded = Boolean(variationField?.shippingTimeIncluded);
+  const deadlineLabel = shippingTimeIncluded ? 'Delivery by' : 'Produced by';
+  const cost = formatOptionCost(product, option, sellerProductEditable);
+
+  return (
+    <span className='merchi-checkout-summary-turnaround-value'>
+      <span className='merchi-checkout-summary-turnaround-days'>
+        {days > 0
+          ? `${days} business day${days !== 1 ? 's' : ''}`
+          : (option?.value?.trim() || '–')}
+      </span>
+      {deadline && (
+        <span className='merchi-checkout-summary-turnaround-deadline'>
+          {deadlineLabel} {deadline}
+        </span>
+      )}
+      {cost || ''}
     </span>
   );
 }
@@ -117,25 +339,64 @@ function VariationOptionsInfoBody({
   sellerProductEditable,
   product,
   fieldType,
+  variation,
+  selectableOptions = [],
+  fieldOptions = [],
 }: any) {
-  const firstOption = selectedOptions[0];
+  const isTurnaroundTime = fieldType === FieldType.TURNAROUND_TIME;
+  const firstOption = isTurnaroundTime
+    ? resolveTurnaroundSelectedOption(
+        { selectedOptions, value: variation?.value },
+        selectableOptions,
+        fieldOptions
+      )
+    : selectedOptions[0];
   const isColourSelect = fieldType === FieldType.COLOUR_SELECT;
+  const isImageSelect = fieldType === FieldType.IMAGE_SELECT;
+  const variationField = variation?.variationField ?? {};
 
   function renderOptionLabel(o: any) {
-    if (isColourSelect) return <ColourSelectOption option={o} />;
+    if (isTurnaroundTime) {
+      return (
+        <TurnaroundOptionLabel
+          option={o}
+          variationField={variationField}
+          product={product}
+          sellerProductEditable={sellerProductEditable}
+        />
+      );
+    }
+    if (isColourSelect) {
+      return (
+        <ColourSelectOption
+          option={o}
+          selectableOptions={selectableOptions}
+          fieldOptions={fieldOptions}
+        />
+      );
+    }
+    if (isImageSelect) {
+      return (
+        <ImageSelectOption
+          option={o}
+          selectableOptions={selectableOptions}
+          fieldOptions={fieldOptions}
+          product={product}
+          sellerProductEditable={sellerProductEditable}
+        />
+      );
+    }
     return (
       <>
         {o.value?.trim() || '–'}
-        {Boolean(o.totalCost && !sellerProductEditable)
-          ? ` + ${formatCost(product, o.totalCost)}`
-          : ''}
+        {formatOptionCost(product, o, sellerProductEditable) || ''}
       </>
     );
   }
 
   return (
     <>
-      {selectedOptions.length > 1 ? (
+      {selectedOptions.length > 1 && !isTurnaroundTime ? (
         <div className='merchi-checkout-summary-variation-row'>
           <div className='merchi-checkout-summary-variation-label'>{name}</div>
           <ul className='merchi-checkout-summary-variation-value list-unstyled m-0'>

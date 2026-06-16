@@ -5,6 +5,24 @@ import { tabIdComplete } from '../tabs_utils';
 import TitleStep from './TitleStep';
 import TabPane from './TabPane';
 import InvoiceInfo from './InvoiceInfo';
+import { completeCheckoutSession } from '../checkoutSession';
+import { clearMerchiSource } from '../merchi_source';
+
+function CompleteButton({ className }: { className: string }) {
+  const { product } = useMerchiCheckboutContext();
+
+  function handleComplete() {
+    completeCheckoutSession(product);
+    clearMerchiSource();
+    window.location.reload();
+  }
+
+  return (
+    <button type='button' className={className} onClick={handleComplete}>
+      Complete!
+    </button>
+  );
+}
 
 function TabPaneSubmitted() {
   const {
@@ -29,28 +47,24 @@ function TabPaneSubmitted() {
       <TitleStep
         title={`Thank You - ${isBuyRequest ? 'Received' : 'Submitted'}`}
       />
-      {!!(isBuyRequest && invoice) && <InvoiceInfo />}
+      {isBuyRequest && invoice?.id ? <InvoiceInfo invoice={invoice} /> : null}
       <div className='d-flex justify-content-center'>
         <div className='w-100'>
           <div className='py-3'>
             <p>{msg}</p>
           </div>
-          <div className='d-none d-sm-flex justify-content-between'>
+          <div
+            className={
+              isProductEmbedForm
+                ? 'd-none d-sm-flex justify-content-center'
+                : 'd-none d-sm-flex justify-content-between'
+            }
+          >
             {isProductEmbedForm ? (
-              <a
-                className={classNameMerchiCheckoutButtonPrimary}
-                href={`${window.location}`}
-              >
-                Done!
-              </a>
+              <CompleteButton className={classNameMerchiCheckoutButtonPrimary} />
             ) : (
               <>
-                <a
-                  className={classNameMerchiCheckoutButtonSecondary}
-                  href='/customisable-merchandise'
-                >
-                  View More Merch
-                </a>
+                <CompleteButton className={classNameMerchiCheckoutButtonSecondary} />
                 {!!(activeSession && job.id && !isBuyRequest) && (
                   <a
                     className={classNameMerchiCheckoutButtonPrimary}
@@ -62,22 +76,18 @@ function TabPaneSubmitted() {
               </>
             )}
           </div>
-          <div className='d-sm-none'>
+          <div
+            className={
+              isProductEmbedForm
+                ? 'd-sm-none d-flex justify-content-center'
+                : 'd-sm-none'
+            }
+          >
             {isProductEmbedForm ? (
-              <a
-                className={classNameMerchiCheckoutButtonPrimaryBlock}
-                href={`${window.location}`}
-              >
-                Done!
-              </a>
+              <CompleteButton className={classNameMerchiCheckoutButtonPrimary} />
             ) : (
               <>
-                <a
-                  className={classNameMerchiCheckoutButtonPrimaryBlock}
-                  href='/customisable-merchandise'
-                >
-                  View More Merch
-                </a>
+                <CompleteButton className={classNameMerchiCheckoutButtonPrimaryBlock} />
                 {!!(activeSession && job.id && !isBuyRequest) && (
                   <a
                     className={classNameMerchiCheckoutButtonSecondaryBlock}

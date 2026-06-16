@@ -1,5 +1,5 @@
 'use client';
-
+import * as React from 'react';
 import { useMerchiCheckboutContext } from "../MerchiCheckoutProvider";
 
 interface InputErrorProps {

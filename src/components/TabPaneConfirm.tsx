@@ -22,6 +22,7 @@ import JobInfoContent from './JobInfoContent';
 import { SmallCustomerInfo } from './TabPaneCustomer';
 import DiscountInputGroup from './DiscountInputGroup';
 import { clearMerchiSource } from '../merchi_source';
+import { clearCheckoutSession } from '../checkoutSession';
 
 interface PropsConfirmInfoPanel {
   content: any;
@@ -97,9 +98,12 @@ function DiscountGroupContainer() {
   return (
     <div className='text-left py-3 modal-merchi-checkout-discount-code'>
       {discountLabel && (
-        <strong className={discountClassNameInputdiscountLabel}>
+        <label
+          className={discountClassNameInputdiscountLabel}
+          htmlFor='merchi-checkout-discount-codes'
+        >
           {discountLabel}
-        </strong>
+        </label>
       )}
       <DiscountInputGroup />
     </div>
@@ -192,7 +196,6 @@ function TabPaneConfirm() {
           });
         if (response.ok) {
           const invoice = await response.json();
-          // clear merchi_source from local storage
           clearMerchiSource();
           setInvoice({ ...invoice.invoice });
           setLoading(false);
@@ -206,8 +209,8 @@ function TabPaneConfirm() {
         const response = await submitQuoteRequest((urlApi as string), job);
         if (response.ok) {
           const quote = await response.json();
-          // clear merchi_source from local storage
           clearMerchiSource();
+          clearCheckoutSession(product);
           const rawRedirect = redirectAfterQuoteSuccessUrl ?? redirectAfterSuccessUrl;
           const quoteRedirect =
             typeof rawRedirect === 'string' ? rawRedirect.trim() : '';
