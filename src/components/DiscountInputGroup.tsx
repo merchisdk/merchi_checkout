@@ -93,6 +93,7 @@ export default function DiscountInputGroup() {
       <div className={discountClassName}>
         <div className={discountClassNameInputContainer}>
           <input
+            id='merchi-checkout-discount-codes'
             type="text"
             className={discountClassNameInput}
             placeholder='discount20,discount10'
@@ -121,7 +122,7 @@ export default function DiscountInputGroup() {
           {errors.codes.message}
         </div>
       )}
-      {discountShowAppliedItems && (
+      {discountShowAppliedItems && items.length > 0 && (
         <div className={discountClassNameListItems}>
           {items.map((item: any, index: number) =>
             <div

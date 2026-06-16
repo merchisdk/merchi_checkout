@@ -4,12 +4,16 @@ import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import ButtonInvoiceDownload from './buttons/ButtonInvoiceDownload';
 
 interface Props {
-  invoice: any;
+  invoice?: any;
 }
 
-function InvoiceInfo({ invoice = {} }: Props) {
+function InvoiceInfo({ invoice: invoiceProp }: Props) {
+  const {
+    invoice: contextInvoice,
+    classNameMerchiCheckoutSubtitle,
+  } = useMerchiCheckboutContext();
+  const invoice = invoiceProp ?? contextInvoice ?? {};
   const { id, unpaid } = invoice;
-  const { classNameMerchiCheckoutSubtitle } = useMerchiCheckboutContext();
   const paid = !unpaid;
   return (
     <div className='w-100 d-flex flex-column align-items-center pt-3'>

@@ -71,6 +71,9 @@ function TabPaneCustomer() {
   const { client } = job;
   const isActive = isUserRegistered(client);
   const { classNameMerchiCheckoutSubtitle } = useMerchiCheckboutContext();
+  const canProceed = includeDomainSignup
+    ? isRegisteredAndHasStore(client)
+    : isUserRegistered(client);
 
   return (
     <TabPane tabId={tabIdCustomerInfo}>
@@ -99,7 +102,7 @@ function TabPaneCustomer() {
         <FormDomainNew />
       )}
       <FooterButtons
-        forceDisabled={!isRegisteredAndHasStore(client)}
+        forceDisabled={!canProceed}
         isActive={isActive}
       />
     </TabPane>

@@ -1,9 +1,26 @@
 'use client';
 import * as React from 'react';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { MerchiCheckoutTab } from '../types';
-import { tabsInit } from '../tabs_utils';
+import { tabsInit, tabIdConfirm } from '../tabs_utils';
 import { Merchi } from 'merchi_sdk_ts';
+import {
+  buildCheckoutSession,
+  checkoutSessionChanged,
+  getCheckoutQuoteSignature,
+  getSafeRestoredTabIndex,
+  loadCheckoutSession,
+  mergeJobWithCheckoutSession,
+  saveCheckoutSession,
+} from '../checkoutSession';
+import { isUserRegistered } from '../utils';
 
 interface IMerchiCheckout {
   activeTabIndex: number;
@@ -19,6 +36,7 @@ interface IMerchiCheckout {
   classNameMerchiCheckoutButtonSecondary?: string;
   classNameMerchiCheckoutButtonSecondaryBlock?: string;
   classNameMerchiCheckoutButtonDownloadInvoice?: string;
+  classNameMerchiCheckoutButtonCancelOrder?: string;
   classNameMerchiCheckoutConfirmInfoPanel?: string;
   classNameMerchiCheckoutFooterActionsContainer?: string;
   classNameMerchiCheckoutFormCheckbox?: string;
@@ -43,6 +61,7 @@ interface IMerchiCheckout {
   classNameMerchiCheckoutTabButton?: string;
   classNameMerchiInvoiceButtonPayInvoice?: string;
   clearCustomer: () => void;
+  cancelCheckoutOrder: () => void;
   currentUser?: any;
   customer?: any;
   discountButtonText?: string;
@@ -130,6 +149,7 @@ const MerchiCheckoutContext = createContext<IMerchiCheckout>({
   classNameMerchiCheckoutTabButton: undefined,
   classNameMerchiInvoiceButtonPayInvoice: undefined,
   clearCustomer() { },
+  cancelCheckoutOrder() { },
   currentUser: undefined,
   customer: undefined,
   discountButtonText: undefined,
@@ -193,6 +213,7 @@ interface PropsMerchiProductFormProvider {
   classNameMerchiCheckoutButtonSecondary?: string;
   classNameMerchiCheckoutButtonSecondaryBlock?: string;
   classNameMerchiCheckoutButtonDownloadInvoice?: string;
+  classNameMerchiCheckoutButtonCancelOrder?: string;
   classNameMerchiCheckoutConfirmInfoPanel?: string;
   classNameMerchiCheckoutFooterActionsContainer?: string;
   classNameMerchiCheckoutFormCheckbox?: string;
@@ -252,6 +273,69 @@ interface PropsMerchiProductFormProvider {
   urlFrontend?: string;
 }
 
+function buildTabsState(
+  jobForTabs: any,
+  {
+    includeDomainSignup,
+    isBuyRequest,
+    tabIndex = 0,
+  }: {
+    includeDomainSignup?: boolean;
+    isBuyRequest?: boolean;
+    tabIndex?: number;
+  }
+): { tabs: MerchiCheckoutTab[]; activeTabIndex: number } {
+  if (!jobForTabs?.product) {
+    return { tabs: [], activeTabIndex: 0 };
+  }
+
+  const baseTabs = tabsInit({
+    job: jobForTabs,
+    includeDomainSignup,
+    isBuyRequest,
+  });
+
+  if (!baseTabs.length) {
+    return { tabs: [], activeTabIndex: 0 };
+  }
+
+  const safeIndex = Math.max(0, Math.min(tabIndex, baseTabs.length - 1));
+  const tabsWithProgress = baseTabs.map((tab, i) => ({
+    ...tab,
+    disabled: i > safeIndex,
+  }));
+
+  return { tabs: tabsWithProgress, activeTabIndex: safeIndex };
+}
+
+function getInitialTabsState(
+  job: any,
+  product: any,
+  includeDomainSignup?: boolean,
+  isBuyRequest?: boolean,
+  invoice?: any
+) {
+  if (!product?.id) {
+    return { tabs: [] as MerchiCheckoutTab[], activeTabIndex: 0 };
+  }
+
+  const session = loadCheckoutSession(product);
+  const mergedJob = mergeJobWithCheckoutSession(job, session);
+  const restoredInvoice = invoice?.id ? invoice : session?.invoice;
+  const tabIndex = getSafeRestoredTabIndex(
+    mergedJob,
+    { includeDomainSignup, isBuyRequest },
+    session?.activeTabIndex ?? 0,
+    restoredInvoice
+  );
+
+  return buildTabsState(mergedJob, {
+    includeDomainSignup,
+    isBuyRequest,
+    tabIndex,
+  });
+}
+
 export const MerchiCheckoutProvider = ({
   children,
   classNameMerchiCheckoutAlertsContainer = 'd-flex justify-content-center flex-column alerts-container-sm',
@@ -263,6 +347,7 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutButtonSecondary = 'btn btn-lg btn-secondary',
   classNameMerchiCheckoutButtonSecondaryBlock = 'btn btn-lg btn-secondary btn-block',
   classNameMerchiCheckoutButtonDownloadInvoice = 'btn btn-lg btn-primary',
+  classNameMerchiCheckoutButtonCancelOrder = 'btn btn-lg btn-secondary',
   classNameMerchiCheckoutConfirmInfoPanel = 'd-flex align-items-center',
   classNameMerchiCheckoutFooterActionsContainer = 'd-flex justify-content-between mt-4',
   classNameMerchiCheckoutFormCheckbox = 'form-check-input',
@@ -276,7 +361,7 @@ export const MerchiCheckoutProvider = ({
   classNameMerchiCheckoutInputError = 'text-danger',
   classNameMerchiCheckoutFormLabelCheckbox = '',
   classNameMerchiCheckoutListGroup = 'modal-merchi-checkout-shipment-option',
-  classNameMerchiCheckoutListGroupItem = 'list-group-item',
+  classNameMerchiCheckoutListGroupItem = 'list-group-item modal-merchi-checkout-shipment-option',
   classNameMerchiCheckoutRow = 'merchi-row',
   classNameMerchiCheckoutRowColumn = 'merchi-column',
   classNameMerchiCheckoutSubtitle = 'merchi-checkout-subtitle',
@@ -295,11 +380,11 @@ export const MerchiCheckoutProvider = ({
   discountClassNameErrorMessage = 'text-danger',
   discountClassNameInput = 'form-control',
   discountClassNameInputContainer = 'merchi-checkout-discount-code-field-container',
-  discountClassNameInputdiscountLabel = 'visually-hidden',
+  discountClassNameInputdiscountLabel = 'merchi-checkout-discount-code-label',
   discountClassNameListItem = 'list-group-item d-flex align-items-center justify-content-between mt-2',
   discountClassNameListItems = 'list-group',
   discountClassNameMainContainer,
-  discountLabel = 'Discount code',
+  discountLabel = 'Apply Discount Code',
   discountShowAppliedItems = true,
   includeDomainSignup = false,
   invoice,
@@ -321,11 +406,20 @@ export const MerchiCheckoutProvider = ({
   urlApi = 'https://api.merchi.co/v6/',
   urlFrontend = 'https://merchi.co/',
 }: PropsMerchiProductFormProvider) => {
-  const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+  const initialTabsState = getInitialTabsState(
+    job,
+    product,
+    includeDomainSignup,
+    isBuyRequest,
+    invoice
+  );
+  const [activeTabIndex, setActiveTabIndex] = useState<number>(
+    initialTabsState.activeTabIndex
+  );
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [domain, setDomain] = useState(null);
-  const [tabs, setTabs] = useState([] as any[]);
+  const [tabs, setTabs] = useState(initialTabsState.tabs);
   const merchi = new Merchi(undefined, undefined, undefined, undefined, urlApi);
   function editDraftTemplate(index: number, draft: any) {
     const jobJson = { ...job };
@@ -353,21 +447,37 @@ export const MerchiCheckoutProvider = ({
     ];
     setAlerts(newAlerts as any);
   }
+  function initTabsFromJob(jobForTabs: any, tabIndex = 0) {
+    const { tabs: nextTabs, activeTabIndex: nextIndex } = buildTabsState(
+      jobForTabs,
+      { includeDomainSignup, isBuyRequest, tabIndex }
+    );
+    setTabs(nextTabs);
+    setActiveTabIndex(nextIndex);
+  }
   function resetTabs() {
-    const _tabs = tabsInit({
-      job,
-      includeDomainSignup,
-      isBuyRequest,
-    });
-    setTabs(_tabs as []);
+    initTabsFromJob(job, activeTabIndex);
   }
   function setCustomer(customer: any) {
-    setJob({ ...job, client: customer });
-    resetTabs();
+    const updatedJob = { ...job, client: customer };
+    setJob(updatedJob);
+    initTabsFromJob(
+      updatedJob,
+      isUserRegistered(customer) ? activeTabIndex : 0
+    );
   }
   function clearCustomer() {
-    setCustomer({});
-    resetTabs();
+    const updatedJob = { ...job, client: {} };
+    setJob(updatedJob);
+    initTabsFromJob(updatedJob, 0);
+  }
+  function cancelCheckoutOrder() {
+    const updatedJob = { ...job };
+    delete updatedJob.id;
+    setInvoice({});
+    setJob(updatedJob);
+    const confirmIndex = tabs.findIndex((t) => t.id === tabIdConfirm);
+    initTabsFromJob(updatedJob, confirmIndex >= 0 ? confirmIndex : 0);
   }
   function nextTab() {
     const ndextIndex = activeTabIndex + 1;
@@ -380,14 +490,81 @@ export const MerchiCheckoutProvider = ({
     const index = tabs.findIndex((t: MerchiCheckoutTab) => t.id === tabId);
     setActiveTabIndex(index);
   }
+  const quoteSignature = getCheckoutQuoteSignature(job);
+  const quoteSignatureRef = React.useRef('');
+
+  useLayoutEffect(() => {
+    if (!product?.id) return;
+
+    const session = loadCheckoutSession(product);
+    const mergedJob = mergeJobWithCheckoutSession(job, session);
+
+    if (checkoutSessionChanged(job, mergedJob)) {
+      setJob(mergedJob);
+    }
+
+    const quoteChanged = quoteSignatureRef.current !== quoteSignature;
+    quoteSignatureRef.current = quoteSignature;
+
+    if (!tabs.length || quoteChanged) {
+      const restoredInvoice = invoice?.id ? invoice : session?.invoice;
+      const restoredIndex =
+        quoteChanged && !restoredInvoice?.id
+          ? 0
+          : getSafeRestoredTabIndex(
+              mergedJob,
+              { includeDomainSignup, isBuyRequest },
+              session?.activeTabIndex ?? 0,
+              restoredInvoice
+            );
+      initTabsFromJob(mergedJob, restoredIndex);
+    }
+
+    if (
+      !isUserRegistered(mergedJob.client) &&
+      !isUserRegistered(session?.client) &&
+      isUserRegistered(currentUser)
+    ) {
+      setJob({ ...mergedJob, client: currentUser });
+    }
+  }, [product?.id, quoteSignature]);
+
   useEffect(() => {
-    if (job.product && !tabs.length) {
-      resetTabs();
+    if (!product?.id) return;
+
+    const session = loadCheckoutSession(product);
+    if (!invoice?.id && session?.invoice?.id) {
+      setInvoice(session.invoice);
     }
-    if (!job.client) {
-      setCustomer(currentUser || {});
-    }
-  }, [job]);
+  }, [product?.id]);
+
+  useEffect(() => {
+    if (!product?.id) return;
+    saveCheckoutSession(
+      product,
+      buildCheckoutSession(
+        job,
+        activeTabIndex,
+        {
+          invoice,
+          checkoutOpen: isOpen,
+          isBuyRequest,
+        },
+        loadCheckoutSession(product)
+      )
+    );
+  }, [
+    product?.id,
+    job.client,
+    job.shipping,
+    job.billing,
+    job.shipment,
+    job.items,
+    activeTabIndex,
+    invoice,
+    isOpen,
+    isBuyRequest,
+  ]);
   function discountCallbackSuccess(items: any[]) {
     setJob({ ...job, items });
   }
@@ -411,6 +588,7 @@ export const MerchiCheckoutProvider = ({
           classNameMerchiCheckoutButtonSecondary,
           classNameMerchiCheckoutButtonSecondaryBlock,
           classNameMerchiCheckoutButtonDownloadInvoice,
+          classNameMerchiCheckoutButtonCancelOrder,
           classNameMerchiCheckoutConfirmInfoPanel,
           classNameMerchiCheckoutFooterActionsContainer,
           classNameMerchiCheckoutFormCheckbox,
@@ -435,6 +613,7 @@ export const MerchiCheckoutProvider = ({
           classNameMerchiCheckoutTabPaneContainer,
           classNameMerchiInvoiceButtonPayInvoice,
           clearCustomer,
+          cancelCheckoutOrder,
           currentUser,
           customer: job.client || {},
           discountButtonText,

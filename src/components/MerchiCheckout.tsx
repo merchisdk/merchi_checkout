@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
-import { MerchiCheckoutProvider } from './MerchiCheckoutProvider';
+import { FaTimes } from 'react-icons/fa';
+import { MerchiCheckoutProvider, useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import MerchiCheckoutTabs from './MerchiCheckoutTabs';
 import TabPaneAddress from './TabPaneAddress';
 import TabPaneConfirm from './TabPaneConfirm';
@@ -54,11 +55,35 @@ interface Props {
   toggleMerchiCheckout: () => void;
 }
 
+function CheckoutCloseButton() {
+  const { toggleMerchiCheckout } = useMerchiCheckboutContext();
+
+  return (
+    <button
+      type='button'
+      className='merchi-checkout-close'
+      onClick={toggleMerchiCheckout}
+      aria-label='Close checkout'
+    >
+      <FaTimes aria-hidden />
+    </button>
+  );
+}
+
+function CheckoutHeader() {
+  return (
+    <div className='merchi-checkout-header'>
+      <MerchiCheckoutTabs />
+      <CheckoutCloseButton />
+    </div>
+  );
+}
+
 function MerchiCheckout(props: Props) {
   return (
     <MerchiCheckoutProvider {...props}>
       <Alerts />
-      <MerchiCheckoutTabs />
+      <CheckoutHeader />
       <TabPaneContainer>
         <TabPaneCustomer />
         <TabPaneAddress />

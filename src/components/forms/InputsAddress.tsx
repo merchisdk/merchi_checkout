@@ -29,6 +29,7 @@ interface Props {
   hookForm: any;
   name: string;
   placeholder?: string;
+  recommendedAddress?: any;
   updateAddress: (address: any) => void;
 }
 
@@ -38,6 +39,7 @@ export function InputsAddress({
   hookForm,
   name,
   placeholder = 'Search your address',
+  recommendedAddress,
   updateAddress
 }: Props) {
   const {
@@ -65,12 +67,13 @@ export function InputsAddress({
     formState: { errors, isValid, submitCount },
     setValue,
     getValues,
+    reset,
   } = hookForm;
   const inputName = (_name: string) => `${name ? `${name}.` : ''}${_name}`;
 
   function onChangeCountryState() {
-    const addr = getValues();
-    updateAddress(addr[name]);
+    const values = getValues();
+    updateAddress(name, name === 'shippingAddress', values[name]);
   }
   const [addressFieldsOpen, setAddressFieldsOpen] = useState(false);
   const toggleAddressFieldsOpen = () => setAddressFieldsOpen(!addressFieldsOpen);
@@ -79,12 +82,18 @@ export function InputsAddress({
       toggleAddressFieldsOpen();
     }
   }, [isValid, submitCount]);
-  // Initialize input value from address
-  React.useEffect(() => {
-    if (addressLocal) {
-      setInputValue(addressInOneLine(addressLocal));
-    }
-  }, [addressLocal]);
+
+  useEffect(() => {
+    if (!defaultAddress?.lineOne) return;
+
+    const nextAddress = { ...defaultAddress };
+    setAddressLocal(nextAddress);
+    setInputValue(addressInOneLine(nextAddress));
+    reset({
+      ...getValues(),
+      [name]: nextAddress,
+    });
+  }, [defaultAddress?.lineOne, defaultAddress?.city, defaultAddress?.postcode]);
 
   async function searchAddresses(query: string) {
     if (!query.trim()) {
@@ -238,6 +247,20 @@ export function InputsAddress({
     }
   }
 
+  function applyRecommendedAddress() {
+    if (!recommendedAddress?.lineOne) return;
+
+    const nextAddress = { ...recommendedAddress };
+    setInputValue(addressInOneLine(nextAddress));
+    updateAddress(nextAddress);
+    setAddressLocal(nextAddress);
+    setShowSuggestions(false);
+    setSuggestions([]);
+  }
+
+  const showRecommendedAddress =
+    Boolean(recommendedAddress?.lineOne) && !addressLocal?.lineOne?.trim();
+
   function clearInput(e: any) {
     e.preventDefault();
     setInputValue('');
@@ -345,6 +368,22 @@ export function InputsAddress({
     <>
       <div className={classNameMerchiCheckoutFormGroup}>
         <label>{labelGeoSuggest}</label>
+        {showRecommendedAddress && (
+          <div className='merchi-checkout-address-recommendation'>
+            <button
+              type='button'
+              className='merchi-checkout-address-recommendation-btn'
+              onClick={applyRecommendedAddress}
+            >
+              <span className='merchi-checkout-address-recommendation-label'>
+                Use previous address
+              </span>
+              <span className='merchi-checkout-address-recommendation-value'>
+                {addressInOneLine(recommendedAddress)}
+              </span>
+            </button>
+          </div>
+        )}
         <div className="position-relative" style={{ position: 'relative' }}>
           <input
             autoComplete='new-password'

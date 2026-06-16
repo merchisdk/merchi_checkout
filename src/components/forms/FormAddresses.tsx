@@ -1,13 +1,17 @@
 'use client';
 import React from 'react';
 import { debounce } from 'lodash';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMerchiCheckboutContext } from '../MerchiCheckoutProvider';
 import InputsAddress from './InputsAddress';
 import CheckboxBillingAddressSameAsShippingAddress from './CheckboxBillingAddressSameAsShippingAddress';
 import InputError from './InputError';
 import { ListShipmentQuoteOptions } from '../lists';
+import {
+  getSavedShippingAddress,
+  loadCheckoutSession,
+} from '../../checkoutSession';
 
 interface PropsAddress {
   defaultAddress?: any;
@@ -15,6 +19,7 @@ interface PropsAddress {
   hookForm: any;
   name?: string;
   placeholder?: string;
+  recommendedAddress?: any;
   updateAddress: (address: any) => void;
 }
 
@@ -29,16 +34,29 @@ interface Props {
   formId: string;
 }
 
+function addressesMatch(left: any, right: any) {
+  if (!left?.lineOne || !right?.lineOne) return true;
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
 function FormAddresses({ formId }: Props) {
-  const { job, merchi, nextTab, setJob } = useMerchiCheckboutContext();
+  const { job, merchi, nextTab, product, setJob } = useMerchiCheckboutContext();
+  const recommendedShipping = getSavedShippingAddress(
+    loadCheckoutSession(product)
+  );
   const [
     billingAddressSameAsShippingAddress,
     setBillingAddressSameAsShippingAddress,
-  ] = useState(true);
+  ] = useState(() => addressesMatch(job.shipping, job.billing));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [shipmentOptions, setShipmentOptions] = useState([]);
-  const hookForm = useForm();
+  const hookForm = useForm({
+    defaultValues: {
+      shippingAddress: job.shipping || {},
+      billingAddress: job.billing || {},
+    },
+  });
   const {
     getValues,
     handleSubmit,
@@ -58,23 +76,58 @@ function FormAddresses({ formId }: Props) {
         `/products/${(product as any).id}/shipment_options/`,
         {body: addressEnt, method: 'POST', query}
       );
-      setShipmentOptions(r.shipments);
+      const shipments = r.shipments ?? [];
+      setShipmentOptions(shipments);
+      const firstShipment = shipments[0]?.shipment;
+      if (firstShipment) {
+        setJob((prev: any) => ({ ...prev, shipment: firstShipment }));
+      }
     } catch (e: any) {
       setError(e);
     } finally {
       setLoading(false);
     }
   }, 1000);
+
+  useEffect(() => {
+    if (!job.shipping?.lineOne) return;
+
+    reset({
+      shippingAddress: job.shipping,
+      billingAddress: job.billing || job.shipping,
+    });
+    setBillingAddressSameAsShippingAddress(
+      addressesMatch(job.shipping, job.billing)
+    );
+    debouncedFetchShippingOptions(job.shipping);
+  }, [job.shipping?.lineOne]);
+
+  function persistAddressToJob(name: string, address: any) {
+    setJob((prev: any) => {
+      if (name === 'shippingAddress') {
+        return {
+          ...prev,
+          shipping: address,
+          billing: billingAddressSameAsShippingAddress
+            ? address
+            : prev.billing,
+        };
+      }
+      return { ...prev, billing: address };
+    });
+  }
+
   async function updateAddress(name: string, fetch: boolean, address: any) {
     const values = getValues();
     values[name] = address;
     reset(values);
+    persistAddressToJob(name, address);
     if (fetch) {
       debouncedFetchShippingOptions(address);
     }
   }
   function onSelectShipment(shipment: any) {
-    setJob({ ...job, shipment });
+    setJob((prev: any) => ({ ...prev, shipment }));
   }
   async function onSubmit(values: any) {
     const address = values.shippingAddress;
@@ -93,6 +146,7 @@ function FormAddresses({ formId }: Props) {
           defaultAddress={job.shipping}
           hookForm={hookForm}
           name='shippingAddress'
+          recommendedAddress={recommendedShipping}
           updateAddress={(addr: any) =>
             updateAddress('shippingAddress', true, addr)
           }
