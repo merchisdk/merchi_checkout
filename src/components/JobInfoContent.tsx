@@ -452,7 +452,7 @@ function VariationGroupInfo({ group, index, product }: any) {
   return (
     <section className='merchi-checkout-summary-group'>
       <strong className='merchi-checkout-summary-order-detail-title'>
-        Group {index + 1} Detail
+        Group {index + 1} Information
       </strong>
       {!isResell && quantity > 0 && (
         <SummaryFieldRow label='Quantity' value={quantity} />
@@ -510,7 +510,7 @@ export default function JobInfoContent() {
           {jobLevelVariations.length > 0 && (
             <>
               <strong className='merchi-checkout-summary-order-detail-title'>
-                Order Detail
+                Order Information
               </strong>
               <VariationsInfo
                 quantity={quantity}
@@ -524,7 +524,7 @@ export default function JobInfoContent() {
       {hasGroups && jobLevelVariations.length > 0 && (
         <div className='merchi-checkout-summary-standalone'>
           <strong className='merchi-checkout-summary-order-detail-title'>
-            Order Detail
+            Order Information
           </strong>
           <VariationsInfo
             quantity={quantity}

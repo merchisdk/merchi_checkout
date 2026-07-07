@@ -62,7 +62,7 @@ function ConfirmAddressAndShipmentInfo() {
   return (
     <div className='text-left px-3 py-3 modal-merchi-checkout-shipment-detail merchi-checkout-summary'>
       <strong className='merchi-checkout-summary-order-detail-title'>
-        Shipment Detail
+        Shipment Information
       </strong>
       {shipping && (
         <SummaryFieldRow
