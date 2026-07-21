@@ -22,6 +22,18 @@ function formatCost(product: any, cost: number) {
   });
 }
 
+/** Product setup fee shown next to unit price, matching product-form wording. */
+function productSetupSuffix(product: any) {
+  const setupPrice = Number(product?.setupPrice);
+  if (!setupPrice) return '';
+  const label = product.setupPerGroup ? 'setup per group' : 'setup';
+  return ` + ${formatCost(product, setupPrice)} ${label}`;
+}
+
+function formatUnitPriceWithSetup(product: any) {
+  return `${formatCost(product, Number(product?.unitPrice) || 0)}${productSetupSuffix(product)}`;
+}
+
 function isPdf(file: any) {
   const mimetype = file?.mimetype || '';
   return mimetype === 'application/pdf' || mimetype === 'application/x-pdf';
@@ -441,13 +453,21 @@ function VariationsInfo({ product, quantity, variations = [] }: any) {
   );
 }
 
-function VariationGroupInfo({ group, index, product }: any) {
+function VariationGroupInfo({
+  group,
+  index,
+  product,
+  showSetupOnUnitPrice,
+}: any) {
   const isResell = isProductSupplierMOD(product);
   const { quantity, variations } = group;
   const visibleVariations = (variations ?? []).filter(
     (v: any) => !isInstructionsType(v?.variationField?.fieldType)
   );
   const costLabel = isResell ? 'Unit Cost' : 'Group Cost';
+  const unitPriceValue = showSetupOnUnitPrice
+    ? formatUnitPriceWithSetup(product)
+    : formatCost(product, Number(product?.unitPrice) || 0);
 
   return (
     <section className='merchi-checkout-summary-group'>
@@ -457,6 +477,7 @@ function VariationGroupInfo({ group, index, product }: any) {
       {!isResell && quantity > 0 && (
         <SummaryFieldRow label='Quantity' value={quantity} />
       )}
+      <SummaryFieldRow label='Unit Price' value={unitPriceValue} />
       {visibleVariations.length > 0 && (
         <VariationsInfo
           quantity={quantity}
@@ -487,6 +508,8 @@ export default function JobInfoContent() {
         0
       )
     : Number(quantity) || 0;
+  const setupPerGroup = Boolean(product?.setupPerGroup);
+  const hasSetupPrice = Number(product?.setupPrice) > 0;
 
   return (
     <div className='modal-merchi-checkout-job-info-content merchi-checkout-summary'>
@@ -500,6 +523,7 @@ export default function JobInfoContent() {
                 key={`${i}-job-info-content`}
                 index={i}
                 product={product}
+                showSetupOnUnitPrice={setupPerGroup}
               />
             ) : null
           )}
@@ -507,17 +531,22 @@ export default function JobInfoContent() {
       )}
       {!hasGroups && (
         <div className='merchi-checkout-summary-standalone'>
+          <strong className='merchi-checkout-summary-order-detail-title'>
+            Order Information
+          </strong>
+          {quantity > 0 && (
+            <SummaryFieldRow label='Quantity' value={quantity} />
+          )}
+          <SummaryFieldRow
+            label='Unit Price'
+            value={formatUnitPriceWithSetup(product)}
+          />
           {jobLevelVariations.length > 0 && (
-            <>
-              <strong className='merchi-checkout-summary-order-detail-title'>
-                Order Information
-              </strong>
-              <VariationsInfo
-                quantity={quantity}
-                variations={variations}
-                product={product}
-              />
-            </>
+            <VariationsInfo
+              quantity={quantity}
+              variations={variations}
+              product={product}
+            />
           )}
         </div>
       )}
@@ -540,6 +569,12 @@ export default function JobInfoContent() {
               className='merchi-checkout-summary-total-quantity'
               label='Total Quantity'
               amount={totalQuantity}
+            />
+          )}
+          {hasGroups && hasSetupPrice && !setupPerGroup && (
+            <SummaryAmountRow
+              label='Setup'
+              amount={formatCost(product, Number(product.setupPrice))}
             />
           )}
           <SummaryAmountRow

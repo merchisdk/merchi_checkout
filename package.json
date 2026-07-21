@@ -74,7 +74,7 @@
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "merchi_invoice": "^1.2.0",
-    "merchi_sdk_ts": "^1.20.0",
+    "merchi_sdk_ts": "^1.23.0",
     "react": "^18.0.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-country-region-selector": "^3.6.1",
