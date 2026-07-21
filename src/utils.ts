@@ -515,15 +515,99 @@ export function appendClientToOwnDraft(job: any) {
   return job;
 }
 
+export interface SuccessRedirectExtras {
+  /** Invoice id for paid checkout, or job id for quote requests. */
+  invoiceId?: string | number | null;
+  email?: string | null;
+}
+
+/**
+ * Decode/normalize a redirect base URL from embed script params.
+ * Handles percent-encoding, legacy %27 wrappers, and trailing junk.
+ */
+export function normalizeRedirectBaseUrl(url: string): string {
+  let clean = String(url || '')
+    .trim()
+    .replace(/%27/g, '')
+    .replace(/%91/g, '')
+    .replace(/%92/g, '')
+    .replace(/%93/g, '')
+    .replace(/%94/g, '')
+    .replace(/^['"]+|['"]+$/g, '');
+
+  // Fully decode so encoded absolute URLs are not treated as relative paths.
+  for (let i = 0; i < 2; i++) {
+    try {
+      if (!/%[0-9A-Fa-f]{2}/.test(clean)) break;
+      const decoded = decodeURIComponent(clean);
+      if (decoded === clean) break;
+      clean = decoded;
+    } catch {
+      break;
+    }
+  }
+
+  return clean;
+}
+
+export function getClientEmail(client: any): string | undefined {
+  const email = client?.emailAddresses?.[0]?.emailAddress;
+  return typeof email === 'string' && email.trim() ? email.trim() : undefined;
+}
+
+/**
+ * Build the post-checkout/quote redirect URL with proper query separators.
+ * Always safe when the base URL omits a trailing "?" / "&".
+ */
+export function buildSuccessRedirectUrl(
+  url: string,
+  redirectWithValue?: boolean,
+  value?: any,
+  extras: SuccessRedirectExtras = {},
+): string {
+  const base = normalizeRedirectBaseUrl(url);
+  if (!base) return base;
+
+  const target = new URL(
+    base,
+    typeof window !== 'undefined' ? window.location.href : 'https://placeholder.invalid/',
+  );
+
+  if (
+    redirectWithValue &&
+    value !== undefined &&
+    value !== null &&
+    value !== ''
+  ) {
+    target.searchParams.set('merchiValue', String(value));
+  }
+
+  if (extras.invoiceId !== undefined && extras.invoiceId !== null && extras.invoiceId !== '') {
+    target.searchParams.set('invoiceId', String(extras.invoiceId));
+  }
+
+  if (extras.email) {
+    target.searchParams.set('email', String(extras.email));
+  }
+
+  // Preserve protocol-relative redirect targets (//example.com/...).
+  if (base.startsWith('//')) {
+    return `//${target.host}${target.pathname}${target.search}${target.hash}`;
+  }
+
+  return target.toString();
+}
+
 export function redirectOnSuccess(
-  url: string, redirectWithValue?: boolean, value?: any) {
-  let cleanUrl = url.
-    replace('%27', '').
-    replace('%91', '').
-    replace('%92', '').
-    replace('%93', '').
-    replace('%94', '');
-  window.location.href = decodeURI(
-    redirectWithValue ? `${cleanUrl}merchiValue=${value}` : cleanUrl
+  url: string,
+  redirectWithValue?: boolean,
+  value?: any,
+  extras: SuccessRedirectExtras = {},
+) {
+  window.location.href = buildSuccessRedirectUrl(
+    url,
+    redirectWithValue,
+    value,
+    extras,
   );
 }

@@ -6,7 +6,7 @@ import TitleStep from './TitleStep';
 import TabPane from './TabPane';
 import MerchiInvoice from 'merchi_invoice';
 import CancelOrderConfirmModal from './CancelOrderConfirmModal';
-import { redirectOnSuccess } from '../utils';
+import { getClientEmail, redirectOnSuccess } from '../utils';
 
 function TabPanePayment() {
   const {
@@ -18,6 +18,7 @@ function TabPanePayment() {
     classNameMerchiCheckoutButtonSecondary,
     classNameMerchiInvoiceButtonPayInvoice,
     invoice,
+    job,
     nextTab,
     redirectAfterSuccessUrl,
     redirectWithValue,
@@ -42,10 +43,18 @@ function TabPanePayment() {
                 alertErrorShow={alertErrorShow}
                 callbackCreditCardPaymentSuccess={(i: any) => {
                   if (redirectAfterSuccessUrl) {
+                    const paidInvoice = i?.invoice ?? i;
                     redirectOnSuccess(
                       redirectAfterSuccessUrl,
                       redirectWithValue,
-                      i?.invoice?.totalCost
+                      paidInvoice?.totalCost,
+                      {
+                        invoiceId: paidInvoice?.id ?? invoice?.id,
+                        email:
+                          getClientEmail(paidInvoice?.client) ||
+                          getClientEmail(invoice?.client) ||
+                          getClientEmail(job?.client),
+                      },
                     );
                   } else {
                     setInvoice(i?.invoice ?? i);

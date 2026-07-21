@@ -128,7 +128,7 @@ function App() {
 | `showUserTermsAndConditions` | `boolean?` | `true` | Show user terms and conditions |
 | `showDiscountCode` | `boolean?` | `true` | Show the discount code UI on the confirm tab |
 | `discountShowAppliedItems` | `boolean?` | `false` | Show the applied discount items |
-| `redirectWithValue` | `boolean?` | `true` | On redirect the value of the sale will be appended onto the redirect URLs |
+| `redirectWithValue` | `boolean?` | `true` | On redirect, append `merchiValue` (sale total) as a query param. Also appends `invoiceId` and `email` when available. Trailing `?` / `&` on redirect URLs is optional. |
 
 ### Function Props
 

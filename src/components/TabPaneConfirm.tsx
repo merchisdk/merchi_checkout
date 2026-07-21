@@ -11,7 +11,12 @@ import {
   tabIdCustomerInfo,
   tabIdShipment,
 } from '../tabs_utils';
-import { addressInOneLine, isProductSupplierMOD, redirectOnSuccess } from '../utils';
+import {
+  addressInOneLine,
+  getClientEmail,
+  isProductSupplierMOD,
+  redirectOnSuccess,
+} from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import {
   SummaryAmountRow,
@@ -216,7 +221,17 @@ function TabPaneConfirm() {
             typeof rawRedirect === 'string' ? rawRedirect.trim() : '';
 
           if (quoteRedirect) {
-            redirectOnSuccess(quoteRedirect, redirectWithValue, quote.job.totalCost);
+            redirectOnSuccess(
+              quoteRedirect,
+              redirectWithValue,
+              quote.job?.totalCost,
+              {
+                invoiceId: quote.job?.id,
+                email:
+                  getClientEmail(quote.job?.client) ||
+                  getClientEmail(job?.client),
+              },
+            );
           } else {
             setJob(prev => ({ ...prev, id: quote.job.id }));
             setLoading(false);
