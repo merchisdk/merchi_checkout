@@ -2405,7 +2405,9 @@ input:autofill {
   margin: 0.25rem 0 0;
   padding: 0;
   list-style: none;
+  /* Explicit colors so host dark-mode --foreground is not inherited onto a light panel */
   background: #fff;
+  color: #18181b;
   border: 1px solid #dee2e6;
   border-radius: 0.375rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -2416,7 +2418,16 @@ input:autofill {
 .merchi-checkout-google-suggest-list-item {
   padding: 0.5rem 0.75rem;
   cursor: pointer;
+  color: #18181b;
   border-bottom: 1px solid #f4f4f5;
+
+  strong {
+    color: #18181b;
+  }
+
+  .text-muted {
+    color: #71717a !important;
+  }
 
   &:last-child {
     border-bottom: none;

@@ -118,6 +118,10 @@ function FormAddresses({ formId }: Props) {
   }
 
   async function updateAddress(name: string, fetch: boolean, address: any) {
+    // Guard against accidental non-object values (e.g. a field name string),
+    // which would wipe nested address inputs on reset.
+    if (!address || typeof address !== 'object') return;
+
     const values = getValues();
     values[name] = address;
     reset(values);
