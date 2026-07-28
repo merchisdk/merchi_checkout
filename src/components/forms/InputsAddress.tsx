@@ -68,12 +68,14 @@ export function InputsAddress({
     setValue,
     getValues,
     reset,
+    watch,
   } = hookForm;
   const inputName = (_name: string) => `${name ? `${name}.` : ''}${_name}`;
+  const selectedCountry = watch(inputName('country'));
 
   function onChangeCountryState() {
-    const values = getValues();
-    updateAddress(name, name === 'shippingAddress', values[name]);
+    // Parent updateAddress expects a single address object (see FormAddresses).
+    updateAddress(getValues()[name]);
   }
   const [addressFieldsOpen, setAddressFieldsOpen] = useState(false);
   const toggleAddressFieldsOpen = () => setAddressFieldsOpen(!addressFieldsOpen);
@@ -323,10 +325,11 @@ export function InputsAddress({
               render={({ field }: any) => (
                 <CountryDropdown
                   {...field}
-                  // value={defaultAddress && defaultAddress.country}
                   classes={classNameMerchiCheckoutFormSelect}
                   onChange={(val) => {
                     setValue(inputName("country"), val);
+                    // Regions are country-specific; clear stale state on country change.
+                    setValue(inputName("state"), '');
                     field.onChange(val);
                     onChangeCountryState();
                   }}
@@ -346,9 +349,8 @@ export function InputsAddress({
               render={({ field }: any) => (
                 <RegionDropdown
                   {...field}
-                  // value={defaultAddress && defaultAddress.state}
                   countryValueType="short"
-                  country={getValues(inputName("country"))}
+                  country={selectedCountry}
                   classes={classNameMerchiCheckoutFormSelect}
                   onChange={(val) => {
                     setValue(inputName("state"), val);
