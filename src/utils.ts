@@ -445,6 +445,7 @@ export enum FieldType {
   COLOUR_PICKER = 10,
   COLOUR_SELECT = 11,
   TURNAROUND_TIME = 12,
+  COLOUR_EXTRACT = 13,
 }
 
 export function isSelectable(fieldType: number) {
@@ -455,6 +456,7 @@ export function isSelectable(fieldType: number) {
     FieldType.IMAGE_SELECT,
     FieldType.COLOUR_SELECT,
     FieldType.TURNAROUND_TIME,
+    FieldType.COLOUR_EXTRACT,
   ].includes(fieldType);
 }
 

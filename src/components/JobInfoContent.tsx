@@ -138,7 +138,8 @@ function VariationFilePreview({ file }: { file: any }) {
 
 function VariationInfoBody({ cost, name, product, value, files, type }: any) {
   const isColourPicker = type === FieldType.COLOUR_PICKER;
-  const isFileUpload = type === FieldType.FILE_UPLOAD;
+  const isFileUpload =
+    type === FieldType.FILE_UPLOAD || type === FieldType.COLOUR_EXTRACT;
   const hasFiles = Boolean(files?.length);
   const displayValue = isColourPicker || (isFileUpload && hasFiles) ? null : value;
 
@@ -180,13 +181,42 @@ function VariationInfo({ product, variation }: any) {
     variationField;
   const isVariationSelectable = isSelectable(fieldType);
   const isTurnaroundTime = fieldType === FieldType.TURNAROUND_TIME;
+  const isColourExtract = fieldType === FieldType.COLOUR_EXTRACT;
   const options = selectedOptions;
   const useSelectableDisplay =
     isVariationSelectable &&
     (Boolean(options?.length) || (isTurnaroundTime && variation.value));
   return (
     <div className='merchi-checkout-summary-variation'>
-      {useSelectableDisplay ? (
+      {isColourExtract ? (
+        <>
+          <VariationInfoBody
+            name={variationField.name}
+            type={fieldType}
+            value={null}
+            files={variationFiles}
+            product={product}
+            cost={
+              sellerProductEditable || options?.length
+                ? 0
+                : variation.cost
+            }
+          />
+          {options?.length ? (
+            <VariationOptionsInfoBody
+              name={`${variationField.name} colours`}
+              fieldType={fieldType}
+              value={variation.value}
+              product={product}
+              selectedOptions={options}
+              variation={variation}
+              selectableOptions={selectableOptions}
+              fieldOptions={fieldOptions}
+              sellerProductEditable={sellerProductEditable}
+            />
+          ) : null}
+        </>
+      ) : useSelectableDisplay ? (
         <VariationOptionsInfoBody
           name={variationField.name}
           fieldType={fieldType}
@@ -363,7 +393,9 @@ function VariationOptionsInfoBody({
         fieldOptions
       )
     : selectedOptions[0];
-  const isColourSelect = fieldType === FieldType.COLOUR_SELECT;
+  const isColourSelect =
+    fieldType === FieldType.COLOUR_SELECT ||
+    fieldType === FieldType.COLOUR_EXTRACT;
   const isImageSelect = fieldType === FieldType.IMAGE_SELECT;
   const variationField = variation?.variationField ?? {};
 
