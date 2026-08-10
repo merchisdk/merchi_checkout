@@ -8,6 +8,10 @@ import {
   isSelectable,
   FieldType,
 } from '../utils';
+import {
+  formatAreaSummary,
+  localePrefersImperial,
+} from '../area';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import {
   SummaryAmountRow,
@@ -233,7 +237,15 @@ function VariationInfo({ product, variation }: any) {
         <VariationInfoBody
           name={variationField.name}
           type={variationField.fieldType}
-          value={variation.value}
+          value={
+            fieldType === FieldType.AREA && variation.value
+              ? formatAreaSummary(
+                  variation.value,
+                  localePrefersImperial() ? 'imperial' : 'metric',
+                  variationField.areaUnit || 'mm'
+                ) || variation.value
+              : variation.value
+          }
           files={variationFiles}
           product={product}
           cost={sellerProductEditable ? 0 : variation.cost}

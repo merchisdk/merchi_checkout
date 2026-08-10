@@ -446,6 +446,7 @@ export enum FieldType {
   COLOUR_SELECT = 11,
   TURNAROUND_TIME = 12,
   COLOUR_EXTRACT = 13,
+  AREA = 14,
 }
 
 export function isSelectable(fieldType: number) {
