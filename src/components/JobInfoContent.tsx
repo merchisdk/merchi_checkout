@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
-import { FaFilePdf } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaFilePdf, FaRegImage } from 'react-icons/fa';
 import { formatCurrency, currencyTotalCostShowIncTax } from './currency';
 import {
   isInstructionsType,
@@ -8,6 +8,11 @@ import {
   isSelectable,
   FieldType,
 } from '../utils';
+import {
+  estimateAreaCosts,
+  formatAreaSummary,
+  localePrefersImperial,
+} from '../area';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
 import {
   SummaryAmountRow,
@@ -20,6 +25,50 @@ function formatCost(product: any, cost: number) {
     currency,
     showCodeIfNoSymbol: false,
   });
+}
+
+function parseCostAmount(value: any): number {
+  const amount = parseFloat(value);
+  return Number.isFinite(amount) && amount > 0 ? amount : 0;
+}
+
+/** Match product-form wording: "+ $X once off" / "+ $Y per unit". */
+function formatOnceOffUnitCostDetail(
+  product: any,
+  onceOffCost: any,
+  unitCost: any
+) {
+  const currency = product?.currency || 'AUD';
+  const parts: string[] = [];
+  const onceOff = parseCostAmount(onceOffCost);
+  const unit = parseCostAmount(unitCost);
+  if (onceOff) {
+    parts.push(
+      ` + ${formatCurrency(onceOff, { currency, showCodeIfNoSymbol: false })} once off`
+    );
+  }
+  if (unit) {
+    parts.push(
+      ` + ${formatCurrency(unit, { currency, showCodeIfNoSymbol: false })} per unit`
+    );
+  }
+  return parts.join('');
+}
+
+function optionOnceOff(option: any): number {
+  return (
+    parseCostAmount(option?.onceOffCost) ||
+    parseCostAmount(option?.variationCost) ||
+    0
+  );
+}
+
+function optionUnit(option: any): number {
+  return (
+    parseCostAmount(option?.unitCost) ||
+    parseCostAmount(option?.variationUnitCost) ||
+    0
+  );
 }
 
 /** Product setup fee shown next to unit price, matching product-form wording. */
@@ -46,8 +95,31 @@ function isImageFile(file: any) {
   return /\.(jpe?g|png|gif|webp|svg|bmp)$/.test(name);
 }
 
-function optionImageUrl(option: any) {
-  return option?.linkedFile?.viewUrl || '';
+function absolutizeFileUrl(raw: string, urlApi?: string) {
+  const url = (raw || '').trim();
+  if (!url || url === 'undefined' || url === 'null') return '';
+  if (/^(https?:|blob:|data:)/i.test(url)) return url;
+  if (!urlApi) return url;
+  try {
+    const base = new URL(urlApi);
+    return new URL(url, `${base.origin}/`).href;
+  } catch {
+    return url;
+  }
+}
+
+function resolveFileUrl(file: any, urlApi?: string) {
+  return absolutizeFileUrl(
+    file?.viewUrl || file?.downloadUrl || '',
+    urlApi
+  );
+}
+
+function optionImageUrl(option: any, urlApi?: string) {
+  return absolutizeFileUrl(
+    option?.linkedFile?.viewUrl || option?.linkedFile?.downloadUrl || '',
+    urlApi
+  );
 }
 
 function findMatchingOption(option: any, options: any[] = []) {
@@ -69,15 +141,17 @@ function resolveOptionColour(
 function resolveOptionImageUrl(
   option: any,
   selectableOptions: any[] = [],
-  fieldOptions: any[] = []
+  fieldOptions: any[] = [],
+  urlApi?: string
 ) {
-  const direct = optionImageUrl(option);
+  const direct = optionImageUrl(option, urlApi);
   if (direct) return direct;
   const fromSelectable = optionImageUrl(
-    findMatchingOption(option, selectableOptions)
+    findMatchingOption(option, selectableOptions),
+    urlApi
   );
   if (fromSelectable) return fromSelectable;
-  return optionImageUrl(findMatchingOption(option, fieldOptions));
+  return optionImageUrl(findMatchingOption(option, fieldOptions), urlApi);
 }
 
 function formatOptionCost(
@@ -85,19 +159,110 @@ function formatOptionCost(
   option: any,
   sellerProductEditable: boolean
 ) {
-  if (!option?.totalCost || sellerProductEditable) return null;
-  return ` + ${formatCost(product, option.totalCost)}`;
+  if (sellerProductEditable || !option) return null;
+  const onceOffUnit = formatOnceOffUnitCostDetail(
+    product,
+    optionOnceOff(option),
+    optionUnit(option)
+  );
+  if (onceOffUnit) return onceOffUnit;
+  if (option.totalCost) {
+    return ` + ${formatCost(product, option.totalCost)}`;
+  }
+  return null;
 }
 
-function VariationFilePreview({ file }: { file: any }) {
-  const fileUrl = file?.viewUrl || file?.downloadUrl || '';
+function variationCostDetail(
+  product: any,
+  variation: any,
+  sellerProductEditable: boolean,
+  {
+    includeSelectedOptionCosts = true,
+    fieldCostsOnly = false,
+  }: {
+    includeSelectedOptionCosts?: boolean;
+    fieldCostsOnly?: boolean;
+  } = {}
+) {
+  if (sellerProductEditable) return '';
+
+  const field = variation?.variationField || {};
+  const fieldType = Number(field.fieldType);
+
+  if (fieldType === FieldType.AREA) {
+    const areaCosts = estimateAreaCosts(field, variation?.value);
+    if (areaCosts) {
+      return formatOnceOffUnitCostDetail(
+        product,
+        areaCosts.onceOffCost,
+        areaCosts.unitCost
+      );
+    }
+  }
+
+  if (fieldCostsOnly) {
+    return formatOnceOffUnitCostDetail(
+      product,
+      field.variationCost,
+      field.variationUnitCost
+    );
+  }
+
+  const selected = Array.isArray(variation?.selectedOptions)
+    ? variation.selectedOptions
+    : [];
+  if (includeSelectedOptionCosts && selected.length) {
+    const fieldOnce =
+      fieldType === FieldType.COLOUR_EXTRACT
+        ? parseCostAmount(field.variationCost)
+        : 0;
+    const fieldUnit =
+      fieldType === FieldType.COLOUR_EXTRACT
+        ? parseCostAmount(field.variationUnitCost)
+        : 0;
+    return formatOnceOffUnitCostDetail(
+      product,
+      fieldOnce +
+        selected.reduce(
+          (sum: number, option: any) => sum + optionOnceOff(option),
+          0
+        ),
+      fieldUnit +
+        selected.reduce(
+          (sum: number, option: any) => sum + optionUnit(option),
+          0
+        )
+    );
+  }
+
+  const onceOffUnit = formatOnceOffUnitCostDetail(
+    product,
+    variation?.onceOffCost ?? field.variationCost,
+    variation?.unitCost ?? field.variationUnitCost
+  );
+  if (onceOffUnit) return onceOffUnit;
+  if (variation?.cost) {
+    return ` + ${formatCost(product, variation.cost)}`;
+  }
+  return '';
+}
+
+function VariationFilePreview({
+  file,
+  urlApi,
+}: {
+  file: any;
+  urlApi?: string;
+}) {
+  const fileUrl = resolveFileUrl(file, urlApi);
   const fileName = file?.name || 'File';
+  const [imageFailed, setImageFailed] = useState(false);
 
   if (isPdf(file)) {
     return (
       <a
         className='merchi-checkout-summary-file-link'
-        href={fileUrl}
+        href={fileUrl || undefined}
         target='_blank'
         rel='noopener noreferrer'
         title={fileName}
@@ -108,14 +273,27 @@ function VariationFilePreview({ file }: { file: any }) {
     );
   }
 
-  if (isImageFile(file) && fileUrl) {
+  if (isImageFile(file) && fileUrl && !imageFailed) {
     return (
       <img
         className='modal-merchi-checkout-job-info-content-img'
         src={fileUrl}
         alt={fileName}
         title={fileName}
+        onError={() => setImageFailed(true)}
       />
+    );
+  }
+
+  if (isImageFile(file)) {
+    return (
+      <span
+        className='merchi-checkout-summary-file-fallback'
+        title={fileName}
+      >
+        <FaRegImage aria-hidden />
+        <span>{fileName}</span>
+      </span>
     );
   }
 
@@ -136,9 +314,18 @@ function VariationFilePreview({ file }: { file: any }) {
   return <span>{fileName}</span>;
 }
 
-function VariationInfoBody({ cost, name, product, value, files, type }: any) {
+function VariationInfoBody({
+  costDetail,
+  name,
+  product,
+  value,
+  files,
+  type,
+  urlApi,
+}: any) {
   const isColourPicker = type === FieldType.COLOUR_PICKER;
-  const isFileUpload = type === FieldType.FILE_UPLOAD;
+  const isFileUpload =
+    type === FieldType.FILE_UPLOAD || type === FieldType.COLOUR_EXTRACT;
   const hasFiles = Boolean(files?.length);
   const displayValue = isColourPicker || (isFileUpload && hasFiles) ? null : value;
 
@@ -152,6 +339,7 @@ function VariationInfoBody({ cost, name, product, value, files, type }: any) {
               <VariationFilePreview
                 key={file.viewUrl || file.id || `${name}-file-${index}`}
                 file={file}
+                urlApi={urlApi}
               />
             ))}
           </div>
@@ -166,27 +354,62 @@ function VariationInfoBody({ cost, name, product, value, files, type }: any) {
           </div>
         )}
         {displayValue && displayValue}
-        {cost ? ` + ${formatCost(product, cost)}` : ''}
-        {!hasFiles && !value && '-'}
+        {costDetail || ''}
+        {!hasFiles && !value && !costDetail && '-'}
       </div>
     </div>
   );
 }
 
 function VariationInfo({ product, variation }: any) {
+  const { urlApi } = useMerchiCheckboutContext();
   const { selectedOptions, variationField, variationFiles, selectableOptions } =
     variation;
   const { fieldType, sellerProductEditable, options: fieldOptions = [] } =
     variationField;
   const isVariationSelectable = isSelectable(fieldType);
   const isTurnaroundTime = fieldType === FieldType.TURNAROUND_TIME;
+  const isColourExtract = fieldType === FieldType.COLOUR_EXTRACT;
   const options = selectedOptions;
   const useSelectableDisplay =
     isVariationSelectable &&
     (Boolean(options?.length) || (isTurnaroundTime && variation.value));
   return (
     <div className='merchi-checkout-summary-variation'>
-      {useSelectableDisplay ? (
+      {isColourExtract ? (
+        <>
+          <VariationInfoBody
+            name={variationField.name}
+            type={fieldType}
+            value={null}
+            files={variationFiles}
+            product={product}
+            urlApi={urlApi}
+            costDetail={variationCostDetail(
+              product,
+              variation,
+              sellerProductEditable,
+              // Options list shows each colour cost; keep field base cost here.
+              options?.length
+                ? { fieldCostsOnly: true }
+                : { includeSelectedOptionCosts: false }
+            )}
+          />
+          {options?.length ? (
+            <VariationOptionsInfoBody
+              name={`${variationField.name} colours`}
+              fieldType={fieldType}
+              value={variation.value}
+              product={product}
+              selectedOptions={options}
+              variation={variation}
+              selectableOptions={selectableOptions}
+              fieldOptions={fieldOptions}
+              sellerProductEditable={sellerProductEditable}
+            />
+          ) : null}
+        </>
+      ) : useSelectableDisplay ? (
         <VariationOptionsInfoBody
           name={variationField.name}
           fieldType={fieldType}
@@ -203,10 +426,24 @@ function VariationInfo({ product, variation }: any) {
         <VariationInfoBody
           name={variationField.name}
           type={variationField.fieldType}
-          value={variation.value}
+          value={
+            fieldType === FieldType.AREA && variation.value
+              ? formatAreaSummary(
+                  variation.value,
+                  localePrefersImperial() ? 'imperial' : 'metric',
+                  variationField.areaUnit || 'mm'
+                ) || variation.value
+              : variation.value
+          }
           files={variationFiles}
           product={product}
-          cost={sellerProductEditable ? 0 : variation.cost}
+          urlApi={urlApi}
+          costDetail={variationCostDetail(
+            product,
+            variation,
+            sellerProductEditable,
+            { includeSelectedOptionCosts: false }
+          )}
         />
       )}
     </div>
@@ -217,13 +454,22 @@ function ColourSelectOption({
   option,
   selectableOptions,
   fieldOptions,
+  product,
+  sellerProductEditable,
 }: {
   option: any;
   selectableOptions?: any[];
   fieldOptions?: any[];
+  product?: any;
+  sellerProductEditable?: boolean;
 }) {
   const label = option?.value?.trim() || '';
   const hex = resolveOptionColour(option, selectableOptions, fieldOptions);
+  const cost = formatOptionCost(
+    product,
+    option,
+    Boolean(sellerProductEditable)
+  );
   return (
     <span className='merchi-checkout-summary-colour-option'>
       {hex && (
@@ -232,7 +478,10 @@ function ColourSelectOption({
           className='color-indicator'
         />
       )}
-      <span>{label || hex || '–'}</span>
+      <span>
+        {label || hex || '–'}
+        {cost || ''}
+      </span>
     </span>
   );
 }
@@ -250,21 +499,32 @@ function ImageSelectOption({
   product: any;
   sellerProductEditable: boolean;
 }) {
-  const imageUrl = resolveOptionImageUrl(option, selectableOptions, fieldOptions);
+  const { urlApi } = useMerchiCheckboutContext();
+  const imageUrl = resolveOptionImageUrl(
+    option,
+    selectableOptions,
+    fieldOptions,
+    urlApi
+  );
   const label = option?.value?.trim() || '';
   const cost = formatOptionCost(product, option, sellerProductEditable);
+  const [imageFailed, setImageFailed] = useState(false);
 
   return (
     <span className='merchi-checkout-summary-image-select-option'>
-      {imageUrl ? (
+      {imageUrl && !imageFailed ? (
         <img
           className='modal-merchi-checkout-job-info-content-img'
           src={imageUrl}
           alt={label || 'Selected option'}
           title={label || undefined}
+          onError={() => setImageFailed(true)}
         />
       ) : null}
-      <span>{label || '–'}{cost || ''}</span>
+      <span>
+        {label || '–'}
+        {cost || ''}
+      </span>
     </span>
   );
 }
@@ -363,7 +623,9 @@ function VariationOptionsInfoBody({
         fieldOptions
       )
     : selectedOptions[0];
-  const isColourSelect = fieldType === FieldType.COLOUR_SELECT;
+  const isColourSelect =
+    fieldType === FieldType.COLOUR_SELECT ||
+    fieldType === FieldType.COLOUR_EXTRACT;
   const isImageSelect = fieldType === FieldType.IMAGE_SELECT;
   const variationField = variation?.variationField ?? {};
 
@@ -384,6 +646,8 @@ function VariationOptionsInfoBody({
           option={o}
           selectableOptions={selectableOptions}
           fieldOptions={fieldOptions}
+          product={product}
+          sellerProductEditable={sellerProductEditable}
         />
       );
     }

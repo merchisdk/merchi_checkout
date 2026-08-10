@@ -2248,7 +2248,8 @@ input:autofill {
   gap: 0.5rem;
 }
 
-.merchi-checkout-summary-file-link {
+.merchi-checkout-summary-file-link,
+.merchi-checkout-summary-file-fallback {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
@@ -2257,6 +2258,12 @@ input:autofill {
 
   &:hover {
     text-decoration: underline;
+  }
+}
+
+.merchi-checkout-summary-file-fallback {
+  &:hover {
+    text-decoration: none;
   }
 }
 
