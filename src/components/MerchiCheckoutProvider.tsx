@@ -99,7 +99,7 @@ interface IMerchiCheckout {
   redirectWithValue?: boolean;
   setActiveTabById: (id: string) => void;
   setActiveTabIndex: (index: number) => void;
-  setCustomer: (customer: any) => void;
+  setCustomer: (customer: any, options?: { sendWhatsapp?: boolean }) => void;
   setDomain: (domain: any) => void;
   setInvoice: (invoice: any) => void;
   setJob: (job: any) => void;
@@ -458,8 +458,15 @@ export const MerchiCheckoutProvider = ({
   function resetTabs() {
     initTabsFromJob(job, activeTabIndex);
   }
-  function setCustomer(customer: any) {
-    const updatedJob = { ...job, client: customer };
+  function setCustomer(
+    customer: any,
+    options?: { sendWhatsapp?: boolean },
+  ) {
+    const updatedJob = {
+      ...job,
+      client: customer,
+      sendWhatsapp: options?.sendWhatsapp === true,
+    };
     setJob(updatedJob);
     initTabsFromJob(
       updatedJob,
@@ -467,13 +474,14 @@ export const MerchiCheckoutProvider = ({
     );
   }
   function clearCustomer() {
-    const updatedJob = { ...job, client: {} };
+    const updatedJob = { ...job, client: {}, sendWhatsapp: false };
     setJob(updatedJob);
     initTabsFromJob(updatedJob, 0);
   }
   function cancelCheckoutOrder() {
     const updatedJob = { ...job };
     delete updatedJob.id;
+    updatedJob.sendWhatsapp = false;
     setInvoice({});
     setJob(updatedJob);
     const confirmIndex = tabs.findIndex((t) => t.id === tabIdConfirm);

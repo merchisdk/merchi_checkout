@@ -38,7 +38,7 @@ function FormCustomerReturning() {
       if (r.ok) {
         const customer = await r.json();
         setCustomer({
-          emailAddresses: [{emailAddress: values.emailAddress}],
+          emailAddresses: [{ emailAddress: values.emailAddress }],
           id: customer.user_id,
           hasStore: customer.has_store,
         });
