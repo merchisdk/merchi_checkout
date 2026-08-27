@@ -547,6 +547,37 @@ export const MerchiCheckoutProvider = ({
   }, [product?.id]);
 
   useEffect(() => {
+    if (!isOpen) {
+      setDomain(null);
+      return;
+    }
+
+    const domainId = product?.domain?.id ?? job?.domain?.id;
+    if (!domainId) {
+      setDomain(null);
+      return;
+    }
+
+    let cancelled = false;
+    merchi.Domain.get(domainId)
+      .then((domainEntity: any) => {
+        if (cancelled) return;
+        setDomain(
+          typeof domainEntity?.toJson === 'function'
+            ? domainEntity.toJson()
+            : domainEntity
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setDomain(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, product?.domain?.id, job?.domain?.id, urlApi]);
+
+  useEffect(() => {
     if (!product?.id) return;
     saveCheckoutSession(
       product,

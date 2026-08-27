@@ -67,16 +67,13 @@ function CustomerPanel() {
 }
 
 function TabPaneCustomer() {
-  const { job, includeDomainSignup } = useMerchiCheckboutContext();
+  const { job, domain: checkoutDomain, includeDomainSignup } = useMerchiCheckboutContext();
   const { client } = job;
   const isActive = isUserRegistered(client);
   const canProceed = includeDomainSignup
     ? isRegisteredAndHasStore(client)
     : isUserRegistered(client);
-  const whatsappEnabled = Boolean(
-    job?.domain?.enableWhatsappNotifications
-    || job?.product?.domain?.enableWhatsappNotifications
-  );
+  const whatsappEnabled = checkoutDomain?.enableWhatsappNotifications === true;
 
   return (
     <TabPane tabId={tabIdCustomerInfo}>
