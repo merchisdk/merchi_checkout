@@ -6,7 +6,7 @@ import FooterButtons from './FooterButtons';
 import { tabIdCustomerInfo } from '../tabs_utils';
 import { isUserRegistered, isRegisteredAndHasStore } from '../utils';
 import { useMerchiCheckboutContext } from './MerchiCheckoutProvider';
-import { FormCustomerNew, FormCustomerReturning } from './forms';
+import CustomerCheckoutMethodTabs from './CustomerCheckoutMethodTabs';
 import FormDomainNew from './forms/FormDomainNew';
 import { BiUserCircle } from 'react-icons/bi';
 
@@ -67,13 +67,13 @@ function CustomerPanel() {
 }
 
 function TabPaneCustomer() {
-  const { job, includeDomainSignup } = useMerchiCheckboutContext();
+  const { job, domain: checkoutDomain, includeDomainSignup } = useMerchiCheckboutContext();
   const { client } = job;
   const isActive = isUserRegistered(client);
-  const { classNameMerchiCheckoutSubtitle } = useMerchiCheckboutContext();
   const canProceed = includeDomainSignup
     ? isRegisteredAndHasStore(client)
     : isUserRegistered(client);
+  const whatsappEnabled = checkoutDomain?.enableWhatsappNotifications === true;
 
   return (
     <TabPane tabId={tabIdCustomerInfo}>
@@ -82,19 +82,11 @@ function TabPaneCustomer() {
         <CustomerPanel />
       ) : (
         <div
-          className={`${
-            isActive ? 'hide' : ''
-          } d-flex justify-content-center flex-column`}
+          className={`${isActive ? 'hide' : ''
+            } d-flex justify-content-center flex-column`}
         >
           <div className='w-100 customer-detail-form'>
-            <div className='mt-1 mb-5'>
-              <h5 className={classNameMerchiCheckoutSubtitle}>Returning customer</h5>
-              <FormCustomerReturning />
-            </div>
-            <div>
-              <h5 className={classNameMerchiCheckoutSubtitle}>New customer</h5>
-              <FormCustomerNew />
-            </div>
+            <CustomerCheckoutMethodTabs whatsappEnabled={whatsappEnabled} />
           </div>
         </div>
       )}

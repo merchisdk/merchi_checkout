@@ -363,14 +363,17 @@ function VariationInfoBody({
 
 function VariationInfo({ product, variation }: any) {
   const { urlApi } = useMerchiCheckboutContext();
-  const { selectedOptions, variationField, variationFiles, selectableOptions } =
-    variation;
+  const { variationField, variationFiles, selectableOptions } = variation;
   const { fieldType, sellerProductEditable, options: fieldOptions = [] } =
     variationField;
   const isVariationSelectable = isSelectable(fieldType);
   const isTurnaroundTime = fieldType === FieldType.TURNAROUND_TIME;
   const isColourExtract = fieldType === FieldType.COLOUR_EXTRACT;
-  const options = selectedOptions;
+  const options = resolveSelectableSelectedOptions(
+    variation,
+    selectableOptions,
+    fieldOptions
+  );
   const useSelectableDisplay =
     isVariationSelectable &&
     (Boolean(options?.length) || (isTurnaroundTime && variation.value));
@@ -533,26 +536,72 @@ function getOptionId(option: any) {
   return option?.optionId ?? option?.id;
 }
 
+function splitSelectedOptionIds(value: any): string[] {
+  if (Array.isArray(value)) {
+    return value.map(String).filter(Boolean);
+  }
+  if (value == null || value === '') return [];
+  return String(value)
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function resolveSelectableSelectedOptions(
+  variation: any,
+  selectableOptions: any[] = [],
+  fieldOptions: any[] = []
+): any[] {
+  const fieldType = variation?.variationField?.fieldType;
+  if (fieldType === FieldType.COLOUR_EXTRACT) {
+    return variation?.selectedOptions || [];
+  }
+
+  const selectedIds = splitSelectedOptionIds(variation?.value);
+  if (selectedIds.length > 0) {
+    const pools = [selectableOptions, fieldOptions];
+    const resolved: any[] = [];
+    for (const id of selectedIds) {
+      for (const pool of pools) {
+        const match = pool.find((option: any) => String(getOptionId(option)) === id);
+        if (match) {
+          resolved.push(match);
+          break;
+        }
+      }
+    }
+    if (resolved.length > 0) {
+      return resolved;
+    }
+  }
+
+  return variation?.selectedOptions || [];
+}
+
 function resolveTurnaroundSelectedOption(
   variation: any,
   selectableOptions: any[] = [],
   fieldOptions: any[] = []
 ) {
-  const { selectedOptions = [], value } = variation;
-  if (selectedOptions.length > 0) {
-    return selectedOptions[0];
+  const resolved = resolveSelectableSelectedOptions(
+    variation,
+    selectableOptions,
+    fieldOptions
+  );
+  if (resolved.length > 0) {
+    return resolved[0];
   }
-  const valueStr = value != null && value !== '' ? String(value).trim() : '';
+
+  const valueStr =
+    variation?.value != null && variation?.value !== ''
+      ? String(variation.value).trim()
+      : '';
   if (!valueStr) return null;
 
   const pools = [selectableOptions, fieldOptions];
   for (const pool of pools) {
-    const byId = pool.find(
-      (o: any) => String(getOptionId(o)) === valueStr
-    );
-    if (byId) return byId;
     const byValue = pool.find(
-      (o: any) => String(o.value ?? '') === valueStr
+      (option: any) => String(option.value ?? '') === valueStr
     );
     if (byValue) return byValue;
   }
