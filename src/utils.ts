@@ -502,12 +502,24 @@ export const supportedCountryDefaultsWithDefault = (countryCode: any) => {
 };
 
 interface ClientFileAndObjectId {
-  file: any;
-  objectId: string;
+  file?: any;
+  objectId?: string;
+  id?: string | number;
 }
 
-export function cleanClientFiles(clientFiles: ClientFileAndObjectId[]) {
-  return clientFiles.map((clientFile: ClientFileAndObjectId) => clientFile.file);
+function isFileRef(value: any) {
+  return value != null && value.id != null && value.id !== '';
+}
+
+export function cleanClientFiles(clientFiles: ClientFileAndObjectId[] = []) {
+  return clientFiles
+    .map((clientFile: ClientFileAndObjectId) => {
+      if (!clientFile) return undefined;
+      if (isFileRef(clientFile.file)) return clientFile.file;
+      if (isFileRef(clientFile)) return { id: clientFile.id };
+      return undefined;
+    })
+    .filter((file) => file != null);
 }
 
 export function appendClientToOwnDraft(job: any) {
