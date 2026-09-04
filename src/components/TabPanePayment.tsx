@@ -42,8 +42,10 @@ function TabPanePayment() {
               <MerchiInvoice
                 alertErrorShow={alertErrorShow}
                 callbackCreditCardPaymentSuccess={(i: any) => {
+                  const paidInvoice = i?.invoice ?? i;
+                  setInvoice(paidInvoice);
+                  if (paidInvoice?.unpaid) return;
                   if (redirectAfterSuccessUrl) {
-                    const paidInvoice = i?.invoice ?? i;
                     redirectOnSuccess(
                       redirectAfterSuccessUrl,
                       redirectWithValue,
