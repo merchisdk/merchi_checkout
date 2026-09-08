@@ -12,7 +12,7 @@ In npm package **merchi_checkout** settings, add a GitHub Actions trusted publis
 - Environment: leave blank (the job has no GitHub environment)
 - Allow direct publishing (`npm publish`), not stage-only publishing.
 
-An npm package owner must authorize this once. There is no `NPM_TOKEN` dependency. Current local npm credentials returned 401, so this trust setup has not been verified or completed by Codex. GitHub branch rules must allow the workflow bot to write the version commit to `main`; the workflow never disables protection or force-pushes.
+An npm package owner must authorize this once. There is no `NPM_TOKEN` dependency. Trusted Publisher was configured and visibly verified on npm on 2026-09-08 for this repository, publish.yml, no environment, with direct publish permission. Local npm login is not required for this OIDC workflow. GitHub branch rules must allow the workflow bot to write the version commit to `main`; the workflow never disables protection or force-pushes.
 
 Official setup: https://docs.npmjs.com/trusted-publishers/
 
@@ -28,4 +28,4 @@ Official setup: https://docs.npmjs.com/trusted-publishers/
 
 Merge/release SDK and invoice before cart and checkout for the initial wallet release. Cart/checkout require invoice 1.3.2 or later; if merged sooner they wait through failed install/retry runs until it exists. Consumers such as Dashboard retain their normal lockfile update/review process; this workflow does not merge or deploy consumers.
 
-Validation: local release planner tests and YAML parsing. Package builds and payment regression tests were verified separately. Actual GitHub-to-npm publishing still requires the one-time trusted publisher setup and a merged workflow.
+Validation: local release planner tests and YAML parsing. Package builds and payment regression tests were verified separately. Actual GitHub-to-npm publication remains unverified and requires the workflow to be merged to main.
