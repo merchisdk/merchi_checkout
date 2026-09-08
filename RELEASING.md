@@ -23,9 +23,17 @@ Official setup: https://docs.npmjs.com/trusted-publishers/
 - Installs dependencies and builds before publishing. npm install also repairs the historical lockfile/manifest mismatch; the resulting lockfile and version are committed together.
 - Pushes the version commit with `[skip ci]` using `GITHUB_TOKEN`; it does not trigger another push workflow. A concurrent main update rejects the push and prevents publication of that attempt.
 - Publishes through npm OIDC, verifies registry version and git commit, then tags `v<version>`.
-- Re-runs of the already published commit do not bump or republish. If publication failed after the version commit, retries reuse the unpublished version.
+- Re-runs of the already published commit do not bump or republish. If publication failed after the version commit, retries reuse the unpublished version only while it remains newer than latest and unoccupied.
 - The hourly run recovers interrupted releases and packages whose new dependencies were not published yet. A failed build or missing authorization still reports failure; it cannot be solved by inventing credentials or publishing broken code. A manual Actions rerun is optional.
 
 Merge/release SDK and invoice before cart and checkout for the initial wallet release. Cart/checkout require invoice 1.3.2 or later; if merged sooner they wait through failed install/retry runs until it exists. Consumers such as Dashboard retain their normal lockfile update/review process; this workflow does not merge or deploy consumers.
 
 Validation: local release planner tests and YAML parsing. Package builds and payment regression tests were verified separately. Actual GitHub-to-npm publication remains unverified and requires the workflow to be merged to main.
+
+## Coexistence with manual publishing
+
+Manual npm publishing remains allowed. The planner reads both latest and all occupied versions, skips occupied versions, and recognizes a manually published main commit even when its version differs from package.json. If latest has no gitHead or its commit is not an ancestor of main, automation pauses with a warning; merge the released source into main or investigate the package provenance before continuing. It never assumes unknown manual code is safe to replace.
+
+Immediately before publishing, the workflow rechecks latest and version availability. A changed registry or a concurrent same-version manual publication is deferred with a warning, without replacing that version or its Git tag. Network/auth/build failures remain failures; the next scheduled run retries. A successful publish with a lost response is reconciled against the registry gitHead.
+
+GitHub concurrency serializes Actions only, not developers' npm commands. npm has no cross-publisher lock or atomic compare-and-set for latest: simultaneous different-version manual and automatic publishes can still race on latest. When doing an exceptional manual release, coordinate to avoid an active publish job (or temporarily disable this workflow and wait for any active job to finish). Prefer the automatic workflow for routine releases. No script force-pushes, unpublishes, or rewrites an existing Git tag. Published version immutability prevents overwriting that version, but does not make latest race-free. First hosted OIDC publication still needs verification after merge.
