@@ -23,7 +23,7 @@ export function plan(local, latest, head, publishedHead, versions=[latest], ance
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  const view=(...args)=>JSON.parse(execFileSync('npm',['view',...args,'--json','--registry=https://registry.npmjs.org'],{encoding:'utf8'}));
+  const view=(...args)=>JSON.parse(execFileSync('npm',['view',...args,'--json','--prefer-online','--registry=https://registry.npmjs.org'],{encoding:'utf8'}));
   // Registry errors are not evidence that a version is available.
   const latest=view(`${pkg.name}@latest`,'version','gitHead');
   const versions=view(pkg.name,'versions');
