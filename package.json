@@ -6,7 +6,8 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "babel src --out-dir lib --extensions .ts,.tsx --source-maps inline --verbose --copy-files && npm run copy-assets && npm run compile-sass",
+    "build": "babel src --out-dir lib --extensions .ts,.tsx --source-maps inline --verbose --copy-files && npm run copy-assets && npm run compile-sass && npm run build:types",
+    "build:types": "tsc -p tsconfig.build.json",
     "copy-assets": "copyfiles -u 1 src/**/*.png lib",
     "compile-sass": "sass src/styles/globals.scss lib/styles/globals.css",
     "start": "react-scripts start",
