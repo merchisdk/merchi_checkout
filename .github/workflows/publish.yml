@@ -47,7 +47,7 @@ jobs:
         run: npm run build
       - name: Validate package contents
         if: steps.plan.outputs.publish == 'true'
-        run: npm pack --dry-run --ignore-scripts
+        run: node .github/scripts/verify-package.mjs
       - name: Record release version on main
         if: steps.plan.outputs.publish == 'true'
         env:

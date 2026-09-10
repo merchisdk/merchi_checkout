@@ -57,7 +57,7 @@ export function tabsProductMOD({
   const { client, product } = job;
   const hasClient = client && (client as any).id > 0;
   const clientHasDomain = client && client.hasStore;
-  const tabs = {} as any;
+  const tabs: Record<string, MerchiCheckoutTab> = {};
   const { needsDrafting } = product;
   // if the current user doesn't have an account ask them to sign up
   if (!hasClient) {
@@ -89,7 +89,7 @@ export function tabsProductSupplier({
   isBuyRequest,
 }: TabsProductSupplier) {
   const { client, product } = job;
-  const tabs = {} as any;
+  const tabs: Record<string, MerchiCheckoutTab> = {};
   const hasClient = client && (client as any).id > 0;
   const { needsDrafting, needsShipping } = product;
   // if the current user doesn't have an account ask them to sign up

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMerchiCheckboutContext } from "./MerchiCheckoutProvider";
-import { MerchiCheckoutTab } from './types';
+import type { MerchiCheckoutTab } from '../types';
 
 interface Props {
   children: any;

@@ -41,3 +41,7 @@ GitHub concurrency serializes Actions only, not developers' npm commands. npm ha
 ## Release recovery
 
 Publication verification queries the exact version with fresh registry reads, retrying up to seven times over 30 seconds without repeating npm publish. Each run also recovers the latest published version's missing Git tag before preparing a new release, including when main has advanced. Recovery requires the registry gitHead to be contained in the checkout history. Existing conflicting tags fail visibly and are never overwritten. Ignored, untracked lockfiles are not staged. Branch rules must still permit the normal version commit push; protection is never changed by this workflow.
+
+## TypeScript package output
+
+The normal build generates declarations with tsconfig.build.json after compiling JavaScript and assets. The published types entry is lib/index.d.ts. Release validation checks that main, module, and types entry points exist in the packed file list before npm publication.
