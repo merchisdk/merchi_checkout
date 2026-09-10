@@ -1,0 +1,14 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { plan } from './release-plan.mjs';
+test('retains prepared unpublished release',()=>assert.equal(plan('1.3.2','1.2.1','new','old').version,'1.3.2'));
+test('bumps patch for a new merge',()=>assert.equal(plan('1.3.2','1.3.2','new','old').version,'1.3.3'));
+test('manual registry advance wins over stale manifest',()=>assert.equal(plan('1.2.0','1.4.9','new','old').version,'1.4.10'));
+test('manual same-commit publish does not require matching local version',()=>assert.equal(plan('1.2.0','1.4.9','same','same').publish,false));
+test('already published commit is idempotent',()=>assert.equal(plan('1.3.2','1.3.2','same','same').published,true));
+test('occupied non-latest versions are skipped',()=>assert.equal(plan('1.3.2','1.3.1','new','old',['1.3.1','1.3.2','1.3.3']).version,'1.3.4'));
+test('failed unpublished version is reused',()=>assert.equal(plan('1.3.2','1.3.1','new','old',['1.3.1']).version,'1.3.2'));
+test('retry never rolls latest back after a newer manual release',()=>assert.equal(plan('1.3.2','1.4.0','new','old',['1.4.0']).version,'1.4.1'));
+test('manual source absent from main is deferred',()=>assert.equal(plan('1.3.2','1.3.1','new','other',[],false).publish,false));
+test('missing manual source provenance is deferred',()=>assert.equal(plan('1.3.2','1.3.1','new',undefined).publish,false));
+test('rejects prerelease as latest',()=>assert.throws(()=>plan('1.3.2-beta.1','1.3.1','x','y')));

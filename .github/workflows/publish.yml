@@ -1,0 +1,80 @@
+name: Publish npm package
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '23 * * * *'
+permissions:
+  contents: write
+  id-token: write
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Use npm with trusted publishing support
+        run: npm install --global npm@11.5.2
+      - name: Check release planning
+        run: node --test .github/scripts/*.test.mjs
+      - name: Choose release version
+        id: plan
+        run: node .github/scripts/release-plan.mjs
+      - name: Prepare version and dependencies
+        if: steps.plan.outputs.publish == 'true'
+        env:
+          RELEASE_VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          npm version "$RELEASE_VERSION" --no-git-tag-version --allow-same-version --ignore-scripts
+          npm install --ignore-scripts --legacy-peer-deps --no-audit --no-fund
+      - name: Build package
+        if: steps.plan.outputs.publish == 'true'
+        run: npm run build
+      - name: Validate package contents
+        if: steps.plan.outputs.publish == 'true'
+        run: npm pack --dry-run --ignore-scripts
+      - name: Record release version on main
+        if: steps.plan.outputs.publish == 'true'
+        env:
+          RELEASE_VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package.json package-lock.json
+          git diff --cached --quiet || git commit -m "chore: release $RELEASE_VERSION [skip ci]"
+          # A concurrent merge rejects this push; never force-push main.
+          git push origin HEAD:main
+      - name: Publish using npm trusted publisher
+        id: publish
+        if: steps.plan.outputs.publish == 'true'
+        env:
+          EXPECTED_LATEST: ${{ steps.plan.outputs.latest }}
+          EXPECTED_LATEST_HEAD: ${{ steps.plan.outputs.latestHead }}
+        run: node .github/scripts/publish-release.mjs
+      - name: Verify published version and record tag
+        if: steps.publish.outputs.published == 'true'
+        env:
+          RELEASE_VERSION: ${{ steps.plan.outputs.version }}
+        run: |
+          node .github/scripts/verify-release.mjs
+          tag="v$RELEASE_VERSION"
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+            if [ "$(git rev-parse "$tag^{commit}")" != "$(git rev-parse HEAD)" ]; then
+              echo "::warning::Existing $tag belongs to another commit; preserving it."
+              exit 0
+            fi
+          else
+            git tag "$tag"
+          fi
+          git push origin "$tag"
