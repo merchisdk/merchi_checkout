@@ -7,13 +7,21 @@ import { jobSourceFieldsForApi } from '../job_source';
 export async function submitBuyNow(urlApi: string, jobJson: any) {
   const clientFiles = cleanClientFiles(jobJson.clientFiles || []);
   const tags = getMerchiSourceJobTagEntities() || [];
-  const job = appendClientToOwnDraft({...jobJson, ...jobSourceFieldsForApi(), clientFiles, tags});
-  const itmes = job?.items || [];
+  const billing = jobJson.billing;
+  const shipping = jobJson.shipping || billing;
+  const job = appendClientToOwnDraft({
+    ...jobJson,
+    ...jobSourceFieldsForApi(),
+    clientFiles,
+    tags,
+    shipping,
+  });
+  const items = job?.items || [];
   delete job.billing;
   const invoice = {
     client: job.client,
-    shipping: job.billing,
-    itmes,
+    shipping: billing || shipping,
+    items,
     jobs: [job],
     shipments: job.shipment ? [job.shipment] : undefined,
   };
